@@ -1,62 +1,60 @@
 <script setup lang="ts">
-import { emitter } from "@/utils/mitt";
-import { onClickOutside } from "@vueuse/core";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
-import CloseIcon from "@iconify-icons/ep/close";
+import { emitter } from '@/utils/mitt'
+import { onClickOutside } from '@vueuse/core'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
+import CloseIcon from '@iconify-icons/ep/close'
 
-const target = ref(null);
-const show = ref<Boolean>(false);
+const target = ref(null)
+const show = ref<Boolean>(false)
 
 const iconClass = computed(() => {
   return [
-    "w-[22px]",
-    "h-[22px]",
-    "flex",
-    "justify-center",
-    "items-center",
-    "outline-none",
-    "rounded-[4px]",
-    "cursor-pointer",
-    "transition-colors",
-    "hover:bg-[#0000000f]",
-    "dark:hover:bg-[#ffffff1f]",
-    "dark:hover:text-[#ffffffd9]"
-  ];
-});
+    'w-[22px]',
+    'h-[22px]',
+    'flex',
+    'justify-center',
+    'items-center',
+    'outline-none',
+    'rounded-[4px]',
+    'cursor-pointer',
+    'transition-colors',
+    'hover:bg-[#0000000f]',
+    'dark:hover:bg-[#ffffff1f]',
+    'dark:hover:text-[#ffffffd9]',
+  ]
+})
 
-const { onReset } = useDataThemeChange();
+const { onReset } = useDataThemeChange()
 
 onClickOutside(target, (event: any) => {
-  if (event.clientX > target.value.offsetLeft) return;
-  show.value = false;
-});
+  if (event.clientX > target.value.offsetLeft) return
+  show.value = false
+})
 
 onMounted(() => {
-  emitter.on("openPanel", () => {
-    show.value = true;
-  });
-});
+  emitter.on('openPanel', () => {
+    show.value = true
+  })
+})
 
 onBeforeUnmount(() => {
   // 解绑`openPanel`公共事件，防止多次触发
-  emitter.off("openPanel");
-});
+  emitter.off('openPanel')
+})
 </script>
 
 <template>
   <div :class="{ show }">
     <div class="right-panel-background" />
     <div ref="target" class="right-panel bg-bg_color">
-      <div
-        class="project-configuration border-b-[1px] border-solid border-[var(--pure-border-color)]"
-      >
+      <div class="project-configuration border-b-[1px] border-solid border-[var(--pure-border-color)]">
         <h4 class="dark:text-white">系统配置</h4>
         <span
           v-tippy="{
             content: '关闭配置',
             placement: 'bottom-start',
-            zIndex: 41000
+            zIndex: 41000,
           }"
           :class="iconClass"
         >
@@ -73,14 +71,12 @@ onBeforeUnmount(() => {
         <slot />
       </el-scrollbar>
 
-      <div
-        class="flex justify-end p-3 border-t-[1px] border-solid border-[var(--pure-border-color)]"
-      >
+      <div class="flex justify-end p-3 border-t-[1px] border-solid border-[var(--pure-border-color)]">
         <el-button
           v-tippy="{
             content: '清空缓存并返回登录页',
             placement: 'left-start',
-            zIndex: 41000
+            zIndex: 41000,
           }"
           type="danger"
           text

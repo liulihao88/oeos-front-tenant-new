@@ -1,44 +1,29 @@
 <script setup lang="ts">
-import { isAllEmpty } from "@pureadmin/utils";
-import { ref, nextTick, computed } from "vue";
-import { useNav } from "@/layout/hooks/useNav";
-import LaySearch from "../lay-search/index.vue";
-import LayNotice from "../lay-notice/index.vue";
-import { usePermissionStoreHook } from "@/store/modules/permission";
-import LaySidebarItem from "../lay-sidebar/components/SidebarItem.vue";
-import LaySidebarFullScreen from "../lay-sidebar/components/SidebarFullScreen.vue";
+import { isAllEmpty } from '@pureadmin/utils'
+import { ref, nextTick, computed } from 'vue'
+import { useNav } from '@/layout/hooks/useNav'
+import LaySearch from '../lay-search/index.vue'
+import LayNotice from '../lay-notice/index.vue'
+import { usePermissionStoreHook } from '@/store/modules/permission'
+import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
+import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 
-import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
-import Setting from "@iconify-icons/ri/settings-3-line";
+import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
+import Setting from '@iconify-icons/ri/settings-3-line'
 
-const menuRef = ref();
+const menuRef = ref()
 
-const {
-  route,
-  title,
-  logout,
-  onPanel,
-  getLogo,
-  username,
-  userAvatar,
-  backTopMenu,
-  avatarsStyle
-} = useNav();
+const { route, title, logout, onPanel, getLogo, username, userAvatar, backTopMenu, avatarsStyle } = useNav()
 
-const defaultActive = computed(() =>
-  !isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path
-);
+const defaultActive = computed(() => (!isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path))
 
 nextTick(() => {
-  menuRef.value?.handleResize();
-});
+  menuRef.value?.handleResize()
+})
 </script>
 
 <template>
-  <div
-    v-loading="usePermissionStoreHook().wholeMenus.length === 0"
-    class="horizontal-header"
-  >
+  <div v-loading="usePermissionStoreHook().wholeMenus.length === 0" class="horizontal-header">
     <div class="horizontal-header-left" @click="backTopMenu">
       <img :src="getLogo()" alt="logo" />
       <span>{{ title }}</span>
@@ -73,20 +58,13 @@ nextTick(() => {
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                :icon="LogoutCircleRLine"
-                style="margin: 5px"
-              />
+              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        title="打开系统配置"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
