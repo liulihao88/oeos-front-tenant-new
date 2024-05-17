@@ -10,25 +10,24 @@ import { useUserStoreHook } from '@/store/modules/user'
 import { initRouter, getTopMenu } from '@/router/utils'
 import { bg, avatar, illustration } from './utils/static'
 import { useRenderIcon } from '@/components/ReIcon/src/hooks'
-import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
 
 import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
+import { getTenants } from '@/api/login.js'
 
 defineOptions({
   name: 'Login',
 })
+const { proxy } = getCurrentInstance()
 const router = useRouter()
 const loading = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const selectValue = ref()
-const options = ref([
-  { label: '小月月', value: 'xyy' },
-  { label: '小鑫鑫', value: 'xxx' },
-])
+const tenantOptions = ref([])
 
 const { initStorage } = useLayout()
 initStorage()
@@ -41,6 +40,13 @@ const ruleForm = reactive({
   username: 'admin',
   password: 'admin123',
 })
+async function init() {
+  let optionsRes = await getTenants()
+  console.log(`88 optionsRes`, optionsRes)
+  tenantOptions.value = optionsRes
+  proxy.$toast('成功')
+}
+init()
 
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
@@ -119,7 +125,13 @@ onBeforeUnmount(() => {
                 ]"
                 prop="username"
               >
-                <o-select v-model="selectValue" :options="options" width="100%" placeholder="请选择租户" />
+                <o-select
+                  v-model="selectValue"
+                  :options="tenantOptions"
+                  label="name"
+                  width="100%"
+                  placeholder="请选择租户"
+                />
               </el-form-item>
             </Motion>
             <Motion :delay="100">
