@@ -24,6 +24,11 @@ defineOptions({
 const router = useRouter()
 const loading = ref(false)
 const ruleFormRef = ref<FormInstance>()
+const selectValue = ref()
+const options = ref([
+  { label: '小月月', value: 'xyy' },
+  { label: '小鑫鑫', value: 'xxx' },
+])
 
 const { initStorage } = useLayout()
 initStorage()
@@ -94,6 +99,7 @@ onBeforeUnmount(() => {
       <div class="img">
         <component :is="toRaw(illustration)" />
       </div>
+
       <div class="login-box">
         <div class="login-form">
           <avatar class="avatar" />
@@ -102,6 +108,20 @@ onBeforeUnmount(() => {
           </Motion>
 
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
+            <Motion :delay="100">
+              <el-form-item
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入账号',
+                    trigger: 'blur',
+                  },
+                ]"
+                prop="username"
+              >
+                <o-select v-model="selectValue" :options="options" width="100%" placeholder="请选择租户" />
+              </el-form-item>
+            </Motion>
             <Motion :delay="100">
               <el-form-item
                 :rules="[

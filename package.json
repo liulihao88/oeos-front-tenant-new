@@ -19,7 +19,9 @@
     "lint:stylelint": "stylelint --cache --fix \"**/*.{html,vue,css,scss}\" --cache-location node_modules/.cache/stylelint/",
     "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
     "prepare": "husky",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "deploy": "sh -x deploy.sh",
+    "deploy-no-build": "sh -x deploy.sh -k"
   },
   "keywords": [
     "pure-admin-thin",
@@ -55,6 +57,7 @@
     "@vueuse/motion": "^2.1.0",
     "animate.css": "^4.1.1",
     "axios": "^1.6.8",
+    "code-inspector-plugin": "^0.13.0",
     "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "element-plus": "^2.7.3",
@@ -62,6 +65,7 @@
     "localforage": "^1.10.0",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
+    "oeos-components": "^0.0.67",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "pinyin-pro": "^3.20.4",

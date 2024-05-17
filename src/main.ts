@@ -46,6 +46,14 @@ import 'tippy.js/themes/light.css'
 import VueTippy from 'vue-tippy'
 app.use(VueTippy)
 
+// 全局注册oeos-components
+import 'oeos-components/dist/style.css'
+import OeosComponents, { utils } from 'oeos-components'
+Object.keys(utils).forEach((v) => {
+  app.config.globalProperties[v] = utils[v]
+})
+app.use(OeosComponents)
+
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)
   app.use(router)

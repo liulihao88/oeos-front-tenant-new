@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { unref } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
 import LaySearch from '../lay-search/index.vue'
 import LayNotice from '../lay-notice/index.vue'
@@ -6,11 +7,23 @@ import LayNavMix from '../lay-sidebar/NavMix.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 import LaySidebarBreadCrumb from '../lay-sidebar/components/SidebarBreadCrumb.vue'
 import LaySidebarTopCollapse from '../lay-sidebar/components/SidebarTopCollapse.vue'
+import { handleAliveRoute, getTopMenu } from '@/router/utils'
 
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
-
+import RefreshRight from '@iconify-icons/ep/refresh-right'
 const { layout, device, logout, onPanel, pureApp, username, userAvatar, avatarsStyle, toggleSideBar } = useNav()
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+function onFresh() {
+  const { fullPath, query } = unref(route)
+  router.replace({
+    path: '/redirect' + fullPath,
+    query,
+  })
+  handleAliveRoute(route, 'refresh')
+}
 </script>
 
 <template>
@@ -27,6 +40,13 @@ const { layout, device, logout, onPanel, pureApp, username, userAvatar, avatarsS
     <LayNavMix v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
+      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10">
+        <IconifyIconOffline :icon="RefreshRight" @click="onFresh" />
+      </div>
+
+      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10">
+        <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" @click="logout" />
+      </div>
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />
       <!-- 全屏 -->
