@@ -29,13 +29,22 @@ import { type DataInfo, userKey, removeToken, multipleTabsKey } from '@/utils/au
 const modules: Record<string, any> = import.meta.glob(['./modules/**/*.ts', '!./modules/**/remaining.ts'], {
   eager: true,
 })
+const tenantRoutes = import.meta.glob(['./tenant-router.js'], { eager: true })
+console.log(`04 tenantRoutes`, tenantRoutes)
+console.log(`04 tenantRoutes[tenant-router.js]`, tenantRoutes['./tenant-router.js'])
+console.log(`04 tenantRoutes[tenant-router.js]`, tenantRoutes['./tenant-router.js'].default)
+console.log(`04 tenantRoutes.default`, tenantRoutes.default)
+console.log(`04 tenantRoutes[0]`, tenantRoutes[0])
 
 /** 原始静态路由（未做任何处理） */
 const routes = []
+routes.push(...tenantRoutes['./tenant-router.js'].default)
 
 Object.keys(modules).forEach((key) => {
+  console.log(`81 modules[key].default`, modules[key].default)
   routes.push(modules[key].default)
 })
+console.log(`43 tenantRoutes.default`, tenantRoutes.default)
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(

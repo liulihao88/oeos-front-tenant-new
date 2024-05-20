@@ -19,7 +19,6 @@ const permissionRouter = {
       name: 'PermissionPage',
       meta: {
         title: '页面权限1',
-        roles: ['admin', 'common'],
       },
     },
     {
@@ -27,7 +26,6 @@ const permissionRouter = {
       name: 'PermissionButton',
       meta: {
         title: '按钮权限',
-        roles: ['admin', 'common'],
         auths: ['permission:btn:add', 'permission:btn:edit', 'permission:btn:delete'],
       },
     },
