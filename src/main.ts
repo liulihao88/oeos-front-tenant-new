@@ -53,6 +53,7 @@ Object.keys(utils).forEach((v) => {
   app.config.globalProperties[v] = utils[v]
 })
 app.use(OeosComponents)
+app.config.globalProperties.$dev = import.meta.env.DEV
 
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)

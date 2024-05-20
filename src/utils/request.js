@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getStorage, getType, $toast } from 'oeos-components'
+
 // import qs from 'qs'
 // 关于axios的一些默认配置项，调用接口时，按需要传递
 const defaultConfig = {
@@ -10,10 +11,8 @@ const defaultConfig = {
   // params:{},
   // data:{},
   // 自定义参数，用于需要在拦截器中处理的全局性事件
-  // neetToken:false,  // 是否需要在headers中加入token
   fileName: '', // 下载的文件名
   fileType: '', // 下载的文件类型
-  // needToken: true,          // 需要token，大部分接口是需要的，所以默认为false
   showLoading: false, // 是否在全局(页面级)显示loading
   // loadingText: '',          // loading中的文字提示，默认为空
   // loadingTime: 0,         // loading加载时长，单位ms；0表示请求成功或失败后动关闭
@@ -34,10 +33,9 @@ let timer = null
 // 请求拦截，使用sessionId方式控制权限，
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = getStorage('oeos_tenant_token')
-    const tokenType = getStorage('oeos_tenant_tokenType')
-    if (accessToken) {
-      config.headers.Authorization = `${tokenType} ${accessToken}`
+    const token = getStorage('token')
+    if (token) {
+      config.headers.Authorization = token
     }
     // 对上传类参数，要转换为FormData形式
     if (config.headers['content-type'] === 'multipart/form-data') {
@@ -86,6 +84,7 @@ instance.interceptors.response.use(
     // TODO 这里应该判断状态码，待确定
     if (response.status === 200) {
       if (response.data.status !== 200) {
+        $toast(response.data.message || '请求错误', 'e')
         return Promise.reject(response.data)
       } else {
         // 返回正常数据
@@ -98,7 +97,7 @@ instance.interceptors.response.use(
   (error) => {
     let obj = JSON.parse(JSON.stringify(error))
     if (obj.message.indexOf('401') !== -1) {
-      localStorage.removeItem('oeos_sys_token')
+      localStorage.removeItem('token')
     }
   },
 )
@@ -133,6 +132,9 @@ export default function request(url, method = 'get', config) {
   let finalMergeConfig = Object.assign({}, defaultConfig, mergeConfig)
   console.log(`36 finalMergeConfig`, finalMergeConfig)
   return instance(finalMergeConfig)
+}
+export function requestOld(config) {
+  return instance(Object.assign({}, defaultConfig, config))
 }
 
 // 处理get请求时传递复杂参数的场景，暂时不用

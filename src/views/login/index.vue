@@ -10,6 +10,7 @@ import { useUserStoreHook } from '@/store/modules/user'
 import { initRouter, getTopMenu } from '@/router/utils'
 import { bg, avatar, illustration } from './utils/static'
 import { useRenderIcon } from '@/components/ReIcon/src/hooks'
+import JSEncrypt from 'jsencrypt'
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
 
@@ -17,7 +18,7 @@ import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
-import { getTenants } from '@/api/login.js'
+import { getTenants, encrypt, login, getMenu } from '@/api/login.js'
 
 defineOptions({
   name: 'Login',
@@ -38,30 +39,87 @@ const { title } = useNav()
 
 const ruleForm = reactive({
   username: 'admin',
-  password: 'admin123',
+  // password: 'admin123',
+  password: 'adminadmin',
 })
 async function init() {
   let optionsRes = await getTenants()
-  console.log(`88 optionsRes`, optionsRes)
   tenantOptions.value = optionsRes
+  proxy.log(`proxy.$dev`, proxy.$dev, '49行 login/index.vue')
+  if (proxy.$dev) {
+    selectValue.value = proxy.uuid(tenantOptions.value)
+    proxy.log(`selectValue.value`, selectValue.value, '50行 login/index.vue')
+  }
   proxy.$toast('成功')
 }
 init()
 
-const onLogin = async (formEl: FormInstance | undefined) => {
+// 匹配本地缓存的菜单route是否包含在服务器返回的路由中, 如果不包含, 取服务器返回路由的第一个
+const _findSubMenu = (menuItems, linkToFind, sendArr = []) => {
+  for (const menuItem of menuItems) {
+    if (menuItem.visable && menuItem.visable === true) {
+      if (menuItem.link && !sendArr[1]) {
+        sendArr[1] = menuItem.link
+      }
+      if (menuItem.link === linkToFind && linkToFind) {
+        sendArr[0] = linkToFind
+      } else {
+        if (menuItem.submenu && menuItem.submenu.length > 0) {
+          _findSubMenu(menuItem.submenu, linkToFind, sendArr)
+        }
+      }
+    }
+  }
+  return sendArr
+}
+
+const onLogin = async (formEl) => {
+  await proxy.validForm(formEl)
+  let encRes = await encrypt(ruleForm.password)
+  const encryptor = new JSEncrypt()
+  const publickKey = encRes.communicationKey
+  encryptor.setPublicKey(publickKey)
+  const pwd = encryptor.encrypt(ruleForm.password)
+  console.log(`77 pwd`, pwd)
+  const loginParams = {
+    username: ruleForm.username,
+    password: pwd,
+    sysdomain: selectValue.value,
+  }
+  console.log(`69 loginParams`, loginParams)
+  let loginRes = await login(loginParams)
+  let token = `${loginRes.tokenType} ${loginRes.token}`
+  proxy.setStorage('token', token)
+  let menuRes = await getMenu()
+  console.log(`37 menuRes`, menuRes)
+  let matchedRouteArr = _findSubMenu(menuRes, proxy.getStorage('tenantRedirectFullPath'))
+  console.log(`85 matchedRouteArr`, matchedRouteArr)
+  return initRouter().then(() => {
+    let jumpPath = '/welcom' || matchedRouteArr[0] || matchedRouteArr[1]
+    router.push(jumpPath).then(() => {
+      message('登录成功11', { type: 'success' })
+    })
+  })
+  // router.push('/welcome' || matchedRouteArr[0] || matchedRouteArr[1]).then(() => {
+  //   proxy.$toast('登录成功')
+  // })
+}
+
+const onLogin2 = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: 'admin123' })
+        .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
         .then((res) => {
           if (res.success) {
             // 获取后端路由
             return initRouter().then(() => {
-              router.push(getTopMenu(true).path).then(() => {
-                message('登录成功', { type: 'success' })
-              })
+              console.log(`18 getTopMenu(true).path`, getTopMenu(true).path)
+              // router.push(getTopMenu(true).path).then(() => {
+              //   message('登录成功', { type: 'success' })
+              // })
             })
           } else {
             message('登录失败', { type: 'error' })
@@ -170,6 +228,17 @@ onBeforeUnmount(() => {
                 @click="onLogin(ruleFormRef)"
               >
                 登录
+              </el-button>
+            </Motion>
+            <Motion :delay="250">
+              <el-button
+                class="w-full mt-4"
+                size="default"
+                type="primary"
+                :loading="loading"
+                @click="onLogin2(ruleFormRef)"
+              >
+                框架登录
               </el-button>
             </Motion>
           </el-form>

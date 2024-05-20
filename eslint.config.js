@@ -51,19 +51,13 @@ export default defineFlatConfig([
       ...configPrettier.rules,
       ...pluginPrettier.configs.recommended.rules,
       'no-debugger': 'off',
-      // "no-unused-vars": [
-      //   "error",
-      //   {
-      //     argsIgnorePattern: "^_",
-      //     varsIgnorePattern: "^_"
-      //   }
-      // ],
       'prettier/prettier': [
         'error',
         {
           endOfLine: 'auto',
         },
       ],
+      'no-empty-source': 'off',
     },
   },
   {
@@ -94,6 +88,7 @@ export default defineFlatConfig([
       ],
       '@typescript-eslint/prefer-literal-enum-member': ['error', { allowBitwiseExpressions: true }],
       '@typescript-eslint/no-unused-vars': 'off',
+      'no-empty-source': 'off',
       // "@typescript-eslint/no-unused-vars": [
       //   "error",
       //   {
@@ -109,6 +104,7 @@ export default defineFlatConfig([
       'eslint-comments/no-unlimited-disable': 'off',
       'import/no-duplicates': 'off',
       'unused-imports/no-unused-vars': 'off',
+      'no-empty-source': 'off',
     },
   },
   {
@@ -116,6 +112,7 @@ export default defineFlatConfig([
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-var-requires': 'off',
+      'no-empty-source': 'off',
     },
   },
   {
@@ -167,6 +164,7 @@ export default defineFlatConfig([
           math: 'always',
         },
       ],
+      'no-empty-source': 'off',
     },
   },
 ])
