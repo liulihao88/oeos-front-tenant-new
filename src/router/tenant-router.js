@@ -39,15 +39,15 @@ export default [
           title: '桶列表',
         },
       },
-      {
-        path: '/apps/bucket/objectexplorer',
-        name: 'Objectexplorer',
-        component: () => import('@/views/bucket/objectexplorer.vue'),
-        meta: {
-          icon: 'ep:home-filled',
-          title: '桶概览',
-        },
-      },
+      // {
+      //   path: '/apps/bucket/objectexplorer',
+      //   name: 'Objectexplorer',
+      //   component: () => import('@/views/bucket/objectexplorer.vue'),
+      //   meta: {
+      //     icon: 'ep:home-filled',
+      //     title: '桶概览',
+      //   },
+      // },
     ],
   },
   {

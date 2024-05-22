@@ -47,7 +47,7 @@ async function init() {
   tenantOptions.value = optionsRes
   proxy.log(`proxy.$dev`, proxy.$dev, '49行 login/index.vue')
   if (proxy.$dev) {
-    selectValue.value = proxy.uuid(tenantOptions.value)
+    selectValue.value = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: 3 })
     proxy.log(`selectValue.value`, selectValue.value, '50行 login/index.vue')
   }
   proxy.$toast('成功')
@@ -95,7 +95,7 @@ const onLogin = async (formEl) => {
   let matchedRouteArr = _findSubMenu(menuRes, proxy.getStorage('tenantRedirectFullPath'))
   console.log(`85 matchedRouteArr`, matchedRouteArr)
   return initRouter().then(() => {
-    let jumpPath = '/welcom' || matchedRouteArr[0] || matchedRouteArr[1]
+    let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     router.push(jumpPath).then(() => {
       message('登录成功11', { type: 'success' })
     })

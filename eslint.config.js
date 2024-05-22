@@ -152,6 +152,7 @@ export default defineFlatConfig([
       'vue/require-explicit-emits': 'off',
       'vue/multi-word-component-names': 'off',
       'vue/no-setup-props-reactivity-loss': 'off',
+      'vue/no-unused-vars': 0,
       'vue/html-self-closing': [
         'error',
         {

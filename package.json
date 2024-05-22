@@ -21,7 +21,8 @@
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
     "deploy": "sh -x deploy.sh",
-    "deploy-no-build": "sh -x deploy.sh -k"
+    "deploy-no-build": "sh -x deploy.sh -k",
+    "update": "pnpm add oeos-components@latest"
   },
   "keywords": [
     "pure-admin-thin",
@@ -66,7 +67,7 @@
     "localforage": "^1.10.0",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
-    "oeos-components": "^0.0.67",
+    "oeos-components": "^0.0.68",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "pinyin-pro": "^3.20.4",

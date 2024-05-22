@@ -49,12 +49,20 @@ app.use(VueTippy)
 // 全局注册oeos-components
 import 'oeos-components/dist/style.css'
 import OeosComponents, { utils } from 'oeos-components'
+app.use(OeosComponents)
 Object.keys(utils).forEach((v) => {
   app.config.globalProperties[v] = utils[v]
 })
-app.use(OeosComponents)
-app.config.globalProperties.$dev = import.meta.env.DEV
+import * as localUtils from '@/utils/gFunc.js'
+Object.keys(localUtils).forEach((v) => {
+  app.config.globalProperties[v] = localUtils[v]
+})
 
+// 引入全局组件
+import globComps from '@/utils/autoImportComps.js'
+app.use(globComps)
+
+app.config.globalProperties.$dev = import.meta.env.DEV
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)
   app.use(router)
