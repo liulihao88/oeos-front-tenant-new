@@ -130,7 +130,7 @@ defineExpose({})
       }"
     >
       <slot />
-      <el-table-column v-if="showIndex" type="index" width="30" />
+      <el-table-column v-if="showIndex" type="index" width="50" />
       <template v-for="(v, i) in finalColumns" :key="i">
         <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
         <el-table-column
@@ -142,7 +142,8 @@ defineExpose({})
               <template v-if="val.reConfirm === true">
                 <o-popconfirm
                   trigger="click"
-                  :title="val.title || '确认删除?'"
+                  :title="val.title ?? '删除'"
+                  :content="val.title ?? '确认删除?'"
                   @confirm="val.handler?.(scope.row, scope)"
                 >
                   <el-button

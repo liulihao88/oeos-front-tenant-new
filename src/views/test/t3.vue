@@ -5,6 +5,6 @@ const { proxy } = getCurrentInstance()
 
 <template>
   <div>
-    <div>test/t2 copy.vue</div>
+    <div style="height: 3000px">test/t3.vue</div>
   </div>
 </template>

@@ -16,7 +16,7 @@ function format(num) {
 }
 const percentage = computed(() => {
   let divideNum = Number(props.used / props.total) * 100
-  let res = divideNum.toFixed(2)
+  let res = Number(divideNum.toFixed(2))
   return res
 })
 function formatColor(value) {

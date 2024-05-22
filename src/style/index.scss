@@ -2,6 +2,7 @@
 @import './element-plus';
 @import './sidebar';
 @import './dark';
+@import './common';
 
 /* 自定义全局 CssVar */
 :root {
@@ -25,12 +26,7 @@
   filter: invert(80%);
 }
 
-.c-box {
-  padding: 8px;
-  background-color: #fff;
-  border-radius: 1px;
-
-  &:hover {
-    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
-  }
+html,
+body {
+  min-width: 1200px;
 }

@@ -84,7 +84,6 @@ const columns = [
     prop: 'objectCount',
     sortable: true,
     filter: (value) => {
-      console.log(`33 value`, value)
       return proxy.formatThousands(value)
     },
   },
@@ -152,6 +151,7 @@ const data = ref([])
 const calcQuota = (num, unit) => {
   return proxy.formatBytesConvert(num + unit)
 }
+const searchValue = ref()
 </script>
 
 <template>
@@ -172,7 +172,7 @@ const calcQuota = (num, unit) => {
 
       <div class="c-box h-100%">
         <o-title title="桶列表" class="m-b-16">
-          <o-input v-model="search" width="200" class="ml" placeholder="可筛选桶名" />
+          <o-input v-model="searchValue" width="200" class="ml" placeholder="可筛选桶名" />
           <template #right>
             <el-button type="" icon="el-icon-refresh" @click="refresh">刷新</el-button>
             <el-button type="primary" icon="el-icon-plus" @click="add">新增桶</el-button>
@@ -213,6 +213,7 @@ const calcQuota = (num, unit) => {
 
   .r {
     flex: 1;
+    margin-left: 24px;
   }
 }
 </style>

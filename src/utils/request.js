@@ -46,7 +46,6 @@ instance.interceptors.request.use(
       config.data = formData
     }
     config.headers['Content-Type'] = 'application/json'
-    console.log(`84 config.headers`, config.headers)
     // 对application/x-www-form-urlencoded类型时参数处理
     if (config.headers['content-type'] === 'application/x-www-form-urlencoded') {
       config.transformRequest = [
@@ -128,9 +127,7 @@ export default function request(url, method = 'get', config) {
       config,
     }
   }
-  console.log(`96 mergeConfig`, mergeConfig)
   let finalMergeConfig = Object.assign({}, defaultConfig, mergeConfig)
-  console.log(`36 finalMergeConfig`, finalMergeConfig)
   return instance(finalMergeConfig)
 }
 export function requestOld(config) {
