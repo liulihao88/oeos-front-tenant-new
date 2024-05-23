@@ -77,6 +77,7 @@ const columns = [
   {
     label: '桶名称',
     prop: 'bucketName',
+    useSlot: true,
     handler: handleDetail,
   },
   {
@@ -96,7 +97,15 @@ const columns = [
     },
   },
   {
-    label: '容量',
+    label: '总容量',
+    prop: 'capacity',
+    width: 200,
+    filter: (value, row) => {
+      return row.quota + row.quotaUnit
+    },
+  },
+  {
+    label: '使用容量',
     prop: 'capacity',
     width: 500,
     useSlot: true,
@@ -106,7 +115,7 @@ const columns = [
     label: '操作',
     btns: [
       {
-        content: '查看',
+        content: '更新',
         handler: handleUpdate,
       },
       {
@@ -179,13 +188,23 @@ const searchValue = ref()
           </template>
         </o-title>
         <g-table ref="tableRef" :columns="columns" :total="total" :data="data">
+          <template #bucketName="{ row }">
+            <div class="cl-blue">
+              <o-icon name="plus" size="10" color="blue" />
+              {{ row.bucketName }}
+            </div>
+          </template>
           <template #capacity="{ scope, row }">
             <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
           </template>
         </g-table>
       </div>
     </div>
-    <div class="r">右侧</div>
+    <div class="r">
+      <div class="c-box">
+        <o-title title="租户对象数量统计" icon="plus" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -195,7 +214,7 @@ const searchValue = ref()
   height: 100%;
 
   .l {
-    flex: 2;
+    flex: auto;
 
     .l-list {
       margin-bottom: 16px;
@@ -212,7 +231,7 @@ const searchValue = ref()
   }
 
   .r {
-    flex: 1;
+    width: 300px;
     margin-left: 24px;
   }
 }

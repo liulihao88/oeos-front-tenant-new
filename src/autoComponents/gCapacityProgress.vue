@@ -12,7 +12,7 @@ const props = defineProps({
   },
 })
 function format(num) {
-  return `总容量${proxy.formatBytes(props.total)}, 已用${percentage.value}%`
+  return `${percentage.value}%`
 }
 const percentage = computed(() => {
   let divideNum = Number(props.used / props.total) * 100

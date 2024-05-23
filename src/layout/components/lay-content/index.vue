@@ -100,7 +100,6 @@ const transitionMain = defineComponent({
               :view-style="{
                 display: 'flex',
                 flex: 'auto',
-                overflow: 'hidden',
                 'flex-direction': 'column',
               }"
             >
@@ -140,7 +139,8 @@ const transitionMain = defineComponent({
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow-x: hidden;
+
+  /* overflow-x: hidden; */
 }
 
 .app-main-nofixed-header {

@@ -61,6 +61,8 @@ Object.keys(localUtils).forEach((v) => {
 // 引入全局组件
 import globComps from '@/utils/autoImportComps.js'
 app.use(globComps)
+import * as echarts from 'echarts'
+app.config.globalProperties.$echarts = echarts
 
 app.config.globalProperties.$dev = import.meta.env.DEV
 getPlatformConfig(app).then(async (config) => {
