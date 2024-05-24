@@ -57,9 +57,7 @@ const updateTable = () => {
       // filter: item.filter,
       // handler: item.handler,
     }
-    console.log(`item`, item)
     let res = Object.assign({}, defaultItems, item)
-    console.log(`res`, res)
     return res
   })
 }

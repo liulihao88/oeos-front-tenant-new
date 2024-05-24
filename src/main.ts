@@ -64,6 +64,10 @@ app.use(globComps)
 import * as echarts from 'echarts'
 app.config.globalProperties.$echarts = echarts
 
+// 引入vChart
+import VChart from 'vue-echarts'
+app.component('vChart', VChart)
+
 app.config.globalProperties.$dev = import.meta.env.DEV
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)

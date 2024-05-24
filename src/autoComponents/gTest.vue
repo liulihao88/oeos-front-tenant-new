@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, onMounted } from 'vue'
+import { useEcharts } from '@/hooks/useEcharts.ts'
+const echartsRef = ref()
 const { proxy } = getCurrentInstance()
 let obj = {
   '<1024B': 15,
@@ -14,13 +16,18 @@ let obj = {
 }
 
 const data = ref([])
-// data.value = Object.entries(obj).map(([name, value]) => {
-//   return { value: value, name: name }
-// })
+data.value = Object.entries(obj).map(([name, value]) => {
+  return { value: value === 0 ? null : value, name: name }
+})
+const total = ref(0)
+total.value = data.value.reduce((pre, cur) => {
+  return pre + cur.value
+}, 0)
 function formatter(params) {
-  // let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
-  // return res
-  return '<span style="color: #ff0000;">' + params.value + '</span>'
+  let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
+  let { value, name } = params.data
+  let percent = ((value / total.value) * 100).toFixed(2)
+  return `${name}: ${value}\n 占比: (${percent}%)`
 }
 const options = {
   title: {
@@ -53,8 +60,11 @@ const options = {
       name: '桶( free-bk )对象数量统计',
       type: 'pie',
       radius: '50%',
+      startAngle: 180,
+      endAngle: 360,
       label: {
-        formatter: ' {b|{b}：}{c}  ',
+        // formatter: ' {b|{b}::：}{c}  ',
+        formatter: formatter,
         backgroundColor: '#F6F8FC',
         borderColor: '#8C8D8E',
         borderRadius: 4,
@@ -90,16 +100,16 @@ const options = {
     },
   ],
 }
-onMounted(() => {
-  var myChart = proxy.$echarts.init(document.getElementById('main'))
-  // 绘制图表
-  myChart.setOption(options)
-})
+// onMounted(() => {
+//   let myChart = proxy.$echarts.init(echartsRef.value)
+//   // 绘制图表
+//   // myChart.setOption(options)
+//   useEcharts(myChart, options)
+// })
 </script>
 
 <template>
   <div>
-    <div>test/321321.vue</div>
-    <div id="main" class="w-500 h-400" />
+    <v-chart ref="echartsRef" class="h-400" :option="options" autoresize />
   </div>
 </template>

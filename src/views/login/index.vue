@@ -105,28 +105,13 @@ const onLogin = async (formEl) => {
   // })
 }
 
-const onLogin2 = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      loading.value = true
-      useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
-        .then((res) => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              console.log(`18 getTopMenu(true).path`, getTopMenu(true).path)
-              // router.push(getTopMenu(true).path).then(() => {
-              //   message('登录成功', { type: 'success' })
-              // })
-            })
-          } else {
-            message('登录失败', { type: 'error' })
-          }
-        })
-        .finally(() => (loading.value = false))
-    }
+const onLogin2 = () => {
+  let token = `测试登录`
+  proxy.setStorage('token', token)
+  return initRouter().then(() => {
+    router.push('/test/t1').then(() => {
+      message('登录成功', { type: 'success' })
+    })
   })
 }
 
@@ -238,7 +223,7 @@ onBeforeUnmount(() => {
                 :loading="loading"
                 @click="onLogin2(ruleFormRef)"
               >
-                框架登录
+                本地登录
               </el-button>
             </Motion>
           </el-form>

@@ -44,6 +44,6 @@ function formatColor(value) {
 
 <style lang="scss" scoped>
 .progress-box :deep(.el-progress-bar__outer) {
-  background: lightgreen;
+  background: #ccc;
 }
 </style>
