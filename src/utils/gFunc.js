@@ -28,6 +28,9 @@ const bytes = formatBytes(storage)
 console.log(bytes) // 输出 107374182400
  */
 export function formatBytesConvert(storage) {
+  if (typeof storage === 'number') {
+    return storage
+  }
   const storageRegex = /^(\d+(?:\.\d+)?)\s*([BKMGTPEZY]?B)$/i
   const units = {
     B: 1,

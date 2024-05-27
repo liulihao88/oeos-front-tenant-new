@@ -1,29 +1,55 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed } from 'vue'
+import { throttle } from 'lodash-es'
 const { proxy } = getCurrentInstance()
-import { getBucketList, getBucketDetail } from '@/api/bucket.js'
+import { getBucketList, getBucketDetail, getSpaceHistogram, getHistogram, getUsage, getOverview } from '@/api/bucket.js'
 import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
-const objectNumOptions = ref({})
+import NewAddBucket from '@/views/bucket/newAddBucket.vue'
+
+import BucketCapacityPie from '@/views/bucket/bucketCapacityPie.vue'
+const totalCapacity = ref(0)
+const bucketName = ref('')
+const rightTableData = ref([])
+const rightTableColumns = [
+  {
+    label: '存储池',
+    sortable: true,
+    prop: 'name',
+  },
+  {
+    label: '对象总数量',
+    sortable: true,
+    prop: 'objectCount',
+    filter: (value) => proxy.formatThousands(value),
+  },
+  {
+    label: '对象总大小',
+    sortable: true,
+    prop: 'objectSize',
+    filter: (value) => proxy.formatBytes(value),
+  },
+]
+const searchValue = ref()
 
 const topObj = ref([
   {
     title: 'objectCount',
     name: '对象总数',
     icon: 'objNum',
-    number: '0',
+    value: '0',
     storage: '0',
   },
   {
     title: 'objectSize',
     name: '对象总大小',
-    number: '0',
+    value: '0',
     storage: '0',
     icon: 'objChange',
   },
   {
     title: 'bucketObjs',
     name: '桶总数',
-    number: '0',
+    value: '0',
     storage: '0',
     icon: 'bucketsCount',
   },
@@ -32,30 +58,32 @@ const topObj = ref([
     name: '待复制大小',
     icon: 'coping',
     storage: '0',
-    number: '0',
+    value: '0',
   },
   {
     title: 'objectsFailedReplicationTotalSize',
     name: '复制失败大小',
-    number: '0',
+    value: '0',
     storage: '0',
     icon: 'objFail',
   },
   {
     title: 'objectsReplicatedTotalSize',
     name: '已复制大小',
-    number: '0',
+    value: '0',
     storage: '0',
     icon: 'copied',
   },
   {
     title: 'objectsReplicaTotalSize',
     name: '备份大小',
-    number: '0',
+    value: '0',
     storage: '0',
     icon: 'copySize',
   },
 ])
+
+const capacityData = ref([])
 
 function refresh() {
   console.log('refresh')
@@ -111,7 +139,7 @@ const columns = [
   {
     label: '使用容量',
     prop: 'capacity',
-    width: 500,
+    width: 300,
     useSlot: true,
   },
   {
@@ -135,35 +163,58 @@ const columns = [
     ],
   },
 ]
-let obj = {
-  '<1024B': 15,
-  '1K-1MB': 10143,
-  '1MB-10MB': 5966,
-  '10MB-50MB': 0,
-  '50MB-100MB': 0,
-  '100MB-500MB': 0,
-  '500MB-1GB': 0,
-  '1GB-5GB': 0,
-  '>5GB': 0,
-}
 
 const objectNumData = ref([])
-objectNumData.value = Object.entries(obj).map(([name, value]) => {
-  return { value: value === 0 ? null : value, name: name }
-})
+
 const bucketLists = ref([])
+const searchHandler = throttle(function () {
+  init()
+}, 1000)
 async function init() {
   let params = {
     pageSize: 30,
     pageNumber: 1,
-    bucketName: '',
+    bucketName: searchValue.value,
   }
   let res = await getBucketList(params)
-  console.log(`45 res`, res)
   bucketLists.value = res
   getBucketDetailByName()
 }
 init()
+getBucketUsed()
+getSpaceHistogramApi()
+overviewApi()
+
+async function getSpaceHistogramApi() {
+  let histogramRes = await getSpaceHistogram()
+  let obj = histogramRes.inCount
+  objectNumData.value = Object.entries(obj).map(([name, value]) => {
+    return { value: value === 0 ? null : value, name: name }
+  })
+}
+
+async function overviewApi() {
+  let res = await getOverview()
+  proxy.log(`res`, res, '185行 bucket/management.vue')
+  rightTableData.value = res.spaces
+  rightTableData.value = proxy.clone(res.spaces, 10)
+}
+
+async function getBucketHistogram(bucketName = 'space') {
+  let histogramRes = await getHistogram(bucketName)
+  let obj = histogramRes.inCount
+  console.log(`48 obj`, obj)
+  objectNumData.value = Object.entries(obj).map(([name, value]) => {
+    return { value: value === 0 ? null : value, name: name }
+  })
+}
+
+async function getBucketUsed(bucketName = 'space') {
+  let usageRes = await getUsage(bucketName)
+  totalCapacity.value = usageRes.quota
+  _handleUsedData(usageRes.usedSpace)
+}
+
 const title = computed(() => {
   let bucketName = currentRow.value.bucketName ?? ''
   let braceBucketName = ''
@@ -172,16 +223,6 @@ const title = computed(() => {
   }
   return `桶${braceBucketName}对象数量统计`
 })
-objectNumOptions.value = {
-  title: {
-    text: title.value,
-  },
-  series: [
-    {
-      data: objectNumData.value,
-    },
-  ],
-}
 async function getBucketDetailByName() {
   let queue = []
   for (let i = 0; i < bucketLists.value.length; i++) {
@@ -199,37 +240,64 @@ const data = ref([])
 const calcQuota = (num, unit) => {
   return proxy.formatBytesConvert(num + unit)
 }
-const searchValue = ref()
-function currentChange(currentRow, oldCurrentRow) {
-  console.log(`28 oldCurrentRow`, oldCurrentRow)
-  console.log(`11 currentRow`, currentRow)
-  currentRow.value = currentRow
+
+function currentChange(nowRow, oldCurrentRow) {
+  console.log(`86 nowRow, oldCurrentRow`, nowRow, oldCurrentRow)
+  if (proxy.isEmpty(nowRow)) {
+    nowRow = oldCurrentRow
+  }
+  currentRow.value = nowRow
+  const usedSpace = nowRow.objectSize
+  bucketName.value = nowRow.bucketName
+  totalCapacity.value = nowRow.quota + nowRow.quotaUnit
+  getBucketHistogram(nowRow.bucketName)
+  _handleUsedData(usedSpace)
+}
+function _handleUsedData(usedSpace) {
+  const leaveSpace = proxy.formatBytesConvert(totalCapacity.value) - usedSpace
+  capacityData.value = [
+    {
+      name: '使用量',
+      value: usedSpace,
+    },
+    {
+      name: '剩余容量',
+      value: leaveSpace,
+    },
+  ]
 }
 </script>
 
 <template>
   <div class="content-box">
-    <el-row :gutter="24" class="h-90%">
+    <el-row :gutter="24" class="h-100%">
       <el-col :span="16">
         <div class="w-100% h-100%">
           <div class="l-list f w-100%">
-            <div v-for="(v, i) in topObj" :key="i" class="c-box f-bt f-c h-100 list-item">
+            <div v-for="(v, i) in topObj" :key="i" class="c-box f-bt f-c h-200 list-item p-tb-16">
               <div>
-                <o-icon name="delete" />
+                <o-icon name="delete" size="40" />
               </div>
               <div>
-                {{ proxy.formatThousands(v.num) }}
+                {{ proxy.formatThousands(v.value) }}
               </div>
               <!-- <div class="fs-12">{{ v.name }}</div> -->
               <o-tooltip :content="v.name" class="fs-12" />
             </div>
           </div>
 
-          <div class="c-box h-100%">
-            <o-title title="桶列表" class="m-b-16">
-              <o-input v-model="searchValue" width="200" class="ml" placeholder="可筛选桶名" />
+          <div class="c-box bucket-table">
+            <o-title title="桶列表" class="mb3">
+              <o-input
+                v-model="searchValue"
+                width="200"
+                class="ml"
+                placeholder="可筛选桶名"
+                @clear="init"
+                @input="searchHandler"
+              />
               <template #right>
-                <el-button type="" icon="el-icon-refresh" @click="refresh">刷新</el-button>
+                <el-button type="" icon="el-icon-refresh" @click="init">刷新</el-button>
                 <el-button type="primary" icon="el-icon-plus" @click="add">新增桶</el-button>
               </template>
             </o-title>
@@ -255,14 +323,23 @@ function currentChange(currentRow, oldCurrentRow) {
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="c-box w-100%">
-          <o-title title="租户对象数量统计" icon="plus" />
-          <BucketNumPie :title="title" :options="objectNumOptions" />
-
-          <g-test />
+        <div class="right-box">
+          <div class="c-box w-100% f-1">
+            <o-title :title="title" icon="plus" />
+            <BucketNumPie :title="title" :data="objectNumData" />
+          </div>
+          <div class="c-box w-100% mt3 f-1">
+            <o-title :title="`租户容量信息(总容量${totalCapacity})`" icon="plus" />
+            <BucketCapacityPie :title="title" :data="capacityData" />
+          </div>
+          <div class="f-1 w-100% mt3 h-100% o-a">
+            <g-table :data="rightTableData" class="h-100% o-a" :columns="rightTableColumns" :showPage="false" />
+          </div>
         </div>
       </el-col>
     </el-row>
+
+    <NewAddBucket />
   </div>
 </template>
 
@@ -271,7 +348,7 @@ function currentChange(currentRow, oldCurrentRow) {
   height: 100%;
 
   .l-list {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 
     .list-item {
       width: 13%;
@@ -281,6 +358,18 @@ function currentChange(currentRow, oldCurrentRow) {
     .list-item:not(:nth-child(7n)) {
       margin-right: calc(7% / 3);
     }
+  }
+
+  .bucket-table {
+    height: calc(100% - 224px);
+  }
+
+  .right-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
   }
 }
 </style>

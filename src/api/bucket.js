@@ -9,3 +9,20 @@ export function getBucketList(params) {
 export function getBucketDetail(bucketName) {
   return request(`tenant/bucket/${bucketName}/gauge`)
 }
+
+export function getSpaceHistogram() {
+  return request(`tenant/space/histogram`)
+}
+// 获取桶容量详情
+export function getHistogram(bucketName) {
+  return request(`tenant/bucket/${bucketName}/histogram`)
+}
+
+// 获取桶容量
+export function getUsage(bucketName) {
+  return request(`tenant/${bucketName}/usage`)
+}
+
+export function getOverview() {
+  return request('tenant/info/overview')
+}

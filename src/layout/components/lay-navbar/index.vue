@@ -40,12 +40,12 @@ function onFresh() {
     <LayNavMix v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
-      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10">
-        <IconifyIconOffline :icon="RefreshRight" @click="onFresh" />
+      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
+        <IconifyIconOffline :icon="RefreshRight" />
       </div>
 
-      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10">
-        <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" @click="logout" />
+      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
+        <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
       </div>
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />

@@ -24,10 +24,11 @@ total.value = data.value.reduce((pre, cur) => {
   return pre + cur.value
 }, 0)
 function formatter(params) {
+  console.log(`01 params`, params)
   let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
   let { value, name } = params.data
   let percent = ((value / total.value) * 100).toFixed(2)
-  return `${name}: ${value}\n 占比: (${percent}%)`
+  return `${name}: ${value}\n 占比: (${params.percent}%)`
 }
 const options = {
   title: {
@@ -46,7 +47,7 @@ const options = {
   },
   tooltip: {
     trigger: 'item',
-    formatter: '{b}: {c}',
+    formatter: formatter,
   },
   toolbox: {
     show: true,
@@ -100,16 +101,10 @@ const options = {
     },
   ],
 }
-// onMounted(() => {
-//   let myChart = proxy.$echarts.init(echartsRef.value)
-//   // 绘制图表
-//   // myChart.setOption(options)
-//   useEcharts(myChart, options)
-// })
 </script>
 
 <template>
   <div>
-    <v-chart ref="echartsRef" class="h-400" :option="options" autoresize />
+    <v-chart class="h-400" :option="options" autoresize />
   </div>
 </template>

@@ -45,10 +45,8 @@ const ruleForm = reactive({
 async function init() {
   let optionsRes = await getTenants()
   tenantOptions.value = optionsRes
-  proxy.log(`proxy.$dev`, proxy.$dev, '49行 login/index.vue')
   if (proxy.$dev) {
     selectValue.value = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: 0 })
-    proxy.log(`selectValue.value`, selectValue.value, '50行 login/index.vue')
   }
   proxy.$toast('成功')
 }
