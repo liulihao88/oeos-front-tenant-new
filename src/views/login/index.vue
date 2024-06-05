@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Motion from './utils/motion'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { message } from '@/utils/message'
 import { loginRules } from './utils/rule'
 import { useNav } from '@/layout/hooks/useNav'
@@ -25,10 +25,13 @@ defineOptions({
 })
 const { proxy } = getCurrentInstance()
 const router = useRouter()
+const route = useRoute()
 const loading = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const selectValue = ref()
 const tenantOptions = ref([])
+const redirectUrl = ref()
+redirectUrl.value = route.query.redirect || ''
 
 const { initStorage } = useLayout()
 initStorage()
@@ -90,7 +93,7 @@ const onLogin = async (formEl) => {
   proxy.setStorage('token', token)
   let menuRes = await getMenu()
   console.log(`37 menuRes`, menuRes)
-  let matchedRouteArr = _findSubMenu(menuRes, proxy.getStorage('tenantRedirectFullPath'))
+  let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   console.log(`85 matchedRouteArr`, matchedRouteArr)
   return initRouter().then(() => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
@@ -107,7 +110,8 @@ const onLogin2 = () => {
   let token = `测试登录`
   proxy.setStorage('token', token)
   return initRouter().then(() => {
-    router.push('/test/t1').then(() => {
+    console.log(`97 redirectUrl.value`, redirectUrl.value)
+    router.push(redirectUrl.value || '/test/t2').then(() => {
       message('登录成功', { type: 'success' })
     })
   })

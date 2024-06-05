@@ -95,7 +95,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     let obj = JSON.parse(JSON.stringify(error))
-    if (obj.message.indexOf('401') !== -1) {
+    if (obj.message?.indexOf('401') !== -1) {
       localStorage.removeItem('oeos_sys_token')
     }
   },

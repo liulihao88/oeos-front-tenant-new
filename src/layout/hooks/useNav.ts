@@ -7,7 +7,7 @@ import { useFullscreen } from '@vueuse/core'
 import type { routeMetaType } from '../types'
 import { useRouter, useRoute } from 'vue-router'
 import { router, remainingPaths } from '@/router'
-import { computed, type CSSProperties } from 'vue'
+import { computed, type CSSProperties, getCurrentInstance } from 'vue'
 import { useAppStoreHook } from '@/store/modules/app'
 import { useUserStoreHook } from '@/store/modules/user'
 import { useGlobal, isAllEmpty } from '@pureadmin/utils'
@@ -36,6 +36,7 @@ export function useNav() {
       overflow: 'hidden',
     }
   })
+  const { proxy } = getCurrentInstance()
 
   /** 头像（如果头像为空则使用 src/assets/user.jpg ） */
   const userAvatar = computed(() => {
@@ -78,7 +79,11 @@ export function useNav() {
   /** 退出登录 */
   function logout() {
     clearStorage('token')
-    router.push('/login')
+    let nowPath = router.currentRoute.value.path
+    console.log(`85 nowPath`, nowPath)
+    // proxy.log(`router`, router, '82行 src/layout/hooks/useNav.ts')
+    console.log(`95 router`, router)
+    router.push(`/login?redirect=${nowPath}`)
   }
 
   function backTopMenu() {
