@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, computed } from 'vue'
+import { ref, getCurrentInstance, computed, nextTick } from 'vue'
 import { throttle } from 'lodash-es'
 const { proxy } = getCurrentInstance()
-import { getBucketList, getBucketDetail, getSpaceHistogram, getHistogram, getUsage, getOverview } from '@/api/bucket.js'
+import {
+  getBucketList,
+  getBucketDetail,
+  getSpaceHistogram,
+  getHistogram,
+  getUsage,
+  getOverview,
+  deleteBucket,
+} from '@/api/bucket.js'
 import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
 import NewAddBucket from '@/views/bucket/newAddBucket.vue'
 
 import BucketCapacityPie from '@/views/bucket/bucketCapacityPie.vue'
 const totalCapacity = ref(0)
-const bucketName = ref('')
+const currentBucketName = ref('')
 const rightTableData = ref([])
+const addRef = ref(null)
 const rightTableColumns = [
   {
     label: '存储池',
@@ -89,15 +98,17 @@ function refresh() {
   console.log('refresh')
 }
 function add() {
-  console.log('add')
+  addRef.value.open()
 }
-function handleDelete(row) {
-  console.log('handleDelete')
+async function handleDelete(row) {
+  await deleteBucket(row.bucketName)
+  init()
 }
 function handleView() {
   console.log('handleView')
 }
-const handleDetail = (row) => {
+const handleDetail = (row, scope, e) => {
+  console.log(`38 e`, e)
   console.log(`68 row`, row)
 }
 function handleUpdate() {
@@ -109,7 +120,6 @@ const columns = [
   {
     label: '桶名称',
     prop: 'bucketName',
-    useSlot: true,
     handler: handleDetail,
   },
   {
@@ -148,12 +158,8 @@ const columns = [
     maxBtns: 4,
     btns: [
       {
-        content: '更新',
-        handler: handleUpdate,
-      },
-      {
         content: '删除',
-        reConfirm: true,
+        reConfirm: proxy.$dev ? false : true,
         handler: handleDelete,
       },
       {
@@ -169,8 +175,8 @@ const objectNumData = ref([])
 const bucketLists = ref([])
 const searchHandler = throttle(function () {
   init()
-}, 1000)
-async function init() {
+}, 500)
+async function getTableList() {
   let params = {
     pageSize: 30,
     pageNumber: 1,
@@ -180,10 +186,21 @@ async function init() {
   bucketLists.value = res
   getBucketDetailByName()
 }
+async function init() {
+  reset()
+  await getTableList()
+  await getBucketUsed()
+  await getSpaceHistogramApi()
+}
 init()
-getBucketUsed()
-getSpaceHistogramApi()
 overviewApi()
+
+async function reset() {
+  await nextTick()
+  currentRow.value = {}
+  currentBucketName.value = ''
+  totalCapacity.value = 0
+}
 
 async function getSpaceHistogramApi() {
   let histogramRes = await getSpaceHistogram()
@@ -195,7 +212,6 @@ async function getSpaceHistogramApi() {
 
 async function overviewApi() {
   let res = await getOverview()
-  proxy.log(`res`, res, '185行 bucket/management.vue')
   rightTableData.value = res.spaces
   rightTableData.value = proxy.clone(res.spaces, 10)
 }
@@ -215,13 +231,14 @@ async function getBucketUsed(bucketName = 'space') {
   _handleUsedData(usageRes.usedSpace)
 }
 
-const title = computed(() => {
-  let bucketName = currentRow.value.bucketName ?? ''
-  let braceBucketName = ''
-  if (bucketName) {
-    braceBucketName = `(${bucketName})`
-  }
-  return `桶${braceBucketName}对象数量统计`
+const objectTitle = computed(() => {
+  let showBucketStr = currentBucketName.value ? `(${currentBucketName.value})` : ''
+  return `桶${showBucketStr}对象数量统计`
+})
+
+const quotaTitle = computed(() => {
+  let showBucketStr = currentBucketName.value ? `(${currentBucketName.value})` : ''
+  return `桶${showBucketStr}容量信息统计`
 })
 async function getBucketDetailByName() {
   let queue = []
@@ -244,11 +261,11 @@ const calcQuota = (num, unit) => {
 function currentChange(nowRow, oldCurrentRow) {
   console.log(`86 nowRow, oldCurrentRow`, nowRow, oldCurrentRow)
   if (proxy.isEmpty(nowRow)) {
-    nowRow = oldCurrentRow
+    return
   }
   currentRow.value = nowRow
   const usedSpace = nowRow.objectSize
-  bucketName.value = nowRow.bucketName
+  currentBucketName.value = nowRow.bucketName
   totalCapacity.value = nowRow.quota + nowRow.quotaUnit
   getBucketHistogram(nowRow.bucketName)
   _handleUsedData(usedSpace)
@@ -309,12 +326,12 @@ function _handleUsedData(usedSpace) {
               highlight-current-row
               @current-change="currentChange"
             >
-              <template #bucketName="{ row }">
+              <!-- <template #bucketName="{ row }">
                 <div class="cl-blue">
                   <o-icon name="plus" size="10" color="blue" />
                   {{ row.bucketName }}
                 </div>
-              </template>
+              </template> -->
               <template #capacity="{ scope, row }">
                 <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
               </template>
@@ -325,11 +342,11 @@ function _handleUsedData(usedSpace) {
       <el-col :span="8">
         <div class="right-box">
           <div class="c-box w-100% f-1">
-            <o-title :title="title" icon="plus" />
+            <o-title :title="objectTitle" icon="plus" />
             <BucketNumPie :title="title" :data="objectNumData" />
           </div>
           <div class="c-box w-100% mt3 f-1">
-            <o-title :title="`租户容量信息(总容量${totalCapacity})`" icon="plus" />
+            <o-title :title="quotaTitle" icon="plus" />
             <BucketCapacityPie :title="title" :data="capacityData" />
           </div>
           <div class="f-1 w-100% mt3 h-100% o-a">
@@ -338,8 +355,7 @@ function _handleUsedData(usedSpace) {
         </div>
       </el-col>
     </el-row>
-
-    <NewAddBucket />
+    <NewAddBucket ref="addRef" @success="init" />
   </div>
 </template>
 

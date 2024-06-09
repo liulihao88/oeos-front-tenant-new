@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 const props = defineProps({
   data: {
@@ -10,10 +10,6 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  total: {
-    type: Number,
-    default: 0,
-  },
   showPage: {
     type: Boolean,
     default: true,
@@ -22,6 +18,12 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  total: {
+    type: Number,
+  },
+})
+const tableTotal = computed(() => {
+  return props.total || props.data.length
 })
 const emits = defineEmits(['update'])
 const finalColumns = ref([])
@@ -51,13 +53,10 @@ const updateTable = () => {
       baseBtns: baseBtns, // 显示的按钮
       hideBtns: hideBtns, // 隐藏在...中的按钮
       maxBtns: item.maxBtns || 2, // 最大显示按钮个数，超出后显示...
-      // prop: item.prop,
-      // label: item.label,
-      // useSlot: item.useSlot,
-      // filter: item.filter,
-      // handler: item.handler,
     }
+    console.log(`item`, item)
     let res = Object.assign({}, defaultItems, item)
+    console.log(`res`, res)
     return res
   })
 }
@@ -72,12 +71,12 @@ watch(
   },
 )
 // isShow 或者 content支持 函数或字符串两种写法。
-const operatorBtnFn = (cont, row = '') => {
+const operatorBtnFn = (cont, row = '', scope = '') => {
   if (typeof cont === 'function') {
     if (!row) {
       return true
     }
-    return cont(row)
+    return cont(row, scope)
   } else {
     if (cont === undefined) {
       return true
@@ -85,12 +84,12 @@ const operatorBtnFn = (cont, row = '') => {
     return cont
   }
 }
-const parseDisabled = (disFn, value = '', row = '', scope = '') => {
+const parseDisabled = (disFn, row = '', scope = '') => {
   if (typeof disFn === 'function') {
     if (!row) {
       return false
     }
-    return disFn(value, row, scope)
+    return disFn(row, scope)
   } else {
     if (disFn === undefined) {
       return false
@@ -128,7 +127,7 @@ defineExpose({})
       }"
     >
       <slot />
-      <el-table-column v-if="showIndex" type="index" width="50" />
+      <el-table-column v-if="showIndex" type="index" width="30" />
       <template v-for="(v, i) in finalColumns" :key="i">
         <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
         <el-table-column
@@ -138,31 +137,27 @@ defineExpose({})
           <template #default="scope">
             <template v-for="(val, idx) in v.baseBtns" :key="idx">
               <template v-if="val.reConfirm === true">
-                <o-popconfirm
-                  trigger="click"
-                  :title="val.title ?? '删除'"
-                  :content="val.title ?? '确认删除?'"
-                  @confirm="val.handler?.(scope.row, scope)"
-                >
+                <o-popconfirm trigger="click" @confirm="val.handler?.(scope.row, scope)">
                   <el-button
                     v-if="!val.confirmInfo"
-                    v-bind="{ type: 'primary', ...val }"
+                    v-bind="{ ...val }"
                     link
-                    :disabled="parseDisabled(val.disabled, scope.row[val.prop], scope.row, scope)"
+                    :disabled="parseDisabled(val.disabled, scope.row, scope)"
                   >
-                    {{ operatorBtnFn(val.content, scope.row) }}
+                    ??{{ operatorBtnFn(val.content, scope.row, scope) }}
                   </el-button>
                 </o-popconfirm>
               </template>
               <template v-else>
                 <el-button
                   v-if="!val.confirmInfo"
-                  v-bind="{ type: 'primary', ...val }"
+                  v-bind="{ ...val }"
                   link
-                  :disabled="parseDisabled(val.disabled, scope.row[val.prop], scope.row, scope)"
-                  @click="val.handler?.(scope.row, scope)"
+                  :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                  class="linked"
+                  @click.stop="val.handler?.(scope.row, scope)"
                 >
-                  {{ operatorBtnFn(val.content, scope.row) }}
+                  {{ operatorBtnFn(val.content, scope.row, scope) }}
                 </el-button>
               </template>
             </template>
@@ -177,23 +172,24 @@ defineExpose({})
                         <o-popconfirm trigger="hover" @confirm="val.handler?.(scope.row, scope)">
                           <el-button
                             v-if="!val.confirmInfo"
-                            v-bind="{ type: 'primary', ...val }"
+                            v-bind="{ ...val }"
                             link
-                            :disabled="parseDisabled(val.disabled, scope.row[val.prop], scope.row, scope)"
+                            :disabled="parseDisabled(val.disabled, scope.row, scope)"
                           >
-                            ??{{ operatorBtnFn(val.content, scope.row) }}
+                            ??{{ operatorBtnFn(val.content, scope.row, scope) }}
                           </el-button>
                         </o-popconfirm>
                       </template>
                       <template v-else>
                         <el-button
                           v-if="!val.confirmInfo"
-                          v-bind="{ type: 'primary', ...val }"
+                          v-bind="{ ...val }"
                           link
-                          :disabled="parseDisabled(val.disabled, scope.row[val.prop], scope.row, scope)"
-                          @click="val.handler?.(scope.row, scope)"
+                          class="linked"
+                          :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                          @click.stop="val.handler?.(scope.row, scope)"
                         >
-                          {{ operatorBtnFn(val.content, scope.row) }}
+                          {{ operatorBtnFn(val.content, scope.row, scope) }}
                         </el-button>
                       </template>
                     </el-dropdown-item>
@@ -206,11 +202,9 @@ defineExpose({})
 
         <el-table-column v-else v-bind="{ ...v }">
           <template #default="scope">
-            <slot v-if="v.useSlot" :name="v.prop" :row="scope.row" :scope="scope" :value="scope.row[v.prop]" />
-            <span v-else-if="v.handler" class="linked" @click="v.handler(scope.row, scope)">
-              <span>
-                {{ v.filter ? v.filter(scope.row[v.prop], scope.row, scope) : scope.row[v.prop] || '-' }}
-              </span>
+            <slot v-if="v.useSlot" :name="v.prop" :row="scope.row" :scope="scope" />
+            <span v-else-if="v.handler" class="linked" @click.stop="v.handler(scope.row, scope)">
+              <span>{{ v.filter ? v.filter(scope.row, scope) : scope.row[v.prop] || '-' }}??</span>
             </span>
             <span v-else-if="v.filter">
               {{ v.filter(scope.row[v.prop], scope.row, scope) }}
@@ -227,7 +221,7 @@ defineExpose({})
       <div class="page-wrap">
         <div class="page-left">
           <span>共</span>
-          <span class="m-lr-5">{{ total }}</span>
+          <span class="m-lr-5">{{ tableTotal }}</span>
           <span>项数据</span>
         </div>
         <el-pagination
@@ -237,7 +231,7 @@ defineExpose({})
           :page-size="pageSize"
           :page-sizes="[10, 30, 50, 100]"
           layout="prev, pager, next, sizes, jumper"
-          :total="total"
+          :total="tableTotal"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -248,7 +242,7 @@ defineExpose({})
 
 <style scoped lang="scss">
 .linked {
-  color: blue;
+  color: var(--blue);
   cursor: pointer;
 }
 

@@ -153,6 +153,7 @@ export default defineFlatConfig([
       'vue/multi-word-component-names': 'off',
       'vue/no-setup-props-reactivity-loss': 'off',
       'vue/no-unused-vars': 0,
+      'vue/no-mutating-props': 'off',
       'vue/html-self-closing': [
         'error',
         {

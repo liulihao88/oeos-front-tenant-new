@@ -26,3 +26,10 @@ export function getUsage(bucketName) {
 export function getOverview() {
   return request('tenant/info/overview')
 }
+
+export function saveBucket(data) {
+  return request('tenant/bucket', 'post', { data: data })
+}
+export function deleteBucket(bucketName) {
+  return request(`tenant/bucket/${bucketName}`, 'delete')
+}

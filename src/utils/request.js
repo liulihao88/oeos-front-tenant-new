@@ -82,7 +82,7 @@ instance.interceptors.response.use(
     }
     // TODO 这里应该判断状态码，待确定
     if (response.status === 200) {
-      if (response.data.status !== 200) {
+      if (response.data.status !== 200 && response.data.status !== 201) {
         $toast(response.data.message || '请求错误', 'e')
         return Promise.reject(response.data)
       } else {
@@ -124,14 +124,15 @@ export default function request(url, method = 'get', config) {
     mergeConfig = {
       url,
       method,
-      config,
+      ...config,
     }
   }
   let finalMergeConfig = Object.assign({}, defaultConfig, mergeConfig)
   return instance(finalMergeConfig)
 }
 export function requestOld(config) {
-  return instance(Object.assign({}, defaultConfig, config))
+  let mergeConfig = Object.assign({}, defaultConfig, config)
+  return instance(mergeConfig)
 }
 
 // 处理get请求时传递复杂参数的场景，暂时不用

@@ -81,6 +81,8 @@ const initOptions = {
 watch(
   () => props.data,
   (val) => {
+    proxy.log(`val`, val, '84行 bucket/bucketCapacityPie.vue')
+    _handleUsedPercent(val)
     initOptions.series[0].data = val
     options.value = proxy.clone(initOptions)
   },
@@ -89,6 +91,27 @@ watch(
     immediate: true,
   },
 )
+/**
+ *
+ * 	[{
+		"name": "使用量",
+		"value": 46868949
+	},
+	{
+		"name": "剩余容量",
+		"value": 2100614699
+	}
+]
+ */
+const usedPercent = ref(0)
+function _handleUsedPercent(data) {
+  if (proxy.isEmpty(data)) {
+    return
+  }
+  let usedValue = data[0].value
+  let totalValue = usedValue + data[1].value
+  usedPercent.value = ((usedValue / totalValue) * 100).toFixed(2) + '%'
+}
 function formatter(params) {
   let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
   let { value, name } = params.data
@@ -99,6 +122,7 @@ function formatter(params) {
 
 <template>
   <v-chart class="calc-height" :option="options" autoresize />
+  <!-- <div class="po-r l-50% t-50%">{{ usedPercent }}</div> -->
 </template>
 
 <style lang="scss" scoped>
