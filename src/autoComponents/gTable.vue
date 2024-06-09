@@ -127,13 +127,10 @@ defineExpose({})
       }"
     >
       <slot />
-      <el-table-column v-if="showIndex" type="index" width="30" />
+      <el-table-column v-if="showIndex" type="index" width="50" />
       <template v-for="(v, i) in finalColumns" :key="i">
         <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
-        <el-table-column
-          v-else-if="v.baseBtns && v.baseBtns.length > 0"
-          v-bind="{ ...{ fixed: 'right', width: 200 }, ...v }"
-        >
+        <el-table-column v-else-if="v.baseBtns && v.baseBtns.length > 0" v-bind="{ ...{ fixed: 'right' }, ...v }">
           <template #default="scope">
             <template v-for="(val, idx) in v.baseBtns" :key="idx">
               <template v-if="val.reConfirm === true">
@@ -144,7 +141,7 @@ defineExpose({})
                     link
                     :disabled="parseDisabled(val.disabled, scope.row, scope)"
                   >
-                    ??{{ operatorBtnFn(val.content, scope.row, scope) }}
+                    {{ operatorBtnFn(val.content, scope.row, scope) }}
                   </el-button>
                 </o-popconfirm>
               </template>
@@ -204,7 +201,7 @@ defineExpose({})
           <template #default="scope">
             <slot v-if="v.useSlot" :name="v.prop" :row="scope.row" :scope="scope" />
             <span v-else-if="v.handler" class="linked" @click.stop="v.handler(scope.row, scope)">
-              <span>{{ v.filter ? v.filter(scope.row, scope) : scope.row[v.prop] || '-' }}??</span>
+              <span>{{ v.filter ? v.filter(scope.row[v.prop], scope.row, scope) : scope.row[v.prop] || '-' }}??</span>
             </span>
             <span v-else-if="v.filter">
               {{ v.filter(scope.row[v.prop], scope.row, scope) }}

@@ -36,10 +36,12 @@ const columns = [
   {
     label: '更新时间',
     prop: 'lastModifiedTime',
+    filter: (value) => proxy.formatTime(value),
   },
   {
     label: '操作',
     prop: 'operation',
+    maxBtns: proxy.$dev ? 6 : null,
     btns: [
       { content: '预览' },
       { content: '删除' },
@@ -86,7 +88,7 @@ async function init() {
   }
   let res = await getObjectList(sendParams)
   console.log(`94 res`, res)
-  data.value = res
+  data.value = proxy.clone(res, 3)
 }
 </script>
 
@@ -110,6 +112,6 @@ async function init() {
       <el-button type="primary" icon="el-icon-refresh" @click="easySearch">刷新</el-button>
     </div>
 
-    <o-table :columns="columns" :data="data" />
+    <g-table :columns="columns" :data="data" class="m-t-24" />
   </div>
 </template>
