@@ -49,7 +49,8 @@ async function init() {
   let optionsRes = await getTenants()
   tenantOptions.value = optionsRes
   if (proxy.$dev) {
-    selectValue.value = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: 0 })
+    let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'hao')
+    selectValue.value = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex })
   }
   proxy.$toast('成功')
 }

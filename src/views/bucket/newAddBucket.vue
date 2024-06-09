@@ -137,7 +137,7 @@ async function confirm() {
   isShow.value = false
   emits('success')
 }
-const isShow = ref(true)
+const isShow = ref(false)
 
 function devTest() {
   if (proxy.$dev) {

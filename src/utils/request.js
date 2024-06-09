@@ -113,6 +113,10 @@ export { instance }
  * @returns
  */
 export default function request(url, method = 'get', config) {
+  console.log(`81 url`, url)
+  if (!url.startsWith('tenant') || url.startsWith('common')) {
+    url = 'tenant/' + url
+  }
   let mergeConfig = {}
   let methodMap = ['get', 'post', 'put', 'delete']
   if (!methodMap.includes(method) && getType(method) === 'object') {
