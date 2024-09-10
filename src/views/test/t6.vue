@@ -5,10 +5,6 @@ const { proxy } = getCurrentInstance()
 
 <template>
   <div>
-    <div>test/t2.vue</div>
-    <div>test/t2.vue</div>
-    <div v-for="(v, i) in 300" :key="i">
-      <div>{{ v }}</div>
-    </div>
+    <div>test/t6.vue</div>
   </div>
 </template>

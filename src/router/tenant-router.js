@@ -95,7 +95,7 @@ export default [
   {
     path: '/test3',
     component: Layout,
-    redirect: '/test/t3',
+    redirect: '/test3/t3',
     meta: {
       icon: 'ep:home-filled',
       title: '测试页',
@@ -103,12 +103,38 @@ export default [
     },
     children: [
       {
-        path: '/test/t3',
+        path: '/test3/t3',
         name: 'T3',
+        redirect: '/test3/t3/t4',
         component: () => import('@/views/test/t3.vue'),
         meta: {
           title: '测试页3',
-          showLink: true,
+        },
+        children: [
+          {
+            path: '/test3/t3/t4',
+            name: 'T4',
+            component: () => import('@/views/test/t4.vue'),
+            meta: {
+              title: '测试页4',
+            },
+          },
+          {
+            path: '/test3/t3/t5',
+            name: 'T5',
+            component: () => import('@/views/test/t5.vue'),
+            meta: {
+              title: '测试页5',
+            },
+          },
+        ],
+      },
+      {
+        path: '/t6',
+        name: 'T6',
+        component: () => import('@/views/test/t6.vue'),
+        meta: {
+          title: '测试页6',
         },
       },
     ],

@@ -112,25 +112,19 @@ export { instance }
  * @param {*} config 可有可无, 参数对象.
  * @returns
  */
-export default function request(url, method = 'get', config) {
-  console.log(`81 url`, url)
-  if (!url.startsWith('tenant') || url.startsWith('common')) {
-    url = 'tenant/' + url
-  }
-  let mergeConfig = {}
+export default function request(url, method = 'get', config = {}) {
   let methodMap = ['get', 'post', 'put', 'delete']
-  if (!methodMap.includes(method) && getType(method) === 'object') {
-    mergeConfig = {
-      url: url,
-      ...method,
-    }
-  } else {
-    mergeConfig = {
-      url,
-      method,
-      ...config,
-    }
+  let methodIsObj = !methodMap.includes(method) && getType(method) === 'object'
+  let configObj = methodIsObj ? method : config
+  if (configObj.type === 'common') {
+    method.baseURL = 'api/v1/admin'
   }
+  let mergeConfig = {
+    url: url,
+    method: methodIsObj ? configObj.method : method,
+    ...configObj,
+  }
+
   let finalMergeConfig = Object.assign({}, defaultConfig, mergeConfig)
   return instance(finalMergeConfig)
 }
