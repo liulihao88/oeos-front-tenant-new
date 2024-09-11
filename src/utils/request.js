@@ -21,7 +21,7 @@ const defaultConfig = {
 }
 
 const instance = axios.create({
-  baseURL: 'api/v1/admin',
+  baseURL: 'api/v1/admin/tenant',
   timeout: 50000,
   validateStatus: function (status) {
     return true
@@ -33,7 +33,7 @@ let timer = null
 // 请求拦截，使用sessionId方式控制权限，
 instance.interceptors.request.use(
   (config) => {
-    const token = getStorage('token')
+    const token = getStorage('tenant-token')
     if (token) {
       config.headers.Authorization = token
     }
@@ -117,7 +117,7 @@ export default function request(url, method = 'get', config = {}) {
   let methodIsObj = !methodMap.includes(method) && getType(method) === 'object'
   let configObj = methodIsObj ? method : config
   if (configObj.type === 'common') {
-    method.baseURL = 'api/v1/admin'
+    configObj.baseURL = 'api/v1/admin'
   }
   let mergeConfig = {
     url: url,

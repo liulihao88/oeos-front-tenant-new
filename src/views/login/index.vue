@@ -1,12 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import Motion from './utils/motion'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from '@/utils/message'
-import { loginRules } from './utils/rule'
 import { useNav } from '@/layout/hooks/useNav'
-import type { FormInstance } from 'element-plus'
 import { useLayout } from '@/layout/hooks/useLayout'
-import { useUserStoreHook } from '@/store/modules/user'
 import { initRouter, getTopMenu } from '@/router/utils'
 import { bg, avatar, illustration } from './utils/static'
 import { useRenderIcon } from '@/components/ReIcon/src/hooks'
@@ -18,7 +15,7 @@ import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
-import { getTenants, encrypt, login, getMenu } from '@/api/login.js'
+import { getTenants, encrypt, login, getMenu } from '@/api/login.ts'
 
 defineOptions({
   name: 'Login',
@@ -27,14 +24,20 @@ const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
 const loading = ref(false)
-const ruleFormRef = ref<FormInstance>()
-const selectValue = ref()
+const ruleFormRef = ref()
 const tenantOptions = ref([])
 const redirectUrl = ref()
+
 redirectUrl.value = route.query.redirect || ''
 
 const { initStorage } = useLayout()
 initStorage()
+
+const rules = {
+  username: [proxy.validate()],
+  password: [proxy.validate()],
+  tenantId: [proxy.validate('请选择租户')],
+}
 
 const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange()
 dataThemeChange(overallStyle.value)
@@ -42,15 +45,15 @@ const { title } = useNav()
 
 const ruleForm = reactive({
   username: 'admin',
-  // password: 'admin123',
+  tenantId: '',
   password: 'adminadmin',
 })
 async function init() {
   let optionsRes = await getTenants()
   tenantOptions.value = optionsRes
   if (proxy.$dev) {
-    let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'sen')
-    selectValue.value = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex })
+    let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'liu')
+    ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex })
   }
   proxy.$toast('成功')
 }
@@ -82,29 +85,23 @@ const onLogin = async (formEl) => {
   const publickKey = encRes.communicationKey
   encryptor.setPublicKey(publickKey)
   const pwd = encryptor.encrypt(ruleForm.password)
-  console.log(`77 pwd`, pwd)
   const loginParams = {
     username: ruleForm.username,
     password: pwd,
-    sysdomain: selectValue.value,
+    sysdomain: ruleForm.tenantId,
   }
-  console.log(`69 loginParams`, loginParams)
   let loginRes = await login(loginParams)
   let token = `${loginRes.tokenType} ${loginRes.token}`
-  proxy.setStorage('token', token)
+  proxy.setStorage('tenant-token', token)
   let menuRes = await getMenu()
-  console.log(`37 menuRes`, menuRes)
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
-  console.log(`85 matchedRouteArr`, matchedRouteArr)
   return initRouter().then(() => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
+    console.log(`69 jumpPath`, jumpPath)
     router.push(jumpPath).then(() => {
       message('登录成功11', { type: 'success' })
     })
   })
-  // router.push('/welcome' || matchedRouteArr[0] || matchedRouteArr[1]).then(() => {
-  //   proxy.$toast('登录成功')
-  // })
 }
 
 const onLogin2 = () => {
@@ -119,7 +116,7 @@ const onLogin2 = () => {
 }
 
 /** 使用公共函数，避免`removeEventListener`失效 */
-function onkeypress({ code }: KeyboardEvent) {
+function onkeypress(code) {
   if (code === 'Enter') {
     onLogin(ruleFormRef.value)
   }
@@ -159,20 +156,12 @@ onBeforeUnmount(() => {
             <h2 class="outline-none">{{ title }}</h2>
           </Motion>
 
-          <el-form ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
+          <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" size="large">
             <Motion :delay="100">
-              <el-form-item
-                :rules="[
-                  {
-                    required: true,
-                    message: '请输入账号',
-                    trigger: 'blur',
-                  },
-                ]"
-                prop="username"
-              >
+              <el-form-item prop="tenantId">
+                {{ ruleForm.tenantId }}??
                 <o-select
-                  v-model="selectValue"
+                  v-model="ruleForm.tenantId"
                   :options="tenantOptions"
                   label="name"
                   width="100%"
@@ -181,16 +170,7 @@ onBeforeUnmount(() => {
               </el-form-item>
             </Motion>
             <Motion :delay="100">
-              <el-form-item
-                :rules="[
-                  {
-                    required: true,
-                    message: '请输入账号',
-                    trigger: 'blur',
-                  },
-                ]"
-                prop="username"
-              >
+              <el-form-item prop="username">
                 <el-input v-model="ruleForm.username" clearable placeholder="账号" :prefix-icon="useRenderIcon(User)" />
               </el-form-item>
             </Motion>
@@ -226,7 +206,7 @@ onBeforeUnmount(() => {
                 :loading="loading"
                 @click="onLogin2(ruleFormRef)"
               >
-                本地登录
+                本地登录(不请求接口)
               </el-button>
             </Motion>
           </el-form>

@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, nextTick } from 'vue'
+import axios from 'axios'
 const { proxy } = getCurrentInstance()
-import { getBucketOptions, getObjectList } from '@/api/bucketReview.js'
+import { getBucketOptions, getObjectList } from '@/api/bucketReview'
+import { ElNotification } from 'element-plus'
 
-const searchValue = ref()
+import request from '@/utils/request.js'
+
+const bucketId = ref()
+const bucketName = ref()
 const bucketOptions = ref([])
-const bucketName = ref('')
 const selectRef = ref(null)
 const columns = [
   {
     label: '对象名称',
     prop: 'name',
-    useSlot: true,
   },
   {
     label: '文件大小',
     prop: 'size',
     filter: (value, row) => {
-      console.log(`59 row`, row)
-      console.log(`43 value`, value)
       if (value === 0 && row.lastModifiedTime == null) {
         return ''
       }
@@ -56,9 +57,7 @@ const data = ref([])
 function upload() {
   console.log('upload')
 }
-function easySearch() {
-  console.log('easySearch')
-}
+function easySearch() {}
 
 async function getBucketListInit() {
   let res = await getBucketOptions()
@@ -66,17 +65,17 @@ async function getBucketListInit() {
   getTableByBucket()
 }
 async function getTableByBucket() {
-  let storageBucketValue = proxy.getStorage('bucketValue')
-  console.log(`57 storageBucketValue`, storageBucketValue)
-  if (storageBucketValue) {
+  let storageBucketValue = proxy.getStorage('tenant-bucket-id')
+  console.log(`19 storageBucketValue`, storageBucketValue)
+  if (proxy.notEmpty(storageBucketValue)) {
     await nextTick()
     selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
   }
 }
 function selectChange(value) {
-  searchValue.value = value
-  bucketName.value = bucketOptions.value.filter((v) => v.value === searchValue.value)[0].name
-  proxy.setStorage('bucketValue', searchValue.value)
+  bucketId.value = value
+  bucketName.value = bucketOptions.value.filter((v) => v.value === bucketId.value)[0].name
+  proxy.setStorage('tenant-bucket-id', bucketId.value)
   init()
 }
 getBucketListInit()
@@ -87,8 +86,81 @@ async function init() {
     prefixKey: '',
   }
   let res = await getObjectList(sendParams)
-  console.log(`94 res`, res)
-  data.value = proxy.clone(res, 3)
+  data.value = proxy.clone(res, 1)
+}
+const onChange = (file, files) => {
+  console.log(`99 file`, file)
+
+  console.log(`87 files`, files)
+  const formData = new FormData()
+  formData.append('file', file.raw)
+  formData.append('bucket', bucketName.value)
+  formData.append('key', '/')
+  // request('object/upload', 'put', {
+  //   data: formData,
+  //   onUploadProgress: (progressEvent) => {
+  //     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+  //     console.log(`38 percentCompleted`, percentCompleted);
+  //     // 可以在这里更新用户界面以显示上传进度
+  //   },
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //     Authorization: proxy.getStorage('tenant-token'),
+  //   },
+  // })
+
+  axios
+    .put('api/v1/admin/tenant/object/upload', formData, {
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        // 可以在这里更新用户界面以显示上传进度
+        ElNotification({
+          message: `${percentCompleted}`,
+          duration: null,
+          type: 'info',
+        })
+      },
+      headers: {
+        'Content-type': 'multipart/form-data',
+        Authorization: proxy.getStorage('tenant-token'),
+      },
+    })
+    .then((res) => {
+      console.log(`46 res`, res)
+    })
+    .catch((err) => {
+      console.log(`32 err`, err)
+    })
+}
+
+async function _genNotify(errorText) {
+  const notificationCount = document.querySelectorAll('.el-notification').length
+  if (notificationCount === 0) {
+    ElNotification({
+      message: '关闭所有通知',
+      duration: 0,
+      type: 'info',
+      onClose: _closeAllNotify,
+    })
+    await sleep(0)
+  }
+  ElNotification({
+    message: errorText,
+    type: 'error',
+    duration: 0,
+  })
+  function _closeAllNotify() {
+    const notifications = document.querySelectorAll('.el-notification')
+    notifications.forEach((notification) => {
+      notification.querySelector('.el-notification__closeBtn').click() // 模拟点击关闭按钮
+    })
+  }
+}
+const beforeUpload = (file) => {
+  let size = file.size
+  if (size / 1024 / 1024 > 1024 * 5) {
+    return proxy.$toast('只能上传小于等于5GB大小的文件', 'e')
+  }
 }
 </script>
 
@@ -97,14 +169,16 @@ async function init() {
     <div class="top f">
       <o-select
         ref="selectRef"
-        v-model="searchValue"
+        v-model="bucketId"
         placeholder="请选择桶名"
         class="m-r-16"
         :options="bucketOptions"
         label="name"
         @change="selectChange"
       />
-      <el-button type="primary" icon="el-icon-upload" @click="upload">上传文件</el-button>
+      <g-upload class="m-r-10" multiple :onChange="onChange" :before-upload="beforeUpload">
+        <el-button type="primary" icon="el-icon-upload" @click="upload">上传文件</el-button>
+      </g-upload>
       <el-button type="primary" icon="el-icon-search" @click="easySearch">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
       <el-button type="primary" icon="el-icon-download" @click="easySearch">批量下载</el-button>

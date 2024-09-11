@@ -7,11 +7,13 @@ export function getTenants() {
 }
 
 export function login(data) {
-  return requestOld({
-    url: 'auth/signin',
-    method: 'put',
-    data: data,
-  })
+  // return requestOld({
+  //   url: 'auth/signin',
+  //   method: 'put',
+  //   type: 'common',
+  //   data: data,
+  // })
+  return request('auth/signin', 'put', { type: 'common', data: data })
 }
 export function encrypt(pwd) {
   return request('common/communicationkey', { type: 'common' })
@@ -19,5 +21,5 @@ export function encrypt(pwd) {
 
 // 获取路由
 export function getMenu() {
-  return request('tenant/ui/menu')
+  return request('ui/menu')
 }
