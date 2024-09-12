@@ -318,7 +318,7 @@ function _handleUsedData(usedSpace) {
                 <el-button type="primary" icon="el-icon-plus" @click="add">新增桶</el-button>
               </template>
             </o-title>
-            <g-table
+            <o-table
               ref="tableRef"
               :columns="columns"
               :total="total"
@@ -335,7 +335,7 @@ function _handleUsedData(usedSpace) {
               <template #capacity="{ scope, row }">
                 <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
               </template>
-            </g-table>
+            </o-table>
           </div>
         </div>
       </el-col>
@@ -350,7 +350,7 @@ function _handleUsedData(usedSpace) {
             <BucketCapacityPie :title="title" :data="capacityData" />
           </div>
           <div class="f-1 w-100% mt3 h-100% o-a">
-            <g-table :data="rightTableData" class="h-100% o-a" :columns="rightTableColumns" :showPage="false" />
+            <o-table :data="rightTableData" class="h-100% o-a" :columns="rightTableColumns" :showPage="false" />
           </div>
         </div>
       </el-col>

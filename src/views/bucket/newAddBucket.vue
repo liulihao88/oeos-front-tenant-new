@@ -28,15 +28,11 @@ const fieldList = [
   {
     label: '桶名',
     prop: 'bucketName',
-    labelRender: () => {
-      return <div class="cl-blue">桶名</div>
-    },
-
     placeholder: '桶名必填, 限3-63个字符',
+    directives: {
+      focus: true,
+    },
     rules: [
-      {
-        required: true,
-      },
       {
         min: 3,
         message: '字符最少是3',
@@ -45,7 +41,7 @@ const fieldList = [
         max: 63,
         message: '字符最长是63',
       },
-      proxy.validate('port'),
+      proxy.validate(),
     ],
   },
 
@@ -146,9 +142,9 @@ function devTest() {
   }
 }
 function open() {
+  devTest()
   isShow.value = true
 }
-devTest()
 defineExpose({
   open,
 })
@@ -156,7 +152,7 @@ defineExpose({
 
 <template>
   <div>
-    <o-drawer v-model="isShow" title="新增桶" confirmText="保存" @confirm="confirm">
+    <o-dialog v-model="isShow" title="新增桶" confirmText="保存" @confirm="confirm">
       <o-form ref="formRef" :model="model" :fieldList="fieldList">
         <template #quota>
           <div class="f-bt-ed w-100%">
@@ -171,6 +167,6 @@ defineExpose({
           <div class="cl-45">新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB, 剩余空间为 1,012.00 GB</div>
         </template>
       </o-form>
-    </o-drawer>
+    </o-dialog>
   </div>
 </template>

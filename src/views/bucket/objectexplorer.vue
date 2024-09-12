@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, nextTick } from 'vue'
+import { ref, getCurrentInstance, nextTick, h } from 'vue'
 import axios from 'axios'
 const { proxy } = getCurrentInstance()
 import { getBucketOptions, getObjectList } from '@/api/bucketReview'
-import { ElNotification } from 'element-plus'
+import UploadFile from '@/views/bucket/components/uploadFile.vue'
 
 import request from '@/utils/request.js'
 
@@ -19,6 +19,7 @@ const columns = [
   {
     label: '文件大小',
     prop: 'size',
+    width: 100,
     filter: (value, row) => {
       if (value === 0 && row.lastModifiedTime == null) {
         return ''
@@ -28,6 +29,7 @@ const columns = [
   },
   {
     label: '存储类型',
+    width: 200,
     prop: 'storageClass',
   },
   {
@@ -36,12 +38,14 @@ const columns = [
   },
   {
     label: '更新时间',
+    width: 180,
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),
   },
   {
     label: '操作',
     prop: 'operation',
+    width: 300,
     maxBtns: proxy.$dev ? 6 : null,
     btns: [
       { content: '预览' },
@@ -54,9 +58,6 @@ const columns = [
   },
 ]
 const data = ref([])
-function upload() {
-  console.log('upload')
-}
 function easySearch() {}
 
 async function getBucketListInit() {
@@ -66,7 +67,6 @@ async function getBucketListInit() {
 }
 async function getTableByBucket() {
   let storageBucketValue = proxy.getStorage('tenant-bucket-id')
-  console.log(`19 storageBucketValue`, storageBucketValue)
   if (proxy.notEmpty(storageBucketValue)) {
     await nextTick()
     selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
@@ -88,79 +88,8 @@ async function init() {
   let res = await getObjectList(sendParams)
   data.value = proxy.clone(res, 1)
 }
-const onChange = (file, files) => {
-  console.log(`99 file`, file)
-
-  console.log(`87 files`, files)
-  const formData = new FormData()
-  formData.append('file', file.raw)
-  formData.append('bucket', bucketName.value)
-  formData.append('key', '/')
-  // request('object/upload', 'put', {
-  //   data: formData,
-  //   onUploadProgress: (progressEvent) => {
-  //     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-  //     console.log(`38 percentCompleted`, percentCompleted);
-  //     // 可以在这里更新用户界面以显示上传进度
-  //   },
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //     Authorization: proxy.getStorage('tenant-token'),
-  //   },
-  // })
-
-  axios
-    .put('api/v1/admin/tenant/object/upload', formData, {
-      onUploadProgress: (progressEvent) => {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        // 可以在这里更新用户界面以显示上传进度
-        ElNotification({
-          message: `${percentCompleted}`,
-          duration: null,
-          type: 'info',
-        })
-      },
-      headers: {
-        'Content-type': 'multipart/form-data',
-        Authorization: proxy.getStorage('tenant-token'),
-      },
-    })
-    .then((res) => {
-      console.log(`46 res`, res)
-    })
-    .catch((err) => {
-      console.log(`32 err`, err)
-    })
-}
-
-async function _genNotify(errorText) {
-  const notificationCount = document.querySelectorAll('.el-notification').length
-  if (notificationCount === 0) {
-    ElNotification({
-      message: '关闭所有通知',
-      duration: 0,
-      type: 'info',
-      onClose: _closeAllNotify,
-    })
-    await sleep(0)
-  }
-  ElNotification({
-    message: errorText,
-    type: 'error',
-    duration: 0,
-  })
-  function _closeAllNotify() {
-    const notifications = document.querySelectorAll('.el-notification')
-    notifications.forEach((notification) => {
-      notification.querySelector('.el-notification__closeBtn').click() // 模拟点击关闭按钮
-    })
-  }
-}
-const beforeUpload = (file) => {
-  let size = file.size
-  if (size / 1024 / 1024 > 1024 * 5) {
-    return proxy.$toast('只能上传小于等于5GB大小的文件', 'e')
-  }
+const refresh = () => {
+  init()
 }
 </script>
 
@@ -176,16 +105,14 @@ const beforeUpload = (file) => {
         label="name"
         @change="selectChange"
       />
-      <g-upload class="m-r-10" multiple :onChange="onChange" :before-upload="beforeUpload">
-        <el-button type="primary" icon="el-icon-upload" @click="upload">上传文件</el-button>
-      </g-upload>
+      <UploadFile :bucketName="bucketName" />
       <el-button type="primary" icon="el-icon-search" @click="easySearch">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
       <el-button type="primary" icon="el-icon-download" @click="easySearch">批量下载</el-button>
       <el-button type="primary" icon="el-icon-refresh-left" @click="easySearch">批量恢复</el-button>
-      <el-button type="primary" icon="el-icon-refresh" @click="easySearch">刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>
 
-    <g-table :columns="columns" :data="data" class="m-t-24" />
+    <o-table :columns="columns" :data="data" class="m-t-24" />
   </div>
 </template>
