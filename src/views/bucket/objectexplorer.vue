@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, nextTick, h } from 'vue'
-import axios from 'axios'
+import { ref, computed, getCurrentInstance, nextTick, h } from 'vue'
 const { proxy } = getCurrentInstance()
-import { getBucketOptions, getObjectList } from '@/api/bucketReview'
+import { getBucketOptions, getObjectList, deleteBatch, deleteOne } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
-
-import request from '@/utils/request.js'
+import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 
 const bucketId = ref()
 const bucketName = ref()
 const bucketOptions = ref([])
 const selectRef = ref(null)
+const selections = ref([])
+const bucketOverviewHistoryRef = ref(null)
+
 const columns = [
+  {
+    type: 'selection',
+  },
   {
     label: '对象名称',
     prop: 'name',
@@ -49,15 +53,18 @@ const columns = [
     maxBtns: proxy.$dev ? 6 : null,
     btns: [
       { content: '预览' },
-      { content: '删除' },
-      { content: '详情' },
       { content: '恢复' },
-      { content: '历史' },
+      { content: '历史', handler: historyRow },
+      { content: '详情' },
+      { content: '删除', handler: deleteRow }, // reConfirm: true,
       { content: '下载' },
     ],
   },
 ]
 const data = ref([])
+const selectDisabled = computed(() => {
+  return selections.value.length === 0
+})
 function easySearch() {}
 
 async function getBucketListInit() {
@@ -88,8 +95,30 @@ async function init() {
   let res = await getObjectList(sendParams)
   data.value = proxy.clone(res, 1)
 }
+
+const selectionChange = (val, ...a) => {
+  console.log(`65 val`, val)
+  selections.value = val
+}
 const refresh = () => {
   init()
+}
+const multypleDelete = async () => {
+  await deleteBatch(selections.value)
+  proxy.$toast('删除成功!')
+  init()
+}
+async function deleteRow(row) {
+  let params = {
+    bucket: bucketName.value,
+    key: row.name,
+  }
+  await deleteOne(params)
+  proxy.$toast('删除成功!')
+  init()
+}
+async function historyRow(row) {
+  bucketOverviewHistoryRef.value.open(row)
 }
 </script>
 
@@ -108,11 +137,20 @@ const refresh = () => {
       <UploadFile :bucketName="bucketName" />
       <el-button type="primary" icon="el-icon-search" @click="easySearch">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
-      <el-button type="primary" icon="el-icon-download" @click="easySearch">批量下载</el-button>
-      <el-button type="primary" icon="el-icon-refresh-left" @click="easySearch">批量恢复</el-button>
+      <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="easySearch">
+        批量下载
+      </el-button>
+      <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
+        批量删除
+      </el-button>
+      <el-button type="primary" icon="el-icon-refresh-left" :disabled="selectDisabled" @click="easySearch">
+        批量恢复
+      </el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>
 
-    <o-table :columns="columns" :data="data" class="m-t-24" />
+    <o-table :columns="columns" :data="data" class="m-t-24" @selection-change="selectionChange" />
+
+    <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
   </div>
 </template>
