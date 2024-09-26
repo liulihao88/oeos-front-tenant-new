@@ -1,9 +1,10 @@
 import { getPluginsList } from './build/plugins'
 import { include, exclude } from './build/optimize'
 import { type UserConfigExport, type ConfigEnv, loadEnv } from 'vite'
+import setting from './src/config/settings.ts'
 
 import { root, alias, wrapperEnv, pathResolve, __APP_INFO__ } from './build/utils'
-const target = 'https://10.0.11.33:8008/'
+// const target = 'https://10.0.11.33:8008/'
 // const target = 'https://10.0.11.102:8008/'
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
@@ -22,7 +23,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {
         '/api': {
-          target: target,
+          target: setting.url,
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, ''),

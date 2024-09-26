@@ -44,7 +44,7 @@ const columns = [
   {
     label: '操作',
     prop: 'operation',
-    btns: [{ content: '下载', handler: proxy.gDownType }],
+    btns: [{ content: '下载', handler: proxy.gDownload }],
   },
 ]
 defineExpose({

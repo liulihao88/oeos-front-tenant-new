@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
-const isShow = ref(true)
+const isShow = ref(false)
 
 const details = ref({})
 const options = computed(() => {

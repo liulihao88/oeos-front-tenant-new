@@ -87,7 +87,7 @@ const columns = [
       { content: '历史', handler: historyRow },
       { content: '详情', handler: detailRow },
       { content: '删除', handler: deleteRow }, // reConfirm: true,
-      { content: '下载' },
+      { content: '下载', handler: proxy.gDownload },
     ],
   },
 ]

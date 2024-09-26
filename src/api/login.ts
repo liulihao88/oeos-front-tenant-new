@@ -1,4 +1,4 @@
-import request, { requestOld } from '@/utils/request.js'
+import request, { requestOld } from '@/utils/request'
 
 export function getTenants() {
   return request('sys/tenant/tenants?filter=Actived', {

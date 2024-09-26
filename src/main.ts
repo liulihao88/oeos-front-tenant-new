@@ -53,7 +53,7 @@ app.use(OeosComponents)
 Object.keys(utils).forEach((v) => {
   app.config.globalProperties[v] = utils[v]
 })
-import * as localUtils from '@/utils/gFunc.js'
+import * as localUtils from '@/utils/gFunc'
 Object.keys(localUtils).forEach((v) => {
   app.config.globalProperties[v] = localUtils[v]
 })

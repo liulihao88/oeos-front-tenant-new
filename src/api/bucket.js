@@ -1,4 +1,4 @@
-import request, { requestOld } from '@/utils/request.js'
+import request, { requestOld } from '@/utils/request.ts'
 
 // 获取桶列表
 export function getBucketList(params) {
