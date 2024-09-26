@@ -30,3 +30,18 @@ export function getHistory(params) {
     params: params,
   })
 }
+
+// 详情 object/property
+export function objectPropertyDetail(data) {
+  return request('object/property', { params: data })
+}
+
+// 恢复
+export function objectRestore(data) {
+  return request('object/restore', 'put', { params: data })
+}
+
+// 批量恢复 object/restore/batch
+export function objectRestoreBatch(data) {
+  return request('object/restore/batch', 'put', { data: data })
+}

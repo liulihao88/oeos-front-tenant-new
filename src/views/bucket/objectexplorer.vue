@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, nextTick, h } from 'vue'
 const { proxy } = getCurrentInstance()
-import { getBucketOptions, getObjectList, deleteBatch, deleteOne } from '@/api/bucketReview'
+import {
+  getBucketOptions,
+  getObjectList,
+  deleteBatch,
+  deleteOne,
+  objectRestore,
+  objectRestoreBatch,
+  objectPropertyDetail,
+} from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
+import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
 
 const bucketId = ref()
 const bucketName = ref()
@@ -11,6 +20,27 @@ const bucketOptions = ref([])
 const selectRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
+const BucketFileDetailsCompRef = ref(null)
+
+const restoreRow = async (row) => {
+  let params = {
+    bucket: bucketName.value,
+    key: row.key,
+  }
+  await objectRestore(params)
+}
+const detailRow = async (row) => {
+  let params = {
+    bucket: bucketName.value,
+    key: row.key,
+  }
+  let res = await objectPropertyDetail(params)
+  BucketFileDetailsCompRef.value.open(res)
+}
+
+const multyRestore = async () => {
+  await objectRestoreBatch(selections.value)
+}
 
 const columns = [
   {
@@ -53,9 +83,9 @@ const columns = [
     maxBtns: proxy.$dev ? 6 : null,
     btns: [
       { content: '预览' },
-      { content: '恢复' },
+      { content: '恢复', handler: restoreRow },
       { content: '历史', handler: historyRow },
-      { content: '详情' },
+      { content: '详情', handler: detailRow },
       { content: '删除', handler: deleteRow }, // reConfirm: true,
       { content: '下载' },
     ],
@@ -143,7 +173,7 @@ async function historyRow(row) {
       <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
         批量删除
       </el-button>
-      <el-button type="primary" icon="el-icon-refresh-left" :disabled="selectDisabled" @click="easySearch">
+      <el-button type="primary" icon="el-icon-refresh-left" :disabled="selectDisabled" @click="multyRestore">
         批量恢复
       </el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
@@ -152,5 +182,6 @@ async function historyRow(row) {
     <o-table :columns="columns" :data="data" class="m-t-24" @selection-change="selectionChange" />
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
+    <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
   </div>
 </template>
