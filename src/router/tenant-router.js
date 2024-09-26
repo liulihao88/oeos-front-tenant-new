@@ -77,7 +77,7 @@ export default [
     redirect: '/test/t2',
     meta: {
       icon: 'ep:home-filled',
-      title: '测试页',
+      title: '测试页2顶部',
       rank: 0,
     },
     children: [
@@ -88,6 +88,15 @@ export default [
         meta: {
           title: '测试页2',
           showLink: true,
+        },
+      },
+      {
+        path: '/test/t22',
+        name: 'T22',
+        component: () => import('@/views/test/t22.vue'),
+        meta: {
+          title: '测试页22',
+          showLink: false,
         },
       },
     ],

@@ -34,6 +34,7 @@ onMounted(() => {
 })
 
 function nativeRefresh() {
+  console.clear()
   useRefresh.refreshHandler()
 }
 const isDev = ref(proxy.$dev)
