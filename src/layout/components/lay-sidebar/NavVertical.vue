@@ -26,6 +26,12 @@ const menuData = computed(() => {
   return pureApp.layout === 'mix' && device.value !== 'mobile' ? subMenuData.value : usePermissionStoreHook().wholeMenus
 })
 
+const defaultOpeneds = computed(() => {
+  return menuData.value.map((v) => {
+    return v.path
+  })
+})
+
 const loading = computed(() => (pureApp.layout === 'mix' ? false : menuData.value.length === 0 ? true : false))
 
 const defaultActive = computed(() => (!isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path))
@@ -77,6 +83,7 @@ onBeforeUnmount(() => {
       <el-menu
         :unique-opened="false"
         mode="vertical"
+        :default-openeds="defaultOpeneds"
         popper-class="pure-scrollbar"
         class="outer-most select-none"
         :collapse="isCollapse"

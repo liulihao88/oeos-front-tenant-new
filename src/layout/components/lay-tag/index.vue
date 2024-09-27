@@ -8,7 +8,7 @@ import { handleAliveRoute, getTopMenu } from '@/router/utils'
 import { useSettingStoreHook } from '@/store/modules/settings'
 import { useMultiTagsStoreHook } from '@/store/modules/multiTags'
 import { usePermissionStoreHook } from '@/store/modules/permission'
-import { ref, watch, unref, toRaw, nextTick, onBeforeUnmount } from 'vue'
+import { ref, watch, unref, toRaw, nextTick, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { delay, isEqual, isAllEmpty, useResizeObserver } from '@pureadmin/utils'
 
 import ExitFullscreen from '@iconify-icons/ri/fullscreen-exit-fill'
@@ -46,6 +46,7 @@ const {
   onContentFullScreen,
 } = useTags()
 
+const { proxy } = getCurrentInstance()
 const tabDom = ref()
 const containerDom = ref()
 const scrollbarDom = ref()
@@ -98,6 +99,14 @@ const moveToView = async (index: number): Promise<void> => {
     // 标签在可视区域右侧
     translateX.value = -(tabItemElOffsetLeft - (scrollbarDomWidth - tabNavPadding - tabItemOffsetWidth))
   }
+}
+
+const closeAllPage = () => {
+  const allRoute = multiTags.value
+  if (allRoute.length <= 2) {
+    return proxy.$toast('至少保留一个菜单', 'e')
+  }
+  onClickDrop(5, '')
 }
 
 const handleScroll = (offset: number): void => {
@@ -564,6 +573,7 @@ onBeforeUnmount(() => {
         </div>
       </ul>
     </transition>
+    <o-icon name="circle-close" class="po-r" @click="closeAllPage" />
     <!-- 右侧功能按钮 -->
     <el-dropdown trigger="click" placement="bottom-end" @command="handleCommand">
       <span class="arrow-down">

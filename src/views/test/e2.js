@@ -1,50 +1,156 @@
-function formatBytesConvert(bytes) {
-  let isPositiveInteger = false
-  if (Number.isInteger(bytes) && bytes > 0) {
-    isPositiveInteger = true
-  }
-  if (typeof bytes === 'string' && /^\d+$/.test(bytes) && parseInt(bytes) > 0) {
-    isPositiveInteger = true
-  }
-  if (isPositiveInteger) {
-    return bytes
-  }
-  if (!bytes) {
-    return bytes
-  }
-  const bytesRegex = /^(\d+(?:\.\d+)?)\s*([BKMGTPEZY]?B)$/i
-  const units = {
-    B: 1,
-    KB: 1024,
-    MB: 1024 ** 2,
-    GB: 1024 ** 3,
-    TB: 1024 ** 4,
-    PB: 1024 ** 5,
-    EB: 1024 ** 6,
-    ZB: 1024 ** 7,
-    YB: 1024 ** 8,
-  }
-
-  const match = bytes.match(bytesRegex)
-  if (!match) {
-    console.log("Invalid bytes format. Please provide a valid bytes string, like '100GB'.")
-    return
-  }
-
-  const size = parseFloat(match[1])
-  const unit = match[2].toUpperCase()
-
-  if (!units.hasOwnProperty(unit)) {
-    console.log(
-      "Invalid bytes unit. Please provide a valid unit, like 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', or 'YB'.",
-    )
-    return
-  }
-
-  return size * units[unit]
-}
-
-formatBytesConvert('321312')
-console.log(`65 formatBytesConvert('321312')`, formatBytesConvert('321312'))
-console.log(`65 formatBytesConvert('100KB')`, formatBytesConvert('100KB'))
-console.log(`65 formatBytesConvert('200TB')`, formatBytesConvert('200TB'))
+;[
+  {
+    bucket: 'bucketnamezd8i',
+    key: '1+1.jpg',
+    version: '6688368-d59b199f-9025-4414-93e2-ab804fb1fb7a',
+    name: '1+1.jpg',
+    size: 765902,
+    injectTime: 1727348166584,
+    lastModifiedTime: 1727348166584,
+    storageClass: null,
+    chechsum: 'b96a2765507a2ba3d4456dd35f1b9c05',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'sp1.mp4',
+    version: '6688368-bad0bc6d-746e-40f7-8b59-476697cfd224',
+    name: 'sp1.mp4',
+    size: 3428772,
+    injectTime: 1727348232710,
+    lastModifiedTime: 1727348232710,
+    storageClass: null,
+    chechsum: '49b2cabc974d7a301e53c5f6d85f67a7',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'a7153433758d1bf9cca0209f8ccfa0e9_o.jpg',
+    version: '6688368-7bdfe799-a829-45a9-86fa-1c6bca439d16',
+    name: 'a7153433758d1bf9cca0209f8ccfa0e9_o.jpg',
+    size: 11868,
+    injectTime: 1727348227833,
+    lastModifiedTime: 1727348227833,
+    storageClass: null,
+    chechsum: 'a7153433758d1bf9cca0209f8ccfa0e9',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: '321321.jpeg',
+    version: '6688368-c8e81173-5b75-4d6b-a6e0-401e189c5de9',
+    name: '321321.jpeg',
+    size: 1347771,
+    injectTime: 1727348229144,
+    lastModifiedTime: 1727348229144,
+    storageClass: null,
+    chechsum: 'cdf1129d2c43a47bc20a07b70e65af56',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'g1.gif',
+    version: '6688368-563f9853-4817-4303-b16a-c4299c9aeffb',
+    name: 'g1.gif',
+    size: 1336049,
+    injectTime: 1727348230407,
+    lastModifiedTime: 1727348230407,
+    storageClass: null,
+    chechsum: '8f1529995e3d4300e97ce7f7f2aae22c',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 't1.jpeg',
+    version: '6688368-13db8f85-4d89-4a07-b7d9-8a373941927f',
+    name: 't1.jpeg',
+    size: 44036,
+    injectTime: 1727348233003,
+    lastModifiedTime: 1727348233003,
+    storageClass: null,
+    chechsum: '14d798c8bc475214348f28cab2821e1c',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'v1.mov',
+    version: '6688368-b56de5ff-2a69-4408-8710-400045e59527',
+    name: 'v1.mov',
+    size: 1754936,
+    injectTime: 1727348234321,
+    lastModifiedTime: 1727348234321,
+    storageClass: null,
+    chechsum: 'aa42e8f56a86d3bd76e22a2c197a16c8',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: '123.png',
+    version: '6688368-92a0a1b3-ee61-4a11-a7fc-f29c1204bef4',
+    name: '123.png',
+    size: 19055,
+    injectTime: 1727348165916,
+    lastModifiedTime: 1727348165916,
+    storageClass: null,
+    chechsum: '023113eb9620c8d9c0c00ffe7103f197',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: '11-[11].jpg',
+    version: '6688368-2c725259-4135-40de-910a-60d3bab9e19f',
+    name: '11-[11].jpg',
+    size: 401777,
+    injectTime: 1727348166381,
+    lastModifiedTime: 1727348166381,
+    storageClass: null,
+    chechsum: '7541e4f09f42a3b8ed9883b6aa3708e8',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'a90372411ca9c90d7f05f6dfdc2001e6.mov',
+    version: '6688368-4b5cb77e-29a6-4c43-ad54-d85dcd9fcefd',
+    name: 'a90372411ca9c90d7f05f6dfdc2001e6.mov',
+    size: 1754936,
+    injectTime: 1727348229504,
+    lastModifiedTime: 1727348229504,
+    storageClass: null,
+    chechsum: 'aa42e8f56a86d3bd76e22a2c197a16c8',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+  {
+    bucket: 'bucketnamezd8i',
+    key: 'BhiZmDygadGdbcd063406573936fdf9509538619dc53.jpeg',
+    version: '6688368-89be4b48-108e-4a98-9d89-efce26c63145',
+    name: 'BhiZmDygadGdbcd063406573936fdf9509538619dc53.jpeg',
+    size: 360383,
+    injectTime: 1727348229762,
+    lastModifiedTime: 1727348229762,
+    storageClass: null,
+    chechsum: 'bcd063406573936fdf9509538619dc53',
+    username: 'oeosadmin',
+    deleteMark: false,
+    hasHistoryVersion: null,
+  },
+]

@@ -1,7 +1,7 @@
 import request, { requestOld } from '@/utils/request'
 
 // 获取桶列表
-export function getBucketOptions(params) {
+export function getBucketOptions(params = {}) {
   return request('bucket/buckets', { params })
 }
 
@@ -28,6 +28,13 @@ export function deleteOne(data) {
 export function getHistory(params) {
   return request('object/listversion', {
     params: params,
+  })
+}
+
+// 批量下载
+export function objectDownloadBatch(data) {
+  return request('object/download/batch', 'put', {
+    data: data,
   })
 }
 

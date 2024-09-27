@@ -21,3 +21,10 @@ export function gDownload(item) {
   console.log(`41 _href`, _href)
   window.location.href = _href
 }
+
+export function gDownloadAll(id) {
+  let baseUrl = import.meta.env.DEV ? settings.url : window.origin
+  let getUrl = `/v1/admin/tenant/object/download/batch`
+  let _href = baseUrl + getUrl + `?id=${encodeURIComponent(id)}&Authorization=${getStorage('tenant-token')}`
+  window.location.href = _href
+}

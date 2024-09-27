@@ -51,6 +51,35 @@ export default [
     ],
   },
   {
+    path: '/apps/object',
+    component: Layout,
+    redirect: '/apps/object/search',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '空间浏览',
+    },
+    children: [
+      {
+        path: '/apps/object/search',
+        name: 'Search',
+        component: () => import('@/views/spaceScan/search.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '简单搜索',
+        },
+      },
+      {
+        path: '/apps/object/advancesearch',
+        name: 'AdvanceSearch',
+        component: () => import('@/views/spaceScan/advanceSearch.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '高级搜索',
+        },
+      },
+    ],
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',

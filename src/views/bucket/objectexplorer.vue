@@ -9,6 +9,7 @@ import {
   objectRestore,
   objectRestoreBatch,
   objectPropertyDetail,
+  objectDownloadBatch,
 } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
@@ -40,6 +41,13 @@ const detailRow = async (row) => {
 
 const multyRestore = async () => {
   await objectRestoreBatch(selections.value)
+  proxy.$toast('批量恢复成功')
+}
+
+const batchDownload = async () => {
+  let res = await objectDownloadBatch(selections.value)
+  proxy.gDownloadAll(res)
+  // proxy.$toast('批量下载成功')
 }
 
 const columns = [
@@ -109,10 +117,11 @@ async function getTableByBucket() {
     selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
   }
 }
-function selectChange(value) {
+function selectChange(value, label, options) {
   bucketId.value = value
-  bucketName.value = bucketOptions.value.filter((v) => v.value === bucketId.value)[0].name
+  bucketName.value = label
   proxy.setStorage('tenant-bucket-id', bucketId.value)
+  proxy.setStorage('tenant-bucket-name', bucketName.value)
   init()
 }
 getBucketListInit()
@@ -162,12 +171,12 @@ async function historyRow(row) {
         class="m-r-16"
         :options="bucketOptions"
         label="name"
-        @change="selectChange"
+        @changeSelect="selectChange"
       />
       <UploadFile :bucketName="bucketName" />
       <el-button type="primary" icon="el-icon-search" @click="easySearch">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
-      <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="easySearch">
+      <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
         批量下载
       </el-button>
       <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
