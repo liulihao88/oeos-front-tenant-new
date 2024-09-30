@@ -10,6 +10,8 @@
 import { ref, getCurrentInstance } from 'vue'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple } from '@/api/searchApi.ts'
+import { objectDownloadBatch, objectRestoreBatch } from '@/api/bucketReview.ts'
+import { previewImage } from '@/api/spaceScan.ts'
 
 const { proxy } = getCurrentInstance()
 let getBucketList = GetBucketList()
@@ -26,9 +28,28 @@ const form = ref({
   pageSize: 30,
   bucket: bucketName.value,
 })
+const selections = ref([])
 
 const data = ref([])
+
+const preview = async (row) => {
+  const params = {
+    bucket: bucketName.value,
+    key: row.name,
+  }
+  let res = await previewImage(params)
+  if (res?.status !== 200 || !res) {
+    return proxy.$toast(res?.data?.message || '请求错误', 'error')
+  }
+  const byteArray = new Uint8Array(res.data) // 将二进制数据流转换为字节数组
+  const blob = new Blob([byteArray]) // 创建Blob对象
+  const imgUrl = URL.createObjectURL(blob) // 创建一个URL，用于表示blob对象
+  console.log(`98 imgUrl`, imgUrl)
+}
 const columns = [
+  {
+    type: 'selection',
+  },
   {
     label: '对象名称',
     prop: 'name',
@@ -53,6 +74,7 @@ const columns = [
     btns: [
       {
         content: '预览',
+        handler: preview,
       },
       {
         content: '下载',
@@ -73,6 +95,10 @@ const init = async () => {
   proxy.$toast('查询成功')
 }
 
+if (bucketId.value) {
+  init()
+}
+
 const changeSelect = (value, label, options) => {
   bucketId.value = value
   bucketName.value = label
@@ -82,6 +108,11 @@ const changeSelect = (value, label, options) => {
   init()
 }
 const timeRange = ref([])
+
+const multyRestore = async () => {
+  await objectRestoreBatch(selections.value)
+  proxy.$toast('批量恢复成功')
+}
 
 const timeChange = (value) => {
   console.log(`43 value`, value)
@@ -95,11 +126,30 @@ const timeChange = (value) => {
   }
   init()
 }
-const restore = () => {
-  console.log('restore')
+const download = async () => {
+  if (!bucketName.value) {
+    proxy.$toast('请先选择桶名', 'e')
+  }
+  if (!data.value.length) {
+    proxy.$toast('无数据可下载！', 'e')
+  }
+  // 全部下载
+  if (selections.value.length === 0) {
+    const sendData = {
+      bucket: bucketName.value,
+      injectTimeBegin: form.value.injectTimeBegin,
+      injectTimeEnd: form.value.injectTimeEnd,
+      key: form.value.key,
+    }
+    proxy.gDownloadUrl('/v1/admin/tenant/object/download/simplequery', sendData)
+  } else {
+    // 不分下载
+    let res = await objectDownloadBatch(selections.value)
+    proxy.gDownloadAll(res)
+  }
 }
-const download = () => {
-  console.log('download')
+const selectionChange = (val, ...a) => {
+  selections.value = val
 }
 </script>
 
@@ -128,14 +178,16 @@ const download = () => {
         />
       </div>
       <div class="f-1 f-ed-un">
-        <el-button type="primary" icon="el-icon-refresh-left" @click="restore">批量恢复</el-button>
+        <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
+          批量恢复
+        </el-button>
         <el-button type="primary" icon="el-icon-download" @click="download">下载</el-button>
         <el-button type="primary" icon="el-icon-search" @click="init">查询</el-button>
       </div>
     </div>
 
     <div class="main">
-      <o-table ref="tableRef" :columns="columns" :data="data" />
+      <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange" />
       o-table
     </div>
   </div>

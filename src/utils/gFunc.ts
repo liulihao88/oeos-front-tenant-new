@@ -1,5 +1,7 @@
 import { $toast, getStorage } from 'oeos-components'
 import settings from '@/config/settings.ts'
+import { router } from '@/router/index.ts'
+
 export function gDownload(item) {
   console.log(`34 item`, item)
 
@@ -27,4 +29,23 @@ export function gDownloadAll(id) {
   let getUrl = `/v1/admin/tenant/object/download/batch`
   let _href = baseUrl + getUrl + `?id=${encodeURIComponent(id)}&Authorization=${getStorage('tenant-token')}`
   window.location.href = _href
+}
+
+export function gDownloadUrl(url, params = {}) {
+  let baseUrl = import.meta.env.DEV ? settings.url : window.origin
+  const token = {
+    Authorization: getStorage('tenant-token'),
+  }
+  const mergeParams = Object.assign(params, token)
+  const queryString = Object.keys(mergeParams)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(mergeParams[key])}`)
+    .join('&')
+  console.log(`75 queryString`, queryString)
+  let _href = baseUrl + url + '?' + queryString
+  console.log(`37 _href`, _href)
+  window.location.href = _href
+}
+
+export function jump(path) {
+  return router.push(path)
 }

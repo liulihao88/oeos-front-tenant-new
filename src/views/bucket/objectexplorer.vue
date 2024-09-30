@@ -47,7 +47,6 @@ const multyRestore = async () => {
 const batchDownload = async () => {
   let res = await objectDownloadBatch(selections.value)
   proxy.gDownloadAll(res)
-  // proxy.$toast('批量下载成功')
 }
 
 const columns = [
@@ -174,7 +173,7 @@ async function historyRow(row) {
         @changeSelect="selectChange"
       />
       <UploadFile :bucketName="bucketName" />
-      <el-button type="primary" icon="el-icon-search" @click="easySearch">简单搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
       <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
         批量下载
