@@ -46,21 +46,21 @@ const columns = [
     label: '注入时间',
     prop: 'injectTime',
     filter: (val) => {
-      return proxy.parseTimeByRule(val)
+      return proxy.formatTimeByRule(val)
     },
   },
   {
     label: '解冻触发时间',
     prop: 'triggerTime',
     filter: (val) => {
-      return proxy.parseTimeByRule(val)
+      return proxy.formatTimeByRule(val)
     },
   },
   {
     label: '解冻保留时间',
     prop: 'expireTime',
     filter: (val) => {
-      return proxy.parseTimeByRule(val)
+      return proxy.formatTimeByRule(val)
     },
   },
   {

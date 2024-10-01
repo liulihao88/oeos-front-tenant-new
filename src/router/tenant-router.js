@@ -89,6 +89,35 @@ export default [
     ],
   },
   {
+    path: '/apps/task',
+    component: Layout,
+    redirect: '/apps/task/management',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '任务管理',
+    },
+    children: [
+      {
+        path: '/apps/task/management',
+        name: 'Management',
+        component: () => import('@/views/task/management.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '桶任务',
+        },
+      },
+      {
+        path: '/apps/task/schedule',
+        name: 'Schedule',
+        component: () => import('@/views/task/schedule.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '任务计划',
+        },
+      },
+    ],
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',

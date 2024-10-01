@@ -61,7 +61,7 @@ export function isImage(fileName) {
   return imageExtensions.includes(extension)
 }
 
-export function parseTimeByRule(time, timeStr = 'datetime') {
+export function formatTimeByRule(time, timeStr = 'datetime') {
   timeStr = timeStr.toLowerCase()
   if (isEmpty(time)) {
     return '-'
