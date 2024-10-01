@@ -15,7 +15,7 @@ import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
-import { getTenants, encrypt, login, getMenu } from '@/api/login.ts'
+import { getTenants, encrypt, login, getMenu, getFormat } from '@/api/login.ts'
 
 defineOptions({
   name: 'Login',
@@ -96,11 +96,13 @@ const onLogin = async (formEl) => {
   proxy.setStorage('tenant-sysdomain', ruleForm.tenantId)
   let menuRes = await getMenu()
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
+  let formatRes = await getFormat()
+  proxy.setStorage('tenant-time-rule', formatRes)
   return initRouter().then(() => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     console.log(`69 jumpPath`, jumpPath)
     router.push(jumpPath).then(() => {
-      message('登录成功11', { type: 'success' })
+      message('登录成功', { type: 'success' })
     })
   })
 }

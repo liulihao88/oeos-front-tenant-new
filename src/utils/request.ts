@@ -116,7 +116,15 @@ export { instance }
  * @param {*} config 可有可无, 参数对象.
  * @returns
  */
-export default function request(url, method = 'get', config = {}) {
+// 定义 method 参数的类型
+type MethodType = 'get' | 'post' | 'put' | 'delete'
+
+// 定义 method 参数的类型（可以是 MethodType 或对象）
+interface MethodOrConfig {
+  method?: MethodType
+  [key: string]: any
+}
+export default function request(url, method?: MethodType | MethodOrConfig = 'get', config = {}) {
   let methodMap = ['get', 'post', 'put', 'delete']
   let methodIsObj = !methodMap.includes(method) && getType(method) === 'object'
   let configObj = methodIsObj ? method : config

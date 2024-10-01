@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, watch, nextTick } from 'vue'
 const { proxy } = getCurrentInstance()
-const message = ref()
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
-proxy.$toast(message.value)
-setInterval(() => {
-  message.value = proxy.uuid()
-}, 1000)
-console.log(`04 message.value`, message.value)
-function isTest55() {
-  router.push({ name: 'T22' })
-}
+const bucketRef = ref(null)
+
+nextTick(() => {
+  let a = bucketRef.value.update()
+  console.log(`42 a`, a)
+})
+
+const bucketId = ref()
+const bucketName = ref()
+
+watch(
+  [bucketId, bucketName],
+  (val) => {
+    console.log(`34 17行 test/t2.vue val`, val)
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+)
 </script>
 
 <template>
   <div>
-    <div>test/t2.vue</div>
-    <el-button type="primary" @click="isTest55">到测试1</el-button>
+    <g-bucket ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
   </div>
 </template>

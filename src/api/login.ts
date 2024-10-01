@@ -23,3 +23,10 @@ export function encrypt(pwd) {
 export function getMenu() {
   return request('ui/menu')
 }
+
+// 获取日期的格式
+export function getFormat() {
+  return request('sys/ui/format', {
+    baseURL: '/api/v1/admin',
+  })
+}

@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
+import { useVModel } from '@vueuse/core'
 const { proxy } = getCurrentInstance()
-import { ElNotification } from 'element-plus'
 
-const num = ref(0)
-setInterval(() => {
-  ElNotification({
-    message: `正在上传, 进度${num.value++}%`,
-    duration: 0,
-  })
-}, 1000)
+const props = defineProps({
+  modelValue: {
+    required: true,
+    type: String,
+  },
+})
+const data = useVModel(props)
+console.log(data.value) // props.data
 </script>
 
 <template>
-  <div>
-    <div>test/t3.vue</div>
-  </div>
+  <o-title title="useVModel" />
+  <el-input v-model="data" v-bind="$attrs" />
 </template>

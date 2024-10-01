@@ -77,6 +77,15 @@ export default [
           title: '高级搜索',
         },
       },
+      {
+        path: '/apps/task/unfrezze',
+        name: 'Unfrezze',
+        component: () => import('@/views/spaceScan/unfrezze.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '解冻浏览',
+        },
+      },
     ],
   },
   {

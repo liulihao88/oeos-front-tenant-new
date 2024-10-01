@@ -7,3 +7,8 @@ export function previewImage(params) {
     customResponse: true,
   })
 }
+
+// 解冻浏览列表 object/restore/list
+export function restoreList(params) {
+  return request('object/restore/list', { params })
+}

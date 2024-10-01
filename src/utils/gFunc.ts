@@ -1,4 +1,4 @@
-import { $toast, getStorage } from 'oeos-components'
+import { $toast, getStorage, isEmpty, formatTime, formatDurationTime } from 'oeos-components'
 import settings from '@/config/settings.ts'
 import { router } from '@/router/index.ts'
 
@@ -59,4 +59,30 @@ export function isImage(fileName) {
 
   // 检查扩展名是否在图片扩展名数组中
   return imageExtensions.includes(extension)
+}
+
+export function parseTimeByRule(time, timeStr = 'datetime') {
+  timeStr = timeStr.toLowerCase()
+  if (isEmpty(time)) {
+    return '-'
+  }
+  const rule = getStorage('tenant-time-rule') || {}
+  const ruleValue = rule[timeStr]
+  if (!ruleValue) {
+    return time
+  }
+  if (timeStr === 'speed1s') {
+    return time + ruleValue
+  }
+  let parseRuleFormat = ruleValue
+    .replace('YYYY', '{y}')
+    .replace('MM', '{m}')
+    .replace('DD', '{d}')
+    .replace('HH', '{h}')
+    .replace('mm', '{i}')
+    .replace('ss', '{s}')
+  if (timeStr === 'uptime' || timeStr === 'time') {
+    return formatDurationTime(time, parseRuleFormat)
+  }
+  return formatTime(time, parseRuleFormat)
 }
