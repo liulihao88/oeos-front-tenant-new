@@ -4,3 +4,8 @@ import request, { requestOld } from '@/utils/request.ts'
 export function querySimple(params) {
   return request('object/query/simple', { params })
 }
+
+// 高级查询
+export function queryAdvance(data) {
+  return request('object/query/advance', 'put', { data })
+}

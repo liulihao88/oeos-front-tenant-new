@@ -93,6 +93,7 @@ const onLogin = async (formEl) => {
   let loginRes = await login(loginParams)
   let token = `${loginRes.tokenType} ${loginRes.token}`
   proxy.setStorage('tenant-token', token)
+  proxy.setStorage('tenant-sysdomain', ruleForm.tenantId)
   let menuRes = await getMenu()
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   return initRouter().then(() => {

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getStorage, getType, $toast } from 'oeos-components'
+import { devLogin } from '@/utils/local401LoginAgain.ts'
 
 // import qs from 'qs'
 // 关于axios的一些默认配置项，调用接口时，按需要传递
@@ -90,13 +91,16 @@ instance.interceptors.response.use(
         return Promise.resolve(response.data.details)
       }
     } else {
+      if (response.status === 401) {
+        return devLogin()
+      }
       return Promise.reject(response.data)
     }
   },
   (error) => {
     let obj = JSON.parse(JSON.stringify(error))
     if (obj.message?.indexOf('401') !== -1) {
-      localStorage.removeItem('token')
+      return devLogin()
     }
   },
 )

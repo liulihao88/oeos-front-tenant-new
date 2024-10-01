@@ -1,16 +1,17 @@
 <script setup lang="ts">
 /**
  * injectTimeBegin: 1725494400000
-  injectTimeEnd: 1726012800000
-  pageNumber: 0
-  pageSize: 30
-  bucket: bucketnamemyjw
-  key: aaa
+ injectTimeEnd: 1726012800000
+ pageNumber: 0
+ pageSize: 30
+ bucket: bucketnamemyjw
+ key: aaa
  */
 import { ref, getCurrentInstance } from 'vue'
+import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple } from '@/api/searchApi.ts'
-import { objectDownloadBatch, objectRestoreBatch } from '@/api/bucketReview.ts'
+import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 import { previewImage } from '@/api/spaceScan.ts'
 
 const { proxy } = getCurrentInstance()
@@ -45,6 +46,16 @@ const preview = async (row) => {
   const blob = new Blob([byteArray]) // 创建Blob对象
   const imgUrl = URL.createObjectURL(blob) // 创建一个URL，用于表示blob对象
   console.log(`98 imgUrl`, imgUrl)
+  viewerApi({
+    images: [imgUrl],
+  })
+}
+const restoreRow = async (row) => {
+  let params = {
+    bucket: bucketName.value,
+    key: row.key,
+  }
+  await objectRestore(params)
 }
 const columns = [
   {
@@ -52,11 +63,13 @@ const columns = [
   },
   {
     label: '对象名称',
+    useSlot: true,
     prop: 'name',
   },
   {
     label: '对象大小',
     prop: 'size',
+    width: 100,
     filter: proxy.formatBytes,
   },
   {
@@ -66,21 +79,28 @@ const columns = [
   {
     label: '写入时间',
     prop: 'injectTime',
-    format: proxy.formatTime,
+    filter: (val, row, prop) => {
+      return proxy.formatTime(val)
+    },
+    width: 200,
   },
   {
     key: 'operation',
     label: '操作',
+    maxBtns: 5,
     btns: [
-      {
-        content: '预览',
-        handler: preview,
-      },
+      // {
+      //   content: '预览',
+      //   isShow: (row) => proxy.isImage(row.key),
+      //   handler: preview,
+      // },
       {
         content: '下载',
+        handler: proxy.gDownload,
       },
       {
         content: '恢复',
+        handler: restoreRow,
       },
     ],
   },
@@ -187,8 +207,16 @@ const selectionChange = (val, ...a) => {
     </div>
 
     <div class="main">
-      <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange" />
-      o-table
+      <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
+        <template #name="{ scope, row }">
+          <template v-if="proxy.isImage(row.key)">
+            <el-button type="primary" text @click="preview(row)">{{ row.key }}</el-button>
+          </template>
+          <span v-else>
+            {{ row.key }}
+          </span>
+        </template>
+      </o-table>
     </div>
   </div>
 </template>

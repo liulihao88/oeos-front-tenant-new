@@ -68,12 +68,17 @@ app.config.globalProperties.$echarts = echarts
 import VChart from 'vue-echarts'
 app.component('vChart', VChart)
 
+// 导入图片预览插件 v-viewer
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
+
 app.config.globalProperties.$dev = import.meta.env.DEV
+
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)
   app.use(router)
   await router.isReady()
   injectResponsiveStorage(app, config)
-  app.use(MotionPlugin).use(useElementPlus).use(Table)
+  app.use(MotionPlugin).use(useElementPlus).use(Table).use(VueViewer, {})
   app.mount('#app')
 })
