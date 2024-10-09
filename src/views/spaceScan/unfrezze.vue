@@ -5,10 +5,9 @@ import { restoreList } from '@/api/spaceScan.ts'
 const { proxy } = getCurrentInstance()
 const bucketRef = ref(null)
 
-nextTick(() => {
-  let a = bucketRef.value.update()
-  console.log(`42 a`, a)
-})
+// nextTick(() => {
+//   let a = bucketRef.value.update()
+// })
 
 const bucketId = ref()
 const bucketName = ref()

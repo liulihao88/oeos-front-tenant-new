@@ -99,7 +99,7 @@ export default [
     children: [
       {
         path: '/apps/task/management',
-        name: 'Management',
+        name: 'TaskManagement',
         component: () => import('@/views/task/management.vue'),
         meta: {
           icon: 'ep:home-filled',
@@ -171,48 +171,132 @@ export default [
   {
     path: '/test3',
     component: Layout,
-    redirect: '/test3/t3',
+    redirect: '/test/t3',
     meta: {
       icon: 'ep:home-filled',
-      title: '测试页',
+      title: '测试页2顶部',
       rank: 0,
     },
     children: [
       {
-        path: '/test3/t3',
+        path: '/test/t3',
         name: 'T3',
-        redirect: '/test3/t3/t4',
         component: () => import('@/views/test/t3.vue'),
         meta: {
           title: '测试页3',
-        },
-        children: [
-          {
-            path: '/test3/t3/t4',
-            name: 'T4',
-            component: () => import('@/views/test/t4.vue'),
-            meta: {
-              title: '测试页4',
-            },
-          },
-          {
-            path: '/test3/t3/t5',
-            name: 'T5',
-            component: () => import('@/views/test/t5.vue'),
-            meta: {
-              title: '测试页5',
-            },
-          },
-        ],
-      },
-      {
-        path: '/t6',
-        name: 'T6',
-        component: () => import('@/views/test/t6.vue'),
-        meta: {
-          title: '测试页6',
+          showLink: true,
         },
       },
     ],
   },
+  {
+    path: '/test4',
+    component: Layout,
+    redirect: '/test/t4',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '测试页2顶部',
+      rank: 0,
+    },
+    children: [
+      {
+        path: '/test/t4',
+        name: 'T4',
+        component: () => import('@/views/test/t4.vue'),
+        meta: {
+          title: '测试页4',
+          showLink: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/test5',
+    component: Layout,
+    redirect: '/test/t5',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '测试页2顶部',
+      rank: 0,
+    },
+    children: [
+      {
+        path: '/test/t5',
+        name: 'T5',
+        component: () => import('@/views/test/t5.vue'),
+        meta: {
+          title: '测试页5',
+          showLink: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/test6',
+    component: Layout,
+    redirect: '/test/t6',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '测试页2顶部',
+      rank: 0,
+    },
+    children: [
+      {
+        path: '/test/t6',
+        name: 'T6',
+        component: () => import('@/views/test/t6.vue'),
+        meta: {
+          title: '测试页6',
+          showLink: true,
+        },
+      },
+    ],
+  },
+  // {
+  //   path: '/test3',
+  //   component: Layout,
+  //   redirect: '/test3/t3',
+  //   meta: {
+  //     icon: 'ep:home-filled',
+  //     title: '测试页',
+  //     rank: 0,
+  //   },
+  //   children: [
+  //     {
+  //       path: '/test3/t3',
+  //       name: 'T3',
+  //       redirect: '/test3/t3/t4',
+  //       component: () => import('@/views/test/t3.vue'),
+  //       meta: {
+  //         title: '测试页3',
+  //       },
+  //       children: [
+  //         {
+  //           path: '/test3/t3/t4',
+  //           name: 'T4',
+  //           component: () => import('@/views/test/t4.vue'),
+  //           meta: {
+  //             title: '测试页4',
+  //           },
+  //         },
+  //         {
+  //           path: '/test3/t3/t5',
+  //           name: 'T5',
+  //           component: () => import('@/views/test/t5.vue'),
+  //           meta: {
+  //             title: '测试页5',
+  //           },
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       path: '/t6',
+  //       name: 'T6',
+  //       component: () => import('@/views/test/t6.vue'),
+  //       meta: {
+  //         title: '测试页6',
+  //       },
+  //     },
+  //   ],
+  // },
 ]

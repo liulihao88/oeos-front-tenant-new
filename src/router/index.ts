@@ -30,18 +30,12 @@ const modules: Record<string, any> = import.meta.glob(['./modules/**/*.ts', '!./
   eager: true,
 })
 const tenantRoutes = import.meta.glob(['./tenant-router.js'], { eager: true })
-console.log(`04 tenantRoutes`, tenantRoutes)
-console.log(`04 tenantRoutes[tenant-router.js]`, tenantRoutes['./tenant-router.js'])
-console.log(`04 tenantRoutes[tenant-router.js]`, tenantRoutes['./tenant-router.js'].default)
-console.log(`04 tenantRoutes.default`, tenantRoutes.default)
-console.log(`04 tenantRoutes[0]`, tenantRoutes[0])
 
 /** 原始静态路由（未做任何处理） */
 const routes = []
 routes.push(...tenantRoutes['./tenant-router.js'].default)
 
 Object.keys(modules).forEach((key) => {
-  console.log(`81 modules[key].default`, modules[key].default)
   routes.push(modules[key].default)
 })
 console.log(`43 tenantRoutes.default`, tenantRoutes.default)

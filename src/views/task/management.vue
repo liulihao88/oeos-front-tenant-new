@@ -23,7 +23,11 @@ const columns = [
   {
     label: '包含桶名',
     prop: 'includeBucketNames',
-    filter: (val) => val.join(','),
+    filter: (val) => {
+      if (val) {
+        return val.join(',')
+      }
+    },
   },
   {
     label: '例外桶名',
