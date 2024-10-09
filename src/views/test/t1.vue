@@ -13,8 +13,16 @@ const open = () => {
 
 <template>
   <div>
-    <div>test/t1.vue</div>
-    <el-button type="primary" @click="open">测试06</el-button>
+    <div
+      v-tippy="{
+        content: '点击展开',
+        hideOnClick: 'toggle',
+        placement: 'right',
+      }"
+    >
+      test/t1.vue
+    </div>
+    <el-button type="primary" @click="open">测11试06</el-button>
     <SearchConfigComp ref="searchConfigCompRef" />
   </div>
 </template>

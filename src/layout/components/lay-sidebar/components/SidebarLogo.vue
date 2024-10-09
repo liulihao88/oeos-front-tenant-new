@@ -24,7 +24,15 @@ const { title, getLogo } = useNav()
       </router-link>
       <router-link v-else key="expand" :title="title" class="sidebar-logo-link" :to="getTopMenu()?.path ?? '/'">
         <img :src="getLogo()" alt="logo" />
-        <span class="sidebar-title">{{ title }}</span>
+        <span
+          v-tippy="{
+            content: title,
+            zIndex: 41000,
+          }"
+          class="sidebar-title"
+        >
+          {{ title }}
+        </span>
       </router-link>
     </transition>
   </div>

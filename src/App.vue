@@ -14,4 +14,11 @@ import nativeRefresh from '@/components/nativeRefresh.vue'
 import useNativeRefresh from '@/store/nativeRefresh.js'
 const useRefresh = useNativeRefresh()
 const currentLocale = ref(zhCn)
+
+document.addEventListener('mouseover', function (event) {
+  if (event.target.title) {
+    event.target.title = '' // 清空title
+    event.preventDefault() // 阻止默认行为
+  }
+})
 </script>
