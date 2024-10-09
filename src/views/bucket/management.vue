@@ -29,10 +29,12 @@ const rightTableColumns = [
     label: '对象总数量',
     sortable: true,
     prop: 'objectCount',
+    width: 130,
     filter: (value) => proxy.formatThousands(value),
   },
   {
     label: '对象总大小',
+    width: 130,
     sortable: true,
     prop: 'objectSize',
     filter: (value) => proxy.formatBytes(value),
@@ -126,6 +128,7 @@ const columns = [
     label: '对象数',
     prop: 'objectCount',
     sortable: true,
+    width: 100,
     filter: (value) => {
       return proxy.formatThousands(value)
     },
@@ -141,7 +144,7 @@ const columns = [
   {
     label: '总容量',
     prop: 'capacity',
-    width: 200,
+    width: 100,
     filter: (value, row) => {
       return row.quota + row.quotaUnit
     },
@@ -287,7 +290,7 @@ function _handleUsedData(usedSpace) {
 
 <template>
   <div class="content-box">
-    <el-row :gutter="24" class="h-100%">
+    <el-row :gutter="24" class="h-100%" style="height: 100%">
       <el-col :span="16">
         <div class="w-100% h-100%">
           <div class="l-list f w-100%">
@@ -326,12 +329,6 @@ function _handleUsedData(usedSpace) {
               highlight-current-row
               @current-change="currentChange"
             >
-              <!-- <template #bucketName="{ row }">
-                <div class="cl-blue">
-                  <o-icon name="plus" size="10" color="blue" />
-                  {{ row.bucketName }}
-                </div>
-              </template> -->
               <template #capacity="{ scope, row }">
                 <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
               </template>
@@ -339,7 +336,7 @@ function _handleUsedData(usedSpace) {
           </div>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="height: 100%">
         <div class="right-box">
           <div class="c-box w-100% f-1">
             <o-title :title="objectTitle" icon="plus" />
