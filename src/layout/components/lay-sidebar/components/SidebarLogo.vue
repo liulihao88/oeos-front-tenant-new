@@ -19,20 +19,15 @@ const { title, getLogo } = useNav()
         class="sidebar-logo-link"
         :to="getTopMenu()?.path ?? '/'"
       >
-        <img :src="getLogo()" alt="logo" />
-        <span class="sidebar-title">{{ title }}</span>
+        <o-tooltip :content="title">
+          <img :src="getLogo()" alt="logo" />
+        </o-tooltip>
       </router-link>
       <router-link v-else key="expand" :title="title" class="sidebar-logo-link" :to="getTopMenu()?.path ?? '/'">
         <img :src="getLogo()" alt="logo" />
-        <span
-          v-tippy="{
-            content: title,
-            zIndex: 41000,
-          }"
-          class="sidebar-title"
-        >
-          {{ title }}
-        </span>
+        <div class="sidebar-title w-150">
+          <o-tooltip :content="title" />
+        </div>
       </router-link>
     </transition>
   </div>
@@ -58,16 +53,16 @@ const { title, getLogo } = useNav()
     }
 
     .sidebar-title {
-      display: inline-block;
+      // display: inline-block;
       height: 32px;
       margin: 2px 0 0 12px;
-      overflow: hidden;
+      // overflow: hidden;
       font-size: 18px;
       font-weight: 600;
       line-height: 32px;
       color: $subMenuActiveText;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
     }
   }
 }

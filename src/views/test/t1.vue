@@ -1,28 +1,16 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
-import SearchConfigComp from '@/views/spaceScan/components/searchConfigComp.vue'
-
 const { proxy } = getCurrentInstance()
-const searchConfigCompRef = ref(null)
-
-const open = () => {
-  console.log('open')
-  searchConfigCompRef.value.open()
-}
 </script>
 
 <template>
   <div>
-    <div
-      v-tippy="{
-        content: '点击展开',
-        hideOnClick: 'toggle',
-        placement: 'right',
-      }"
-    >
-      test/t1.vue
+    <div>test/t1.vue</div>
+    <div class="w-200">
+      <o-tooltip
+        content="2024-10-09 17:19:05I want to set some random text, if you like it , please tell me. good wish for you! thank you so much. have a nice day!"
+      />
     </div>
-    <el-button type="primary" @click="open">测11试06</el-button>
-    <SearchConfigComp ref="searchConfigCompRef" />
+    奇怪啊
   </div>
 </template>
