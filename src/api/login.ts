@@ -2,7 +2,7 @@ import request, { requestOld } from '@/utils/request'
 
 export function getTenants() {
   return request('sys/tenant/tenants?filter=Actived', {
-    baseURL: '/api/v1/admin',
+    type: 'common',
   })
 }
 
@@ -27,6 +27,6 @@ export function getMenu() {
 // 获取日期的格式
 export function getFormat() {
   return request('sys/ui/format', {
-    baseURL: '/api/v1/admin',
+    type: 'common',
   })
 }

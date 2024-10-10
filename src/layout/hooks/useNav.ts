@@ -80,9 +80,7 @@ export function useNav() {
   function logout() {
     clearStorage('token')
     let nowPath = router.currentRoute.value.path
-    console.log(`85 nowPath`, nowPath)
-    // proxy.log(`router`, router, '82行 src/layout/hooks/useNav.ts')
-    console.log(`95 router`, router)
+    console.log(`14 nowPath`, nowPath)
     router.push(`/login?redirect=${nowPath}`)
   }
 

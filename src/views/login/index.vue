@@ -124,6 +124,9 @@ function onkeypress(code) {
     onLogin(ruleFormRef.value)
   }
 }
+const customTenantLabel = (obj) => {
+  return `${obj.name} - ${obj.value}`
+}
 
 onMounted(() => {
   window.document.addEventListener('keypress', onkeypress)
@@ -162,11 +165,10 @@ onBeforeUnmount(() => {
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" size="large">
             <Motion :delay="100">
               <el-form-item prop="tenantId">
-                {{ ruleForm.tenantId }}??
                 <o-select
                   v-model="ruleForm.tenantId"
                   :options="tenantOptions"
-                  label="name"
+                  :customLabel="customTenantLabel"
                   width="100%"
                   placeholder="请选择租户"
                 />
