@@ -40,9 +40,11 @@ function onFresh() {
     <LayNavMix v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
-      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
-        <IconifyIconOffline :icon="RefreshRight" />
-      </div>
+      <o-tooltip content="快捷键:windows->ctrl+enter或者mac->cmd+enter">
+        <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
+          <IconifyIconOffline :icon="RefreshRight" />
+        </div>
+      </o-tooltip>
 
       <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
         <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />

@@ -46,16 +46,14 @@ const columns = computed(() => {
       btns: [
         {
           content: '运行',
-          disabled: (val, row) => {
-            console.log(`79 row`, row)
+          disabled: (row) => {
             return row.status === 'Running'
           },
           handler: runningRow,
         },
         {
           content: '终止',
-          disabled: (val, row) => {
-            console.log(`29 row`, row)
+          disabled: (row) => {
             return row.status !== 'Running'
           },
           handler: stopRunningRow,
@@ -79,13 +77,11 @@ async function runningRow(row) {
     return proxy.$toast('正在运行中!', 'e')
   }
   await startRunning(row.cmdId)
-  proxy.$toast('操作成功')
-  init()
+  proxy.$toast('运行成功')
 }
 async function stopRunningRow(row) {
   await stopRunning(row.cmdId)
-  proxy.$toast('操作成功')
-  init()
+  proxy.$toast('终止成功')
 }
 onUnmounted(() => {
   clearInterval(timer.value)
@@ -99,6 +95,5 @@ onUnmounted(() => {
         {{ row.statusTitle }}
       </template>
     </o-table>
-    o-table
   </div>
 </template>

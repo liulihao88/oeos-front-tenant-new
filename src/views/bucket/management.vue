@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed, nextTick } from 'vue'
-import { throttle } from 'lodash-es'
+// import { throttle } from 'lodash-es'
 const { proxy } = getCurrentInstance()
 import {
   getBucketList,
@@ -123,6 +123,7 @@ const columns = [
     label: '桶名称',
     prop: 'bucketName',
     handler: handleDetail,
+    // width: 200,
   },
   {
     label: '对象数',
@@ -136,6 +137,7 @@ const columns = [
   {
     label: '已用容量',
     prop: 'objectSize',
+    width: 120,
     sortable: true,
     filter: (value) => {
       return proxy.formatBytes(value)
@@ -144,6 +146,7 @@ const columns = [
   {
     label: '总容量',
     prop: 'capacity',
+    sortable: true,
     width: 100,
     filter: (value, row) => {
       return row.quota + row.quotaUnit
@@ -152,7 +155,7 @@ const columns = [
   {
     label: '使用容量',
     prop: 'capacity',
-    width: 300,
+    width: 200,
     useSlot: true,
   },
   {
@@ -176,9 +179,9 @@ const columns = [
 const objectNumData = ref([])
 
 const bucketLists = ref([])
-const searchHandler = throttle(function () {
-  init()
-}, 500)
+// const searchHandler = throttle(function () {
+//   init()
+// }, 500)
 async function getTableList() {
   let params = {
     pageSize: 30,
@@ -310,11 +313,11 @@ function _handleUsedData(usedSpace) {
             <o-title title="桶列表" class="mb3">
               <o-input
                 v-model="searchValue"
+                v-throttle.300="init"
                 width="200"
                 class="ml"
                 placeholder="可筛选桶名"
                 @clear="init"
-                @input="searchHandler"
               />
               <template #right>
                 <el-button type="" icon="el-icon-refresh" @click="init">刷新</el-button>
@@ -358,7 +361,7 @@ function _handleUsedData(usedSpace) {
 
 <style lang="scss" scoped>
 .content-box {
-  height: 100%;
+  max-height: calc(100vh - 110px);
 
   .l-list {
     margin-bottom: 24px;

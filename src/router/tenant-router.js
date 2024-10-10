@@ -144,6 +144,7 @@ export default [
     redirect: '/test/t1',
     meta: {
       icon: 'ep:home-filled',
+      showLink: import.meta.env.MODE === 'development',
       title: '测试页',
       rank: 0,
     },
@@ -164,6 +165,7 @@ export default [
     component: Layout,
     redirect: '/test/t2',
     meta: {
+      showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -194,6 +196,7 @@ export default [
     component: Layout,
     redirect: '/test/t3',
     meta: {
+      showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -215,6 +218,7 @@ export default [
     component: Layout,
     redirect: '/test/t4',
     meta: {
+      showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -236,6 +240,7 @@ export default [
     component: Layout,
     redirect: '/test/t5',
     meta: {
+      showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -257,6 +262,7 @@ export default [
     component: Layout,
     redirect: '/test/t6',
     meta: {
+      showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
