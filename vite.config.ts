@@ -10,7 +10,7 @@ import { root, alias, wrapperEnv, pathResolve, __APP_INFO__ } from './build/util
 export default ({ mode }: ConfigEnv): UserConfigExport => {
   const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } = wrapperEnv(loadEnv(mode, root))
   return {
-    // base: VITE_PUBLIC_PATH,
+    base: VITE_PUBLIC_PATH,
     root,
     resolve: {
       alias,
@@ -43,6 +43,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     build: {
       // https://cn.vitejs.dev/guide/build.html#browser-compatibility
       target: 'es2015',
+      outDir: 'tenant',
       sourcemap: false,
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
@@ -60,6 +61,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     },
     define: {
       __INTLIFY_PROD_DEVTOOLS__: false,
+      __APP_VERSION__: JSON.stringify('v1.0.0'),
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
   }

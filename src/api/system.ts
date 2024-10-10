@@ -2,7 +2,7 @@ import request from '@/utils/request.ts'
 
 // 内置命令列表
 export function getInnerCommand() {
-  return request('command/status')
+  return request('command/status', {})
 }
 
 // 开始运行

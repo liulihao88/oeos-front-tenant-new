@@ -22,7 +22,7 @@ const defaultConfig = {
 }
 
 const instance = axios.create({
-  baseURL: 'api/v1/admin/tenant',
+  baseURL: '/api/v1/admin/tenant',
   timeout: 50000,
   validateStatus: function (status) {
     return true
@@ -128,7 +128,7 @@ export default function request(url, method?: MethodType | MethodOrConfig = 'get
   let methodIsObj = !methodMap.includes(method) && getType(method) === 'object'
   let configObj = methodIsObj ? method : config
   if (configObj.type === 'common') {
-    configObj.baseURL = 'api/v1/admin'
+    configObj.baseURL = '/api/v1/admin'
   }
   let mergeConfig = {
     url: url,

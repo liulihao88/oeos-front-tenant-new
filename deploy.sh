@@ -12,8 +12,8 @@ fi
 for i in {33..35};do
 # for i in 33;do
    ssh  root@10.0.11."$i" <<EOF
-   rm -rf /opt/newfront/*
+   rm -rf /opt/newfront/tenant
 EOF
-   scp -r ./dist/* root@10.0.11."$i":/opt/newfront/
+   scp -r ./dist/* root@10.0.11."$i":/opt/newfront/tenant
    ssh root@10.0.11."$i" systemctl restart nginx
 done

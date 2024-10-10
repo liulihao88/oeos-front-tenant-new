@@ -17,7 +17,7 @@ const onChange = (file, files) => {
   const fileName = file.name
   let notificationInstance = null
   axios
-    .put('api/v1/admin/tenant/object/upload', formData, {
+    .put('/api/v1/admin/tenant/object/upload', formData, {
       onUploadProgress: (progressEvent) => {
         console.log(`47 progressEvent`, progressEvent)
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
