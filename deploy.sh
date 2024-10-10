@@ -1,3 +1,5 @@
+
+
 set -o nounset
 set -o errexit
 
@@ -7,13 +9,11 @@ else
     npm run build
 fi
 
-
-# for i in {33..35};do
-for i in 35;do
-   echo "upload front-tenant to 10.0.11.$i"
+for i in {33..35};do
+# for i in 33;do
    ssh  root@10.0.11."$i" <<EOF
-   rm -rf /usr/local/oct/oeos/app/KS02/front/tenant/tenant
+   rm -rf /opt/newfront/*
 EOF
-   scp  -r ./tenant  root@10.0.11."$i":/usr/local/oct/oeos/app/KS02/front/tenant/
+   scp -r ./dist/* root@10.0.11."$i":/opt/newfront/
    ssh root@10.0.11."$i" systemctl restart nginx
 done

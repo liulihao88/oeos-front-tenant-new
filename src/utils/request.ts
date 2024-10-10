@@ -28,7 +28,6 @@ const instance = axios.create({
     return true
   },
   withCredentials: true,
-  timeout: 600000,
 })
 let timer = null
 // 请求拦截，使用sessionId方式控制权限，

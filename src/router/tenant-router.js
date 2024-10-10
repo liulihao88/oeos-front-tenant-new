@@ -118,6 +118,27 @@ export default [
     ],
   },
   {
+    path: '/apps/feature',
+    component: Layout,
+    redirect: '/apps/feature/management',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '服务管理',
+    },
+    children: [
+      {
+        path: '/apps/feature/command',
+        name: 'InnerCommand',
+        component: () => import('@/views/system/innerCommand.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '内置命令',
+          showParent: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',
