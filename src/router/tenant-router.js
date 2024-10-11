@@ -139,6 +139,27 @@ export default [
     ],
   },
   {
+    path: '/apps/monitor',
+    component: Layout,
+    redirect: '/apps/monitor/event',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '租户监控',
+    },
+    children: [
+      {
+        path: '/apps/monitor/event',
+        name: 'Event',
+        component: () => import('@/views/system/event.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '租户事件',
+          showParent: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',
