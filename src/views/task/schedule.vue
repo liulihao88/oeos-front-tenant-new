@@ -314,12 +314,13 @@ const deleteTime = (v, i, val = '', idx = '') => {
 <style scoped lang="scss">
 .task-container {
   display: flex;
-  height: calc(100vh - 124px);
+  // height: calc(100vh - 324px);
 
   .l {
     position: absolute;
     width: 280px;
-    height: calc(100vh - 124px);
+    height: calc(100vh - 144px);
+    // height: 100%;
     padding: 8px;
     margin-right: 20px;
     overflow: auto;
@@ -329,6 +330,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
 
   .r {
     flex: 1;
+    height: calc(100vh - 144px);
     margin-left: 300px;
 
     .r-top {
@@ -342,7 +344,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
       display: flex;
       flex: 1;
       justify-content: space-between;
-      height: calc(100% - 16px);
+      height: 100%;
       overflow: auto;
       background-color: #fff;
 

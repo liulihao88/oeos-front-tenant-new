@@ -45,7 +45,7 @@ export default [
         component: () => import('@/views/bucket/objectexplorer.vue'),
         meta: {
           icon: 'ep:home-filled',
-          title: '桶概览',
+          title: '桶浏览',
         },
       },
     ],
@@ -154,6 +154,27 @@ export default [
         meta: {
           icon: 'ep:home-filled',
           title: '租户事件',
+          showParent: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/apps/config',
+    component: Layout,
+    redirect: '/apps/config/default',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '系统配置',
+    },
+    children: [
+      {
+        path: '/apps/config/default',
+        name: 'Event',
+        component: () => import('@/views/system/defaultConfig.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '默认配置',
           showParent: true,
         },
       },

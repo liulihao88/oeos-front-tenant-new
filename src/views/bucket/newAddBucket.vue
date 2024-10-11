@@ -74,17 +74,17 @@ const fieldList = [
       ],
     },
   },
-  {
-    label: '桶事件通知',
-    prop: 'bucketNotification',
-    comp: 'o-radio',
-    attrs: {
-      options: [
-        { label: '启用', value: true },
-        { label: '禁用', value: false },
-      ],
-    },
-  },
+  // {
+  //   label: '桶事件通知',
+  //   prop: 'bucketNotification',
+  //   comp: 'o-radio',
+  //   attrs: {
+  //     options: [
+  //       { label: '启用', value: true },
+  //       { label: '禁用', value: false },
+  //     ],
+  //   },
+  // },
   {
     label: '桶版本',
     prop: 'versionEnabled',
@@ -96,28 +96,28 @@ const fieldList = [
       ],
     },
   },
-  {
-    label: '锁定',
-    prop: 'objectLockEnabled',
-    comp: 'o-radio',
-    attrs: {
-      options: [
-        { label: '启用', value: true },
-        { label: '禁用', value: false },
-      ],
-    },
-  },
-  {
-    label: '加密',
-    prop: 'bucketEncryptionEnabled',
-    comp: 'o-radio',
-    attrs: {
-      options: [
-        { label: '启用', value: true },
-        { label: '禁用', value: false },
-      ],
-    },
-  },
+  // {
+  //   label: '锁定',
+  //   prop: 'objectLockEnabled',
+  //   comp: 'o-radio',
+  //   attrs: {
+  //     options: [
+  //       { label: '启用', value: true },
+  //       { label: '禁用', value: false },
+  //     ],
+  //   },
+  // },
+  // {
+  //   label: '加密',
+  //   prop: 'bucketEncryptionEnabled',
+  //   comp: 'o-radio',
+  //   attrs: {
+  //     options: [
+  //       { label: '启用', value: true },
+  //       { label: '禁用', value: false },
+  //     ],
+  //   },
+  // },
 ]
 
 const unitOptions = [

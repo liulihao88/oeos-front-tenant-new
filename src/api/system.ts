@@ -45,3 +45,19 @@ export function deleteEvent(id) {
 export function exportEvent(data) {
   return request('query/export', 'put', { data: data })
 }
+
+/**
+ * 默认配置
+ */
+// 初始化桶配置
+export function initBucket() {
+  return request('config/defaultbucket')
+}
+// 获取最小空间参数
+export function getLimitCeiling() {
+  return request('bucket/quota/limit/ceiling')
+}
+// 保存配置
+export function saveBucket(data) {
+  return request('config/defaultbucket', 'put', { data: data })
+}

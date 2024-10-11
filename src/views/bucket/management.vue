@@ -21,7 +21,7 @@ const rightTableData = ref([])
 const addRef = ref(null)
 const rightTableColumns = [
   {
-    label: '存储池',
+    label: '存储层',
     sortable: true,
     prop: 'name',
   },

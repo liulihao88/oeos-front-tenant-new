@@ -1,0 +1,84 @@
+<script setup>
+import { ref, getCurrentInstance } from 'vue'
+import { initBucket, saveBucket, getLimitCeiling } from '@/api/system.ts'
+
+const { proxy } = getCurrentInstance()
+const form = ref({
+  quota: '1.0',
+  quotaType: 'hard',
+})
+const limitMax = ref(0)
+const fieldList = [
+  {
+    label: '默认空间大小',
+    prop: 'quota',
+    comp: 'el-input-number',
+    attrs: {
+      min: 0,
+      precision: 1,
+      style: {
+        width: '300px',
+      },
+    },
+  },
+  {
+    label: '类型',
+    prop: 'quotaType',
+    comp: 'o-select',
+    attrs: {
+      width: 300,
+      clearable: false,
+      options: [
+        { label: '硬配额', value: 'hard' },
+        { label: '软配额', value: 'soft' },
+      ],
+    },
+  },
+]
+const rules = {
+  quota: [proxy.validate('默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB')],
+}
+const save = async () => {
+  if (form.value.quota < 0.5 && form.value.quotaUnit === 'GB') {
+    proxy.$toast('默认空间不能小于0.5GB', 'warn')
+    return false
+  } else if (form.value.quota < 0.1 && form.value.quotaUnit === 'TB') {
+    proxy.$toast('默认空间不能小于0.1TB', 'warn')
+    return false
+  } else if (form.value.quota < 0.01 && form.value.quotaUnit === 'PB') {
+    proxy.$toast('默认空间不能小于0.01PB', 'warn')
+    return false
+  }
+  let num = proxy.formatSize(form.value.quota + form.value.quotaUnit)
+  console.log(`37 num`, num)
+  if (num > limitMax.value) {
+    proxy.$toast('默认空间不能大于' + proxy.formatBytes(limitMax.value), 'warn')
+    return false
+  }
+  await saveBucket(form.value)
+  proxy.$toast('保存成功')
+}
+async function init() {
+  let res = await initBucket()
+  form.value = res
+}
+
+const getLimitCeilingFn = async () => {
+  let res = await getLimitCeiling()
+  limitMax.value = res
+}
+init()
+</script>
+
+<template>
+  <div class="c-container">
+    <o-title title="默认桶配置" sub-title="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" b="16" />
+
+    <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules" />
+
+    <div>
+      <el-button type="primary" @click="save">保存</el-button>
+      <el-button type="primary" @click="init">重置</el-button>
+    </div>
+  </div>
+</template>
