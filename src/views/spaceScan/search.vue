@@ -210,7 +210,7 @@ const selectionChange = (val, ...a) => {
       <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
         <template #name="{ scope, row }">
           <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text @click="preview(row)">{{ row.key }}</el-button>
+            <el-button type="primary" text class="p-0" @click="preview(row)">{{ row.key }}</el-button>
           </template>
           <span v-else>
             {{ row.key }}

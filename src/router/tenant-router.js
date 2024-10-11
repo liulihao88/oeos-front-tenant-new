@@ -170,7 +170,7 @@ export default [
     children: [
       {
         path: '/apps/config/default',
-        name: 'Event',
+        name: 'DefaultConfig',
         component: () => import('@/views/system/defaultConfig.vue'),
         meta: {
           icon: 'ep:home-filled',

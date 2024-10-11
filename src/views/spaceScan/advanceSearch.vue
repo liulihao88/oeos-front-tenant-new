@@ -75,16 +75,29 @@ const columns = [
     filter: proxy.formatBytes,
   },
   {
-    label: '内容Hash',
-    prop: 'chechsum',
+    label: '对象版本号',
+    prop: 'version',
+  },
+  {
+    label: '所属桶',
+    prop: 'bucket',
+    width: 150,
+  },
+  {
+    label: '更新时间',
+    prop: 'lastModifiedTime',
+    width: 180,
+    filter: (val, row, prop) => {
+      return proxy.formatTime(val)
+    },
   },
   {
     label: '写入时间',
     prop: 'injectTime',
+    width: 180,
     filter: (val, row, prop) => {
       return proxy.formatTime(val)
     },
-    width: 200,
   },
   {
     key: 'operation',
@@ -186,7 +199,7 @@ const selectionChange = (val, ...a) => {
       <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
         <template #name="{ scope, row }">
           <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text @click="preview(row)">{{ row.key }}</el-button>
+            <el-button type="primary" text class="p-0" @click="preview(row)">{{ row.key }}</el-button>
           </template>
           <span v-else>
             {{ row.key }}

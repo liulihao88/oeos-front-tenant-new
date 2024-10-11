@@ -74,11 +74,17 @@ const columns = [
     prop: 'storageClass',
   },
   {
-    label: '对象内容md5值',
-    prop: 'chechsum',
+    label: '对象版本号',
+    prop: 'version',
   },
   {
     label: '更新时间',
+    width: 180,
+    prop: 'lastModifiedTime',
+    filter: (value) => proxy.formatTime(value),
+  },
+  {
+    label: '写入时间',
     width: 180,
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),

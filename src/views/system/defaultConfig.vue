@@ -10,7 +10,7 @@ const form = ref({
 const limitMax = ref(0)
 const fieldList = [
   {
-    label: '默认空间大小',
+    label: '默认容量大小',
     prop: 'quota',
     comp: 'el-input-number',
     attrs: {
@@ -22,15 +22,15 @@ const fieldList = [
     },
   },
   {
-    label: '类型',
+    label: '存储桶容量类型',
     prop: 'quotaType',
     comp: 'o-select',
     attrs: {
       width: 300,
       clearable: false,
       options: [
-        { label: '硬配额', value: 'hard' },
-        { label: '软配额', value: 'soft' },
+        { label: '硬容量', value: 'hard' },
+        { label: '软容量', value: 'soft' },
       ],
     },
   },

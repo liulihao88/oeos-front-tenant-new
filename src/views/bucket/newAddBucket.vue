@@ -17,8 +17,10 @@ const model = ref({
 const formRef = ref()
 const emits = defineEmits(['success'])
 const validateNumber = (rule, value, callback) => {
-  let validFlag = /^[1-9]\d*(\.\d{1})?$/.test(value)
-  if (!validFlag) {
+  let getQuota = proxy.formatBytesConvert(value + model.value.quotaUnit)
+  let minQuota = proxy.formatBytesConvert('0.5GB')
+  console.log(`53 minQuota`, minQuota)
+  if (getQuota < minQuota) {
     callback(new Error('请输入数字'))
   } else {
     callback()
@@ -49,15 +51,15 @@ const fieldList = [
     label: '容量',
     prop: 'quota',
     useSlot: true,
-
     rules: [
       {
         required: true,
+        trigger: ['change', 'blur'],
       },
       {
         validator: validateNumber,
         trigger: ['change', 'blur'],
-        message: '请输入数字, 且最多一位小数',
+        message: '桶最小为0.5GB',
       },
     ],
   },
@@ -69,8 +71,8 @@ const fieldList = [
     attrs: {
       clearable: false,
       options: [
-        { label: '软配额', value: 'soft' },
-        { label: '硬配额', value: 'hard' },
+        { label: '软容量', value: 'soft' },
+        { label: '硬容量', value: 'hard' },
       ],
     },
   },
@@ -155,11 +157,11 @@ defineExpose({
     <o-dialog v-model="isShow" title="新增桶" confirmText="保存" @confirm="confirm">
       <o-form ref="formRef" :model="model" :fieldList="fieldList">
         <template #quota>
-          <div class="f-bt-ed w-100%">
-            <div class="w-60%">
-              <o-input v-model="model.quota" />
+          <div class="f-st-ct w-100%">
+            <div class="m-r-16">
+              <el-input-number v-model="model.quota" :precision="1" :min="0" />
             </div>
-            <div class="m-l-8">
+            <div>
               <o-radio v-model="model.quotaUnit" :options="unitOptions" showType="button" />
             </div>
           </div>

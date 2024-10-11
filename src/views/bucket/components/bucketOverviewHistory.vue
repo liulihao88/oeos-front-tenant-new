@@ -33,6 +33,10 @@ const columns = [
     prop: 'storageClass',
   },
   {
+    label: '对象内容md5值',
+    prop: 'chechsum',
+  },
+  {
     label: '版本',
     prop: 'version',
   },

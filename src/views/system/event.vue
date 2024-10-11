@@ -132,20 +132,22 @@ init()
       <div class="f-1 f-st-ct">
         <o-select
           v-model="searchForm.levels"
+          title="事件等级"
           :options="levelOptions"
           multiple
           label="name"
           placeholder="请选择事件等级"
+          class="m-r-16"
           @change="init"
         />
         <o-select
           v-model="searchForm.mark"
+          title="状态"
           width="200"
           :options="statusOptions"
           placeholder="请选择状态"
-          class="m-lr-8"
         />
-        <o-date-range v-model="dateRangeValue" />
+        <o-date-range v-model="dateRangeValue" title="日期" class="m-l-16" width="600" />
       </div>
       <div class="w-100">
         <el-button type="primary" @click="exportEvent">导出</el-button>

@@ -224,11 +224,15 @@ defineExpose({
                 label-width="0"
               >
                 <div class="f-st-ct w-100%">
-                  <o-icon
-                    :name="form.matchFields[scope.$index].isInput ? 'edit' : 'caret-bottom'"
-                    class="w-40"
-                    @click="changeName(scope.$index, form.matchFields[scope.$index].isInput)"
-                  />
+                  <o-tooltip
+                    :content="form.matchFields[scope.$index].isInput ? '转换为下拉框模式' : '转换为自定义模式'"
+                  >
+                    <o-icon
+                      :name="form.matchFields[scope.$index].isInput ? 'edit' : 'caret-bottom'"
+                      class="w-40"
+                      @click="changeName(scope.$index, form.matchFields[scope.$index].isInput)"
+                    />
+                  </o-tooltip>
 
                   <o-input
                     v-if="form.matchFields[scope.$index].isInput"

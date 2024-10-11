@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
+let res = proxy.formatBytes(536870912)
+console.log(`73 res`, res)
 </script>
 
 <template>
@@ -12,5 +14,7 @@ const { proxy } = getCurrentInstance()
       />
     </div>
     奇怪啊
+
+    <o-icon name="required" />
   </div>
 </template>
