@@ -1,5 +1,6 @@
 export default {
-  url: 'https://10.0.11.101:8008',
+  // url: 'https://10.0.11.101:8008',
+  url: 'https://10.0.11.33:8008',
   nativeLogo: {
     updateTime: '20240914104846',
     brandTitle: '一体化存储',

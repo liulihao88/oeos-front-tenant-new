@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, watch } from 'vue'
-import KeepTime from '@/views/test/components/keepTime.vue'
+import KeepTime from './keepTime.vue'
 
 import { getSchedules } from '@/api/taskApi.ts'
 
@@ -15,6 +15,10 @@ const isShow = ref(true)
 const form = ref({
   properties: {
     workSchedule: 'IncludeExecute',
+    objectFilter: {
+      expiredTimeExpress: '0y0m0d0h',
+      keyPrefix: '',
+    },
   },
 })
 const rules = {
@@ -55,7 +59,7 @@ initSchedule()
 
 <template>
   <div>
-    <o-dialog v-model="isShow" title="桶任务">
+    <o-dialog v-model="isShow" title="桶任务" width="80%">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <o-title title="基本信息" />
         <el-form-item label="任务名称" prop="name">
@@ -64,8 +68,10 @@ initSchedule()
         <el-form-item label="任务类型" prop="action">
           <o-select v-model="form.action" :options="taskOptions" />
         </el-form-item>
-        <hr />
-        <el-form-item label="数据保留时长" prop="" />
+        <hr class="m-tb-16" />
+        <el-form-item label="数据保留时长" prop="">
+          <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />
+        </el-form-item>
         <template v-if="action === 'UNFREEZE'">
           <el-form-item label="数据解冻配置" prop="">
             <div>

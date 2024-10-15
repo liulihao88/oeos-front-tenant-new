@@ -2,6 +2,8 @@
 import { ref, getCurrentInstance } from 'vue'
 import { getBucketTask, toggleTaskStatus } from '@/api/taskApi.ts'
 
+import AddTask from '@/views/task/components/addTask.vue'
+
 const { proxy } = getCurrentInstance()
 const data = ref([])
 
@@ -114,6 +116,6 @@ const beforeChange = async (enabledBoolean, row) => {
         <!-- @change="enableChange(row.enabled, row)" -->
       </template>
     </o-table>
-    o-table
+    <AddTask />
   </div>
 </template>
