@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, watch } from 'vue'
-import KeepTime from '@/views/test/components/keepTime.vue'
 
 import { getSchedules } from '@/api/taskApi.ts'
 

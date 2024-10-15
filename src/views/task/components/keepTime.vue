@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, watch } from 'vue'
 const { proxy } = getCurrentInstance()
-const years = ref(0)
-const months = ref(0)
-const days = ref(0)
-const hours = ref(0)
-
-const emits = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: {
     type: String,
   },
 })
+
+const emits = defineEmits(['update:modelValue'])
+const years = ref(0)
+const months = ref(0)
+const days = ref(0)
+const hours = ref(0)
 
 watch(
   () => props.modelValue,
@@ -43,15 +43,15 @@ const changeInputNumber = () => {
   <div>
     <el-input-number v-model="years" :min="0" :max="300" @blur="changeInputNumber">
       <template #prefix>
-        <span>$</span>
+        <span>年</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="months" :min="0" :max="12" @blur="changeInputNumber">
+    <el-input-number v-model="months" :min="0" :max="12" class="mlr" @blur="changeInputNumber">
       <template #prefix>
         <span>月</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="days" :min="0" :max="31" @blur="changeInputNumber">
+    <el-input-number v-model="days" :min="0" :max="31" class="mr" @blur="changeInputNumber">
       <template #prefix>
         <span>日</span>
       </template>
