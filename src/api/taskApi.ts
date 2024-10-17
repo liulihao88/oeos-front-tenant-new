@@ -20,6 +20,15 @@ export function getScheduleDetail(id) {
   return request(`/schedule/${id}`)
 }
 
+// 获取数据冷冻目标存储列表
+export function getTargetStorageList() {
+  return request('space/accessablestorages', {
+    params: {
+      type: 'GlacierStoragePool',
+    },
+  })
+}
+
 // 删除任务计划
 export function deleteSchedule(id) {
   return request(`/schedule/${id}`, 'delete', { customResponse: true })
