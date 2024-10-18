@@ -2,12 +2,13 @@
 import { ref, getCurrentInstance, watch } from 'vue'
 import KeepTime from './keepTime.vue'
 
-import { getSchedules, getTargetStorageList } from '@/api/taskApi.ts'
+import { getSchedules, getTargetStorageList, saveTask } from '@/api/taskApi.ts'
 
 const FREEZE = 'FREEZE'
 const UNFREEZE = 'UNFREEZE'
 
 const formRef = ref(null)
+const emits = defineEmits(['success'])
 
 const { proxy } = getCurrentInstance()
 const taskOptions = [
@@ -50,8 +51,15 @@ watch(
   },
 )
 
+const open = () => {
+  isShow.value = true
+}
+
 const save = async () => {
   await proxy.validForm(formRef)
+  await saveTask(form.value)
+  isShow.value = false
+  emits('success')
 }
 const getTargetBucketValue = async () => {}
 const prev = () => {
@@ -72,6 +80,10 @@ const actionChange = async (value) => {
     targetOptions.value = res
   }
 }
+
+defineExpose({
+  open,
+})
 </script>
 
 <template>
@@ -86,9 +98,26 @@ const actionChange = async (value) => {
           <o-select v-model="form.action" :options="taskOptions" @change="actionChange" />
         </el-form-item>
         <hr class="m-tb-16" />
-        <el-form-item label="数据保留时长" prop="">
-          <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />
-        </el-form-item>
+        <template v-if="form.action !== UNFREEZE">
+          <el-form-item label="数据保留时长" prop="">
+            <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />
+          </el-form-item>
+          <el-form-item label="任务计划" prop="">
+            <div class="f-st-ct">
+              <o-select
+                v-model="form.properties.workScheduleExeOpportunity"
+                :options="planOptions"
+                width="200"
+                label="name"
+                class="mr"
+              />
+              <el-radio-group v-if="form.properties.workScheduleExeOpportunity" v-model="form.properties.workSchedule">
+                <el-radio value="IncludeExecute">计划内执行</el-radio>
+                <el-radio value="ExcludeExecute">计划外执行</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item>
+        </template>
         <template v-if="form.action === UNFREEZE">
           <el-form-item label="数据解冻配置" prop="">
             <div>
@@ -101,21 +130,7 @@ const actionChange = async (value) => {
             </div>
           </el-form-item>
         </template>
-        <el-form-item label="任务计划" prop="">
-          <div class="f-st-ct">
-            <o-select
-              v-model="form.properties.workScheduleExeOpportunity"
-              :options="planOptions"
-              width="200"
-              label="name"
-              class="mr"
-            />
-            <el-radio-group v-if="form.properties.workScheduleExeOpportunity" v-model="form.properties.workSchedule">
-              <el-radio value="IncludeExecute">计划内执行</el-radio>
-              <el-radio value="ExcludeExecute">计划外执行</el-radio>
-            </el-radio-group>
-          </div>
-        </el-form-item>
+
         <!-- </template> -->
         <template v-if="form.action === FREEZE">
           <hr class="m-bt-16" />

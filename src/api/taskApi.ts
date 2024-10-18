@@ -10,6 +10,16 @@ export function toggleTaskStatus(id, status) {
   return request(`/objecthandle/task/${id}/${status}`, 'put')
 }
 
+// 保存或更新桶任务
+export function saveTask(data) {
+  return request('objecthandle/task/', 'put', { data: data })
+}
+
+// 删除桶任务
+export function delTask(id) {
+  return request(`objecthandle/task/${id}`, 'delete')
+}
+
 // 任务计划列表 /schedule/schedules
 export function getSchedules() {
   return request('/schedule/schedules')
