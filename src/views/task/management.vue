@@ -18,6 +18,7 @@ const columns = [
   {
     label: '任务类型',
     prop: 'action',
+    width: 100,
   },
   {
     label: '包含桶名',
