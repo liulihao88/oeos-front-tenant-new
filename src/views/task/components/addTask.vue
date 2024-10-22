@@ -18,7 +18,8 @@ const selectRef = ref(null)
 
 const { proxy } = getCurrentInstance()
 const taskOptions = [
-  { label: '数据冷冻', value: FREEZE },
+  { label: '标准数据冷冻', value: FREEZE },
+  { label: '零拷贝数据冷冻', value: FREEZE },
   { label: '数据解冻', value: UNFREEZE },
   { label: '数据过期', value: DELETE },
 ]
@@ -66,7 +67,7 @@ const compTitle = computed(() => {
 })
 
 const actionChange = async (value) => {
-  if (form.value.action === FREEZE) {
+  if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     let res = await getTargetStorageList()
     targetOptions.value = res
   }
@@ -76,9 +77,6 @@ const open = async (row = '') => {
   if (row) {
     let res = await taskDetails(row.id)
     form.value = res
-    if (form.value.action === 'ZERO_COPY_FREEZE') {
-      form.value.action = FREEZE
-    }
     isEdit.value = true
     actionChange()
     isTargetBucket.value = form.value.properties.includeBuckets.length === 0 ? true : false
@@ -98,27 +96,17 @@ const open = async (row = '') => {
 
 const save = async () => {
   await proxy.validForm(formRef)
-  let mergeForm = proxy.clone(form)
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     if (!isTargetBucket.value && form.value.properties.includeBuckets.length === 0) {
       proxy.$toast('请选择桶')
       return
     }
-    const highFormValue = highSettingsRef.value.baseFormValue
-    mergeForm = {
-      ...mergeForm,
-      properties: {
-        ...mergeForm.properties,
-        ...highFormValue,
-      },
-    }
-    mergeForm.action = highFormValue.action
   }
-  console.log(`45 mergeForm`, mergeForm)
+  const copyForm = proxy.clone(form)
   if (isTargetBucket.value) {
-    mergeForm.properties.includeBuckets = []
+    copyForm.properties.includeBuckets = []
   }
-  await saveTask(mergeForm)
+  await saveTask(copyForm)
   isShow.value = false
   emits('success')
 }
@@ -130,6 +118,15 @@ const highSettings = () => {
     highSettingsRef.value.open(form.value.properties)
   } else {
     highSettingsRef.value.open()
+  }
+}
+const highSave = (highForm) => {
+  form.value = {
+    ...form.value,
+    properties: {
+      ...form.value.properties,
+      ...highForm,
+    },
   }
 }
 
@@ -146,7 +143,7 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog v-model="isShow" :title="compTitle" width="80%">
+    <o-dialog v-model="isShow" :title="compTitle" width="60%" :enableConfirm="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <o-title title="基本信息" />
         <el-form-item label="任务名称" prop="name">
@@ -202,7 +199,7 @@ defineExpose({
           <el-form-item label="选择目标存储" prop="properties.targetStorageId">
             <o-select v-model="form.properties.targetStorageId" :options="targetOptions" label="name" />
           </el-form-item>
-          <el-form-item label="处理目标桶" prop="">
+          <el-form-item label="处理目标桶" prop="" required>
             <div class="f-st-ct w-100%">
               <el-switch
                 v-model="isTargetBucket"
@@ -253,7 +250,6 @@ defineExpose({
       </el-form>
 
       <template #footer>
-        <!-- <el-button type="" @click="prev">上一步</el-button> -->
         <el-button
           v-if="form.action === FREEZE || form.action === ZERO_COPY_FREEZE"
           type="primary"
@@ -261,9 +257,9 @@ defineExpose({
         >
           高级配置
         </el-button>
-        <el-button type="primary" @click="save">保存</el-button>
+        <el-button type="primary" @click="save">完成</el-button>
       </template>
-      <HighSettings ref="highSettingsRef" @save="save" />
+      <HighSettings ref="highSettingsRef" @save="highSave" />
     </o-dialog>
   </div>
 </template>

@@ -38,7 +38,7 @@ watch(
 </script>
 
 <template>
-  <o-input v-model="data" v-bind="$attrs" v-number :min="1">
+  <el-input-number v-model="data" v-bind="$attrs" v-number :min="1">
     <template #suffix>MB</template>
-  </o-input>
+  </el-input-number>
 </template>

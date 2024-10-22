@@ -4,8 +4,6 @@ const { proxy } = getCurrentInstance()
 import { saveTask } from '@/api/taskApi.ts'
 
 const FREEZE = 'FREEZE'
-const ZERO_COPY_FREEZE = 'ZERO_COPY_FREEZE'
-
 const formRef = ref(null)
 const isShow = ref(false)
 const originForm = ref({
@@ -24,24 +22,19 @@ const originForm = ref({
 })
 const emits = defineEmits(['save'])
 const form = ref({})
-// form.value = proxy.clone(originForm)
 const rules = {
   packageSizeThreshold: [proxy.validate()],
   singleSizeRange: [proxy.validate()],
   fragmentSizeThreshold: [proxy.validate()],
   workerCount: [proxy.validate()],
-
   threadOfTransmission: [proxy.validate()],
 }
-const baseFormValue = ref({})
-baseFormValue.value = proxy.clone(originForm)
 const open = (row = '') => {
   if (proxy.isEmpty(row)) {
     form.value = proxy.clone(originForm)
   } else {
     form.value = proxy.clone(row)
   }
-  baseFormValue.value = proxy.clone(form)
   isShow.value = true
 }
 const prefixOptions = [
@@ -53,7 +46,6 @@ const prefixOptions = [
 const devTest = () => {
   open()
 }
-// devTest()
 
 const beforeChange = async () => {
   if (!form.value.KeepRawKey) {
@@ -71,34 +63,23 @@ const beforeChange = async () => {
 
 const confirm = async () => {
   await proxy.validForm(formRef)
+  console.log(`13 form.value.singleSizeRange`, form.value.singleSizeRange)
+  proxy.log(`form.value`, form.value, '/cyrd/oeos-front-tenant-new/src/views/task/components/highSettings.vue')
+  if (form.value.singleSizeRange[0] >= form.value.singleSizeRange[1]) {
+    return proxy.$toast('独立存储区间第一个值要小于第二个值')
+  }
   isShow.value = false
-  baseFormValue.value = form.value
+  emits('save', form.value)
 }
 
 defineExpose({
   open,
-  baseFormValue,
 })
 </script>
 
 <template>
   <o-dialog ref="dialogRef" v-model="isShow" title="高级配置[数据冷冻配置]" confirmText="保存" @confirm="confirm">
-    <!-- <o-title title="数据冷冻配置"></o-title> -->
     <el-form id="highSettingsForm" ref="formRef" :model="form" :rules="rules" label-width="auto">
-      <el-form-item label="冷冻类型" prop="">
-        <el-radio-group v-model="form.action">
-          <el-radio :label="FREEZE">标准冷冻</el-radio>
-          <el-radio :label="ZERO_COPY_FREEZE">零拷贝冷冻</el-radio>
-        </el-radio-group>
-
-        <o-icon
-          name="warning"
-          color="#DCDEE0"
-          class="ml"
-          content="当提交冷冻数据至存储系统时,校验提交内容正确性避免数据传输错误；会小幅影响性能。"
-        />
-      </el-form-item>
-
       <el-form-item label="保持原始对象" prop="">
         <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
         <o-icon
@@ -151,11 +132,12 @@ defineExpose({
         <o-input
           v-model="form.threadOfTransmission"
           v-number
-          :disabled="form.KeepRawKey"
           :min="1"
           content="单个工作线程内的传输线程"
+          :disabled="form.KeepRawKey"
         />
       </el-form-item>
+
       <el-form-item label="开启元数据注入" prop="InjectSelftMeta">
         <el-switch v-model="form.InjectSelftMeta" class="mr" :disabled="form.KeepRawKey" />
         <o-icon name="warning" color="#DCDEE0" content="此功能可通过冷冻后的数据独立恢复原始文件；但会降低冷冻性能。" />
