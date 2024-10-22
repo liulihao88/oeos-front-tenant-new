@@ -2,7 +2,7 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 
-import { getBucketTotal, getBucketUse } from '@/api/bucket'
+import { getBucketTotal } from '@/api/bucket'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -37,7 +37,7 @@ const columns = [
 ]
 
 const init = async () => {
-  let res = await Promise.all([getBucketTotal(bucketName.value), getBucketUse(bucketName.value)])
+  let res = await Promise.all([getBucketTotal(bucketName.value)])
   console.log(`24 res`, res)
 
   data.value = [
