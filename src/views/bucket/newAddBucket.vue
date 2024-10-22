@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { ref, getCurrentInstance, h } from 'vue'
 const { proxy } = getCurrentInstance()
-import { saveBucket } from '@/api/bucket.js'
+import { saveBucket } from '@/api/bucket.ts'
 import { spawn } from 'child_process'
 
 const model = ref({

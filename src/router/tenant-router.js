@@ -40,6 +40,25 @@ export default [
         },
       },
       {
+        path: '/apps/bucket/management',
+        meta: {
+          title: '桶列表',
+        },
+        children: [
+          {
+            path: '/apps/bucket/management/detail',
+            name: 'ManagementDetail',
+            meta: {
+              title: '桶详情',
+              activePath: '/apps/bucket/management',
+              showLink: false,
+              keepAlive: true,
+            },
+            component: async () => await import('@/views/bucket/managementDetail.vue'),
+          },
+        ],
+      },
+      {
         path: '/apps/bucket/objectexplorer',
         name: 'Objectexplorer',
         component: () => import('@/views/bucket/objectexplorer.vue'),

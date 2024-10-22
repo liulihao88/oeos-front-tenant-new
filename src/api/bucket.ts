@@ -33,3 +33,21 @@ export function saveBucket(data) {
 export function deleteBucket(bucketName) {
   return request(`bucket/${bucketName}`, 'delete')
 }
+
+/**
+ * 桶详情
+ */
+
+// 获取总容量
+export function getBucketTotal(bucketName) {
+  return request(`bucket/${bucketName}/config/quota`)
+}
+
+// 获取使用量
+export function getBucketUse(bucketName) {
+  return request(`bucket/quota/limit/floor`, {
+    params: {
+      bucketName: bucketName,
+    },
+  })
+}

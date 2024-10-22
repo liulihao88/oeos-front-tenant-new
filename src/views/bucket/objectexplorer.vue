@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, nextTick, h } from 'vue'
+import { ref, computed, getCurrentInstance, nextTick, h, watch } from 'vue'
 const { proxy } = getCurrentInstance()
 import {
   getBucketOptions,
@@ -14,10 +14,16 @@ import {
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
+import GetBucketList from '@/hooks/getBucketList.ts'
+let getBucketList = GetBucketList()
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+console.log(`42 route`, route)
 
 const bucketId = ref()
+bucketId.value = route.query.id ?? ''
 const bucketName = ref()
-const bucketOptions = ref([])
 const selectRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
@@ -105,16 +111,12 @@ const columns = [
   },
 ]
 const data = ref([])
+
 const selectDisabled = computed(() => {
   return selections.value.length === 0
 })
 function easySearch() {}
 
-async function getBucketListInit() {
-  let res = await getBucketOptions()
-  bucketOptions.value = res
-  getTableByBucket()
-}
 async function getTableByBucket() {
   let storageBucketValue = proxy.getStorage('tenant-bucket-id')
   if (proxy.notEmpty(storageBucketValue)) {
@@ -122,14 +124,6 @@ async function getTableByBucket() {
     selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
   }
 }
-function selectChange(value, label, options) {
-  bucketId.value = value
-  bucketName.value = label
-  proxy.setStorage('tenant-bucket-id', bucketId.value)
-  proxy.setStorage('tenant-bucket-name', bucketName.value)
-  init()
-}
-getBucketListInit()
 async function init() {
   let sendParams = {
     bucket: bucketName.value,
@@ -164,20 +158,19 @@ async function deleteRow(row) {
 async function historyRow(row) {
   bucketOverviewHistoryRef.value.open(row)
 }
+const bucketChange = (val) => {
+  console.log(`1152 176行 bucket/objectexplorer.vue bucketId.value `, bucketId.value)
+
+  console.log(`2229 178行 bucket/objectexplorer.vue bucketName.value `, bucketName.value)
+
+  init()
+}
 </script>
 
 <template>
   <div>
     <div class="top f">
-      <o-select
-        ref="selectRef"
-        v-model="bucketId"
-        placeholder="请选择桶名"
-        class="m-r-16"
-        :options="bucketOptions"
-        label="name"
-        @changeSelect="selectChange"
-      />
+      <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketChange" />
       <UploadFile :bucketName="bucketName" />
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>

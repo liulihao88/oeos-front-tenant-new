@@ -9,17 +9,14 @@
  */
 import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
-import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple } from '@/api/searchApi.ts'
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 import { previewImage } from '@/api/spaceScan.ts'
 
 const { proxy } = getCurrentInstance()
-let getBucketList = GetBucketList()
-getBucketList.getBucketList()
 
-const bucketId = ref(proxy.getStorage('tenant-bucket-id') ?? '')
-const bucketName = ref(proxy.getStorage('tenant-bucket-name') ?? '')
+const bucketId = ref()
+const bucketName = ref()
 
 const form = ref({
   key: '',
@@ -120,11 +117,7 @@ if (bucketId.value) {
 }
 
 const changeSelect = (value, label, options) => {
-  bucketId.value = value
-  bucketName.value = label
   form.value.bucket = label
-  proxy.setStorage('tenant-bucket-id', value)
-  proxy.setStorage('tenant-bucket-name', label)
   init()
 }
 const timeRange = ref([])
@@ -177,16 +170,7 @@ const selectionChange = (val, ...a) => {
   <div>
     <div class="f-bt-un w-100% m-b-16">
       <div class="f-3 f-st-ct">
-        <o-select
-          ref="selectRef"
-          v-model="bucketId"
-          placeholder="请选择桶名"
-          class="mr"
-          :clearable="false"
-          :options="getBucketList.bucketOptions"
-          label="name"
-          @changeSelect="changeSelect"
-        />
+        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @changeSelect="changeSelect" />
 
         <o-input v-model="form.key" width="150" placeholder="请输入对象名称" class="mr2" @input="init" />
         <o-date-range

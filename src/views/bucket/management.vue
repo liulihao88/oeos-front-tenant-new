@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed, nextTick } from 'vue'
 // import { throttle } from 'lodash-es'
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
 const { proxy } = getCurrentInstance()
 import {
   getBucketList,
@@ -10,7 +13,7 @@ import {
   getUsage,
   getOverview,
   deleteBucket,
-} from '@/api/bucket.js'
+} from '@/api/bucket.ts'
 import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
 import NewAddBucket from '@/views/bucket/newAddBucket.vue'
 
@@ -64,34 +67,6 @@ const topObj = ref([
     storage: '0',
     icon: 'bucketsCount',
   },
-  {
-    title: 'objectsPendingReplicationTotalSize',
-    name: '待复制大小',
-    icon: 'coping',
-    storage: '0',
-    value: '0',
-  },
-  {
-    title: 'objectsFailedReplicationTotalSize',
-    name: '复制失败大小',
-    value: '0',
-    storage: '0',
-    icon: 'objFail',
-  },
-  {
-    title: 'objectsReplicatedTotalSize',
-    name: '已复制大小',
-    value: '0',
-    storage: '0',
-    icon: 'copied',
-  },
-  {
-    title: 'objectsReplicaTotalSize',
-    name: '备份大小',
-    value: '0',
-    storage: '0',
-    icon: 'copySize',
-  },
 ])
 
 const capacityData = ref([])
@@ -102,16 +77,26 @@ function refresh() {
 function add() {
   addRef.value.open()
 }
-async function handleDelete(row) {
+async function deleteRow(row) {
   await deleteBucket(row.bucketName)
+  proxy.$toast('删除成功')
   init()
 }
-function handleView() {
-  console.log('handleView')
+function viewRow(row) {
+  console.log(`83 row`, row)
+  console.log(`54 row.bucketID`, row.bucketID)
+  router.push({
+    name: 'Objectexplorer',
+    query: {
+      id: row.bucketID,
+    },
+  })
 }
 const handleDetail = (row, scope, e) => {
-  console.log(`38 e`, e)
-  console.log(`68 row`, row)
+  proxy.jump({
+    name: 'ManagementDetail',
+  })
+  proxy.setStorage('tenant-bucket-details', row)
 }
 function handleUpdate() {
   console.log('handleUpdate')
@@ -122,8 +107,7 @@ const columns = [
   {
     label: '桶名称',
     prop: 'bucketName',
-    handler: handleDetail,
-    // width: 200,
+    useSlot: true,
   },
   {
     label: '对象数',
@@ -166,11 +150,11 @@ const columns = [
       {
         content: '删除',
         reConfirm: proxy.$dev ? false : true,
-        handler: handleDelete,
+        handler: deleteRow,
       },
       {
         content: '桶浏览',
-        handler: handleView,
+        handler: viewRow,
       },
     ],
   },
@@ -190,6 +174,7 @@ async function getTableList() {
   }
   let res = await getBucketList(params)
   bucketLists.value = res
+  data.value = res
   getBucketDetailByName()
 }
 async function init() {
@@ -251,12 +236,17 @@ async function getBucketDetailByName() {
   for (let i = 0; i < bucketLists.value.length; i++) {
     queue.push(getBucketDetail(bucketLists.value[i].bucketName))
   }
-  let detailRes = await Promise.all(queue)
-  console.log(`02 detailRes`, detailRes)
-  data.value = detailRes.map((v, i) => {
-    const item = bucketLists.value[i]
-    return { ...v, ...item }
-  })
+  let detailRes = []
+  try {
+    detailRes = await Promise.all(queue)
+  } catch (error) {}
+  if (proxy.notEmpty(detailRes)) {
+    data.value = detailRes.map((v, i) => {
+      const item = bucketLists.value[i]
+      return { ...v, ...item }
+    })
+  }
+
   total.value = data.value.length
 }
 const data = ref([])
@@ -297,14 +287,13 @@ function _handleUsedData(usedSpace) {
       <el-col :span="16">
         <div class="w-100% h-100%">
           <div class="l-list f w-100%">
-            <div v-for="(v, i) in topObj" :key="i" class="c-box f-bt f-c h-200 list-item p-tb-16">
+            <div v-for="(v, i) in topObj" :key="i" class="c-box list-item p-tb-16">
               <div>
                 <o-icon name="delete" size="40" />
               </div>
               <div>
                 {{ proxy.formatThousands(v.value) }}
               </div>
-              <!-- <div class="fs-12">{{ v.name }}</div> -->
               <o-tooltip :content="v.name" class="fs-12" />
             </div>
           </div>
@@ -332,6 +321,13 @@ function _handleUsedData(usedSpace) {
               highlight-current-row
               @current-change="currentChange"
             >
+              <template #bucketName="{ scope, row }">
+                <o-tooltip :content="row.bucketID">
+                  <div class="link" @click="handleDetail(row, scope)">
+                    {{ row.bucketName }}
+                  </div>
+                </o-tooltip>
+              </template>
               <template #capacity="{ scope, row }">
                 <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
               </template>
@@ -361,23 +357,24 @@ function _handleUsedData(usedSpace) {
 
 <style lang="scss" scoped>
 .content-box {
-  max-height: calc(100vh - 110px);
+  max-height: calc(100vh - 84px);
 
   .l-list {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 24px;
 
     .list-item {
-      width: 13%;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 32%;
       margin: 0;
-    }
-
-    .list-item:not(:nth-child(7n)) {
-      margin-right: calc(7% / 3);
     }
   }
 
   .bucket-table {
-    height: calc(100% - 224px);
+    height: calc(100% - 104px);
   }
 
   .right-box {
