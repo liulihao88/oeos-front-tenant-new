@@ -6,6 +6,7 @@ import HighSettings from '@/views/task/components/highSettings.vue'
 import { getSchedules, getTargetStorageList, saveTask, taskDetails } from '@/api/taskApi.ts'
 
 const FREEZE = 'FREEZE'
+const ZERO_COPY_FREEZE = 'ZERO_COPY_FREEZE'
 const UNFREEZE = 'UNFREEZE'
 const DELETE = 'DELETE'
 
@@ -98,24 +99,21 @@ const open = async (row = '') => {
 const save = async () => {
   await proxy.validForm(formRef)
   let mergeForm = proxy.clone(form)
-  if (form.value.action === FREEZE) {
+  if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     if (!isTargetBucket.value && form.value.properties.includeBuckets.length === 0) {
       proxy.$toast('请选择桶')
       return
     }
     const highFormValue = highSettingsRef.value.baseFormValue
-    console.log(`78 highFormValue`, highFormValue)
-    console.log(`42 highFormValue.value`, highFormValue.value)
-    form.value.action = highFormValue.action
     mergeForm = {
-      ...form.value,
+      ...mergeForm,
       properties: {
-        ...form.value.properties,
+        ...mergeForm.properties,
         ...highFormValue,
       },
     }
+    mergeForm.action = highFormValue.action
   }
-
   console.log(`45 mergeForm`, mergeForm)
   if (isTargetBucket.value) {
     mergeForm.properties.includeBuckets = []
@@ -198,7 +196,7 @@ defineExpose({
         </template>
 
         <!-- </template> -->
-        <template v-if="form.action === FREEZE">
+        <template v-if="form.action === FREEZE || form.action === ZERO_COPY_FREEZE">
           <hr class="m-bt-16" />
           <o-title title="数据空间配置: " />
           <el-form-item label="选择目标存储" prop="properties.targetStorageId">
@@ -256,7 +254,13 @@ defineExpose({
 
       <template #footer>
         <!-- <el-button type="" @click="prev">上一步</el-button> -->
-        <el-button v-if="form.action === FREEZE" type="primary" @click="highSettings">高级配置</el-button>
+        <el-button
+          v-if="form.action === FREEZE || form.action === ZERO_COPY_FREEZE"
+          type="primary"
+          @click="highSettings"
+        >
+          高级配置
+        </el-button>
         <el-button type="primary" @click="save">保存</el-button>
       </template>
       <HighSettings ref="highSettingsRef" @save="save" />
