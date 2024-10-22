@@ -110,6 +110,7 @@ defineExpose({
       <el-form-item label="独立存储区间" prop="singleSizeRange">
         <div class="f-st-ct w-93%">
           <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" class="mr" />
+          <div class="mr">-</div>
           <gBtoMb
             v-model="form.singleSizeRange[1]"
             :disabled="form.KeepRawKey"
