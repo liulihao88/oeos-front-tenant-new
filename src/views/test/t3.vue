@@ -1,19 +1,13 @@
-<template>
-  <el-space>
-    <el-input-number v-model="num" :min="1" :max="10">
-      <template #prefix>
-        <span>￥</span>
-      </template>
-    </el-input-number>
-    <el-input-number v-model="num" :min="1" :max="10">
-      <template #suffix>
-        <span>RMB</span>
-      </template>
-    </el-input-number>
-  </el-space>
-</template>
-
-<script lang="ts" setup>
-import { ref } from 'vue'
-const num = ref(1)
+<script setup lang="ts">
+import { ref, getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance()
+const base = ref([1024 * 1024 * 100, 1024 * 1024])
 </script>
+
+<template>
+  <div>
+    <gBtoMb v-model="base[0]" />
+    <gBtoMb v-model="base[1]" />
+    我不服啊 ========={{ base }}
+  </div>
+</template>

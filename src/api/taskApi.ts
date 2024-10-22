@@ -15,6 +15,11 @@ export function saveTask(data) {
   return request('objecthandle/task/', 'put', { data: data })
 }
 
+// 桶任务详情
+export function taskDetails(id) {
+  return request(`objecthandle/task/${id}`)
+}
+
 // 删除桶任务
 export function delTask(id) {
   return request(`objecthandle/task/${id}`, 'delete')

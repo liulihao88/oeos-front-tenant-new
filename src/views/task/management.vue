@@ -8,7 +8,9 @@ const { proxy } = getCurrentInstance()
 const data = ref([])
 const addTaskRef = ref(null)
 
-const editRow = (row) => {}
+const editRow = (row) => {
+  addTaskRef.value.open(row)
+}
 
 const columns = [
   {

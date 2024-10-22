@@ -1,0 +1,44 @@
+<script setup lang="ts">
+import { ref, getCurrentInstance, watch } from 'vue'
+// import { useVModel } from '@vueuse/core'
+const { proxy } = getCurrentInstance()
+
+const props = defineProps({
+  modelValue: {
+    required: true,
+    type: [String, Number],
+  },
+})
+// const data = useVModel(props)
+// console.log(data.value) // props.data
+
+const data = ref()
+const emits = defineEmits(['update:modelValue'])
+watch(
+  () => props.modelValue,
+  (val) => {
+    data.value = val / 1024 / 1024
+  },
+  {
+    immediate: true,
+  },
+)
+
+watch(
+  data,
+  (val) => {
+    console.log(`25 val`, val)
+    emits('update:modelValue', val * 1024 * 1024)
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+)
+</script>
+
+<template>
+  <o-input v-model="data" v-bind="$attrs" v-number :min="1">
+    <template #suffix>MB</template>
+  </o-input>
+</template>
