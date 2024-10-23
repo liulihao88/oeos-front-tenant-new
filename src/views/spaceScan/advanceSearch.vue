@@ -47,7 +47,6 @@ const preview = async (row) => {
   const byteArray = new Uint8Array(res.data) // 将二进制数据流转换为字节数组
   const blob = new Blob([byteArray]) // 创建Blob对象
   const imgUrl = URL.createObjectURL(blob) // 创建一个URL，用于表示blob对象
-  console.log(`98 imgUrl`, imgUrl)
   viewerApi({
     images: [imgUrl],
   })

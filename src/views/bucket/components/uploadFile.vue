@@ -3,12 +3,14 @@ import { ref, getCurrentInstance } from 'vue'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
 const { proxy } = getCurrentInstance()
+const emits = defineEmits(['success'])
 const props = defineProps({
   bucketName: {
     type: String,
     default: '',
   },
 })
+const timer = ref(null)
 const onChange = (file, files) => {
   const formData = new FormData()
   formData.append('file', file.raw)
@@ -49,6 +51,12 @@ const onChange = (file, files) => {
         return
       } else {
         proxy.$toast(`${fileName}上传成功`, 'success')
+        if (timer.value) {
+          clearTimeout(timer.value)
+        }
+        timer.value = setTimeout(() => {
+          emits('success')
+        }, 5000)
       }
     })
     .finally(() => {

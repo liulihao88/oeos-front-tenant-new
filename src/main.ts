@@ -7,6 +7,8 @@ import { MotionPlugin } from '@vueuse/motion'
 import { createApp, type Directive } from 'vue'
 import { useElementPlus } from '@/plugins/elementPlus'
 import { injectResponsiveStorage } from '@/utils/responsive'
+import { createPinia } from 'pinia'
+const pinia = createPinia()
 
 import Table from '@pureadmin/table'
 // import PureDescriptions from "@pureadmin/descriptions";
@@ -77,6 +79,7 @@ app.config.globalProperties.$dev = import.meta.env.DEV
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)
   app.use(router)
+  app.use(pinia)
   await router.isReady()
   injectResponsiveStorage(app, config)
   app.use(MotionPlugin).use(useElementPlus).use(Table).use(VueViewer, {})

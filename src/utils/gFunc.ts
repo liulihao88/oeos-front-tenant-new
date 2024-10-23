@@ -50,17 +50,6 @@ export function jump(path) {
   return router.push(path)
 }
 
-export function isImage(fileName) {
-  // 定义一个包含图片扩展名的数组
-  const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'tif', 'webp']
-
-  // 获取文件名的扩展名
-  const extension = fileName.split('.').pop().toLowerCase()
-
-  // 检查扩展名是否在图片扩展名数组中
-  return imageExtensions.includes(extension)
-}
-
 export function formatTimeByRule(time, timeStr = 'datetime') {
   timeStr = timeStr.toLowerCase()
   if (isEmpty(time)) {
@@ -85,4 +74,10 @@ export function formatTimeByRule(time, timeStr = 'datetime') {
     return formatDurationTime(time, parseRuleFormat)
   }
   return formatTime(time, parseRuleFormat)
+}
+
+export function isImage(str) {
+  // 正则表达式匹配常见的图片文件扩展名
+  const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp|tif|tiff)$/i
+  return imageRegex.test(str)
 }

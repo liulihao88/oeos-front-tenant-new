@@ -14,7 +14,13 @@ import {
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
+import FolderNav from '@/views/bucket/components/folderNav.vue'
+
+import useBucketSettings from '@/store/modules/bucketSettings.ts'
+const bucketSettings = useBucketSettings()
 import GetBucketList from '@/hooks/getBucketList.ts'
+import { preview } from '@/utils/remoteFunc.ts'
+import { useI18n } from 'vue-i18n'
 let getBucketList = GetBucketList()
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -28,6 +34,10 @@ const selectRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
 const BucketFileDetailsCompRef = ref(null)
+
+function selectableFn(row, index) {
+  return row.injectTime
+}
 
 const restoreRow = async (row) => {
   let params = {
@@ -58,6 +68,7 @@ const batchDownload = async () => {
 const columns = [
   {
     type: 'selection',
+    selectable: selectableFn,
   },
   {
     label: '对象名称',
@@ -104,7 +115,6 @@ const columns = [
     maxBtns: proxy.$dev ? 6 : null,
     isShow: (row) => (row.injectTime ? true : false),
     btns: [
-      { content: '预览' },
       { content: '恢复', handler: restoreRow },
       { content: '历史', handler: historyRow },
       { content: '详情', handler: detailRow },
@@ -130,8 +140,8 @@ async function getTableByBucket() {
 async function init() {
   let sendParams = {
     bucket: bucketName.value,
-    pageMarker: '',
-    prefixKey: '',
+    pageMarker: bucketSettings.prevFolderList.at(-1) ?? '',
+    prefixKey: bucketSettings.prefixKey,
   }
   let res = await getObjectList(sendParams)
   data.value = proxy.clone(res, 1)
@@ -167,16 +177,38 @@ const bucketSuccess = () => {
 const bucketChange = (val) => {
   proxy.setStorage('tenant-bucket-id', val)
 }
-const prev = () => {}
-const next = () => {}
-const toPrevFolder = () => {}
+const prev = () => {
+  bucketSettings.changePrevFolder()
+  init()
+}
+const next = () => {
+  let laskKey = data.value.at(-1).key
+  console.log(`21 laskKey`, laskKey)
+  bucketSettings.changePrevFolder(laskKey)
+  init()
+}
+const toPrevFolder = () => {
+  let nowPrefixKeyArr = bucketSettings.prefixKeyArr
+  console.log(`61 nowPrefixKeyArr`, nowPrefixKeyArr)
+  nowPrefixKeyArr.pop()
+  let nowPrefixkey = nowPrefixKeyArr.length > 0 ? nowPrefixKeyArr.join('/') + '/' : ''
+  bucketSettings.changePrefixKey(nowPrefixkey)
+  // init()
+}
+const inside = (row) => {
+  bucketSettings.changePrefixKey(row.key)
+}
+const previewImage = (row) => {
+  preview(bucketName.value, row.key)
+}
 </script>
 
 <template>
   <div>
     <div class="top f">
+      {{ bucketSettings.prevFolderList }}
       <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketSuccess" @change="bucketChange" />
-      <UploadFile :bucketName="bucketName" />
+      <UploadFile :bucketName="bucketName" @success="init" />
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
       <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
@@ -192,17 +224,25 @@ const toPrevFolder = () => {}
     </div>
 
     <div class="middle m-t-16">
-      <el-button type="primary" @click="prev">上一页</el-button>
-      <el-button type="primary" @click="next">下一页</el-button>
-      <el-button type="primary" @click="toPrevFolder">返回上级目录</el-button>
+      <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
+      <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+      <el-button v-if="bucketSettings.prefixKey" type="primary" @click="toPrevFolder">返回上级目录</el-button>
+      <FolderNav class="ml2" />
     </div>
 
     <o-table :columns="columns" :data="data" class="m-t-24" :showPage="false" @selection-change="selectionChange">
       <template #name="{ scope, row }">
-        <div v-if="row.injectTime">
+        <div
+          v-if="row.injectTime"
+          :class="{
+            link: proxy.isImage(row.key),
+            'is-image': proxy.isImage(row.key),
+          }"
+          @click="previewImage(row)"
+        >
           {{ row.name }}
         </div>
-        <div v-else class="link f-st-ct">
+        <div v-else class="link f-st-ct" @click="inside(row)">
           <o-icon name="folder" class="mr" />
           {{ row.name }}
         </div>
@@ -213,3 +253,9 @@ const toPrevFolder = () => {}
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.is-image {
+  cursor: pointer;
+}
+</style>

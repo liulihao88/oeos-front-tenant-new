@@ -1,23 +1,38 @@
 import { defineStore } from 'pinia'
-import { store } from '../utils'
 
-export const useBucketSettings = defineStore({
-  id: 'pure-setting',
+const useBucketSettings = defineStore('bucketSettings', {
   state: () => ({
-    title: '哈哈',
+    prefixKey: '',
+    prevFolderList: [],
   }),
   getters: {
-    getTitle(state) {
-      return state.title
+    prefixKeyArr: (state) => {
+      if (!state.prefixKey) return []
+      let splitArr = state.prefixKey.split('/')
+      // splitArr.unshift('根目录')
+      console.log(`64 splitArr`, splitArr)
+      return splitArr.filter((v) => v)
     },
   },
   actions: {
-    changeSetting(data) {
-      this.title = data
+    changePrefixKey(key) {
+      this.prefixKey = key
+    },
+    changePrevFolder(key = '') {
+      if (!key) {
+        this.prevFolderList.pop()
+      } else {
+        this.prevFolderList.push(key)
+      }
+    },
+    clearPrefixKey() {
+      this.prefixKey = ''
+    },
+    clear() {
+      this.prefixKey = ''
+      this.prevFolderList = []
     },
   },
 })
 
-export function useSettingStoreHook() {
-  return useBucketSettings(store)
-}
+export default useBucketSettings

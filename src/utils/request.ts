@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getStorage, getType, $toast } from 'oeos-components'
 import { devLogin } from '@/utils/local401LoginAgain.ts'
+import qs from 'qs'
 
 // import qs from 'qs'
 // 关于axios的一些默认配置项，调用接口时，按需要传递
@@ -31,53 +32,34 @@ const instance = axios.create({
 })
 let timer = null
 // 请求拦截，使用sessionId方式控制权限，
-instance.interceptors.request.use(
-  (config) => {
-    const token = getStorage('tenant-token')
-    if (token) {
-      config.headers.Authorization = token
+instance.interceptors.request.use((config) => {
+  const token = getStorage('tenant-token')
+  if (token) {
+    config.headers.Authorization = token
+  }
+  // 对上传类参数，要转换为FormData形式
+  if (config.headers['content-type'] === 'multipart/form-data') {
+    const formData = new FormData()
+    for (let key in config.data) {
+      formData.append(key, config.data[key])
     }
-    // 对上传类参数，要转换为FormData形式
-    if (config.headers['content-type'] === 'multipart/form-data') {
-      const formData = new FormData()
-      for (let key in config.data) {
-        formData.append(key, config.data[key])
-      }
-      config.data = formData
-    }
-    config.headers['Content-Type'] = 'application/json'
-    // 对application/x-www-form-urlencoded类型时参数处理
-    if (config.headers['content-type'] === 'application/x-www-form-urlencoded') {
-      config.transformRequest = [
-        function (data) {
-          let result = ''
-          for (let key in data) {
-            result += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]) + '&'
-          }
-          return result.slice(0, result.length - 1)
-        },
-      ]
-    }
-    // get请求中的引用类型参数，基本没用，如果有，干死后端
-    if (config.method === 'get') {
-      config.paramsSerializer = function (params) {
-        if (params.queries) {
-          return _handleQueries(params)
-        } else {
-          // return qs.stringify(params, { arrayFormat: 'repeat' })
-        }
-      }
-    }
-    return config
-  },
-  function (error) {
-    return Promise.reject(error)
-  },
-)
+    config.data = formData
+  }
+  let [baseUrl, urlQuery] = config.url.split('?')
+  let parseQueryParams = getQueryObject(urlQuery)
+  let mergeParams = { ...config.params, ...parseQueryParams }
+  let qsParams = qs.stringify(mergeParams)
+  if (qsParams) {
+    config.url = baseUrl + '?' + qsParams
+  } else {
+    config.url = baseUrl
+  }
+  delete config.params
+  return config
+})
 // 响应拦截
 instance.interceptors.response.use(
   (response) => {
-    console.log(`97 response`, response)
     if (response.config.customResponse) {
       return Promise.resolve(response)
     }
@@ -150,26 +132,19 @@ export function requestOld(config) {
   return instance(mergeConfig)
 }
 
-// 处理get请求时传递复杂参数的场景，暂时不用
-function _handleSearchQueries(queryArr) {
-  let str = ''
-  queryArr.forEach((v, i) => {
-    for (let key in v) {
-      str += `queries[${i}].${key}=${v[key]}&`
-    }
+function getQueryObject(url) {
+  if (!url) {
+    return {}
+  }
+  const search = url.slice(url.indexOf('?') + 1)
+  const obj = {}
+  const reg = /([^?&=]+)=([^?&=]*)/g
+  search.replace(reg, (rs, $1, $2) => {
+    const name = $1
+    let val = $2
+    val = String(val)
+    obj[name] = val
+    return rs
   })
-  str = str.slice(0, -1)
-  return encodeURI(str)
-}
-
-function _handleQueries(params) {
-  let searchEncode = _handleSearchQueries(params.queries)
-  delete params.queries
-  for (let key in params) {
-    searchEncode += `&${key}=${params[key]}`
-  }
-  if (searchEncode.startsWith('&')) {
-    searchEncode = searchEncode.slice(1)
-  }
-  return searchEncode
+  return obj
 }
