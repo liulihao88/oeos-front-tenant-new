@@ -137,69 +137,6 @@ export default [
     ],
   },
   {
-    path: '/apps/feature',
-    component: Layout,
-    redirect: '/apps/feature/management',
-    meta: {
-      icon: 'ep:home-filled',
-      title: '服务管理',
-    },
-    children: [
-      {
-        path: '/apps/feature/command',
-        name: 'InnerCommand',
-        component: () => import('@/views/system/innerCommand.vue'),
-        meta: {
-          icon: 'ep:home-filled',
-          title: '内置命令',
-          showParent: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/apps/monitor',
-    component: Layout,
-    redirect: '/apps/monitor/event',
-    meta: {
-      icon: 'ep:home-filled',
-      title: '租户监控',
-    },
-    children: [
-      {
-        path: '/apps/monitor/event',
-        name: 'Event',
-        component: () => import('@/views/system/event.vue'),
-        meta: {
-          icon: 'ep:home-filled',
-          title: '租户事件',
-          showParent: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/apps/config',
-    component: Layout,
-    redirect: '/apps/config/default',
-    meta: {
-      icon: 'ep:home-filled',
-      title: '系统配置',
-    },
-    children: [
-      {
-        path: '/apps/config/default',
-        name: 'DefaultConfig',
-        component: () => import('@/views/system/defaultConfig.vue'),
-        meta: {
-          icon: 'ep:home-filled',
-          title: '默认配置',
-          showParent: true,
-        },
-      },
-    ],
-  },
-  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',
@@ -340,6 +277,70 @@ export default [
       },
     ],
   },
+  {
+    path: '/apps/feature',
+    component: Layout,
+    redirect: '/apps/feature/management',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '服务管理',
+    },
+    children: [
+      {
+        path: '/apps/feature/command',
+        name: 'InnerCommand',
+        component: () => import('@/views/system/innerCommand.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '内置命令',
+          showParent: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/apps/monitor',
+    component: Layout,
+    redirect: '/apps/monitor/event',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '租户监控',
+    },
+    children: [
+      {
+        path: '/apps/monitor/event',
+        name: 'Event',
+        component: () => import('@/views/system/event.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '租户事件',
+          showParent: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/apps/config',
+    component: Layout,
+    redirect: '/apps/config/default',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '系统配置',
+    },
+    children: [
+      {
+        path: '/apps/config/default',
+        name: 'DefaultConfig',
+        component: () => import('@/views/system/defaultConfig.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '默认配置',
+          showParent: true,
+        },
+      },
+    ],
+  },
+
   // {
   //   path: '/test3',
   //   component: Layout,

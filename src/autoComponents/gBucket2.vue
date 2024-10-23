@@ -23,6 +23,13 @@ const sValue = ref()
 const sBucketName = ref()
 // 只有当下拉选项有值, 且bucketName也有值时, 才传递success的emit
 watchEffect(() => {
+  console.log(`68 getBucketList.bucketOptions.length`, getBucketList.bucketOptions.length)
+  console.log(
+    `%c68 27行 src/autoComponents/gBucket2.vue sBucketName.value`,
+    'background:#fff;color:red',
+    sBucketName.value,
+  )
+
   if (getBucketList.bucketOptions.length > 0 && sBucketName.value) {
     console.log(`39 getBucketList.bucketOptions.length`, getBucketList.bucketOptions.length)
     emits('success')
@@ -30,17 +37,21 @@ watchEffect(() => {
 })
 
 watch(
-  () => props.modelValue,
-  (val) => {
-    sValue.value = val
+  () => [props.modelValue, getBucketList.bucketOptions],
+  ([val1, val2]) => {
+    console.log(`14 val1`, val1)
+    sValue.value = val1
     sBucketName.value = ''
-    if (!val) {
+    if (!val1) {
       emits('update:bucketName', '')
     } else {
-      let filterItem = getBucketList.bucketOptions.filter((v) => v.value === val)
-      if (proxy.notEmpty(filterItem)) {
-        sBucketName.value = filterItem[0].name
-        emits('update:bucketName', filterItem[0].name)
+      if (val2.length > 0) {
+        let filterItem = val2.filter((v) => v.value === val1)
+        console.log(`67 filterItem`, filterItem)
+        if (proxy.notEmpty(filterItem)) {
+          sBucketName.value = filterItem[0].name
+          emits('update:bucketName', filterItem[0].name)
+        }
       }
     }
   },

@@ -22,7 +22,7 @@ const route = useRoute()
 console.log(`42 route`, route)
 
 const bucketId = ref()
-bucketId.value = route.query.id ?? ''
+bucketId.value = proxy.getStorage('tenant-bucket-id') ?? ''
 const bucketName = ref()
 const selectRef = ref(null)
 const selections = ref([])
@@ -62,6 +62,8 @@ const columns = [
   {
     label: '对象名称',
     prop: 'name',
+    useSlot: true,
+    width: 300,
   },
   {
     label: '文件大小',
@@ -100,6 +102,7 @@ const columns = [
     prop: 'operation',
     width: 300,
     maxBtns: proxy.$dev ? 6 : null,
+    isShow: (row) => (row.injectTime ? true : false),
     btns: [
       { content: '预览' },
       { content: '恢复', handler: restoreRow },
@@ -158,19 +161,21 @@ async function deleteRow(row) {
 async function historyRow(row) {
   bucketOverviewHistoryRef.value.open(row)
 }
-const bucketChange = (val) => {
-  console.log(`1152 176行 bucket/objectexplorer.vue bucketId.value `, bucketId.value)
-
-  console.log(`2229 178行 bucket/objectexplorer.vue bucketName.value `, bucketName.value)
-
+const bucketSuccess = () => {
   init()
 }
+const bucketChange = (val) => {
+  proxy.setStorage('tenant-bucket-id', val)
+}
+const prev = () => {}
+const next = () => {}
+const toPrevFolder = () => {}
 </script>
 
 <template>
   <div>
     <div class="top f">
-      <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketChange" />
+      <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketSuccess" @change="bucketChange" />
       <UploadFile :bucketName="bucketName" />
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
@@ -186,7 +191,23 @@ const bucketChange = (val) => {
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>
 
-    <o-table :columns="columns" :data="data" class="m-t-24" @selection-change="selectionChange" />
+    <div class="middle m-t-16">
+      <el-button type="primary" @click="prev">上一页</el-button>
+      <el-button type="primary" @click="next">下一页</el-button>
+      <el-button type="primary" @click="toPrevFolder">返回上级目录</el-button>
+    </div>
+
+    <o-table :columns="columns" :data="data" class="m-t-24" :showPage="false" @selection-change="selectionChange">
+      <template #name="{ scope, row }">
+        <div v-if="row.injectTime">
+          {{ row.name }}
+        </div>
+        <div v-else class="link f-st-ct">
+          <o-icon name="folder" class="mr" />
+          {{ row.name }}
+        </div>
+      </template>
+    </o-table>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />

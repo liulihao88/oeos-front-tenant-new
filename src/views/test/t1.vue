@@ -1,12 +1,42 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-let res = proxy.formatBytes(1069446856704)
-console.log(`19 res`, res)
+const data = ref([
+  {
+    name: 'andy',
+  },
+  {
+    name: 'tom',
+  },
+])
+const columns = [
+  {
+    label: '名字',
+    prop: 'name',
+  },
+  {
+    key: 'operation',
+    label: '操作',
+    btns: [
+      {
+        content: '编辑',
+        isShow: (row) => {
+          return row.name === 'andy'
+        },
+      },
+      {
+        content: '删除',
+        isShow: (row) => {
+          return row.name === 'tom'
+        },
+      },
+    ],
+  },
+]
 </script>
 
 <template>
   <div>
-    <div>test/t1.vue</div>
+    <o-table ref="tableRef" :columns="columns" :data="data" />
   </div>
 </template>

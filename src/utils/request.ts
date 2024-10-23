@@ -77,6 +77,7 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   (response) => {
+    console.log(`97 response`, response)
     if (response.config.customResponse) {
       return Promise.resolve(response)
     }
@@ -93,10 +94,15 @@ instance.interceptors.response.use(
       if (response.status === 401) {
         return devLogin()
       }
+      console.log(`55 response.status`, response.status)
+      if (('' + response.status).startsWith('5')) {
+        return $toast('系统繁忙, 请稍后再试', 'e')
+      }
       return Promise.reject(response.data)
     }
   },
   (error) => {
+    console.log(`09 error`, error)
     let obj = JSON.parse(JSON.stringify(error))
     if (obj.message?.indexOf('401') !== -1) {
       return devLogin()
