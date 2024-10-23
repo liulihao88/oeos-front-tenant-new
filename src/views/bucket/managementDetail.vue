@@ -11,7 +11,6 @@ const tenantBucketDetails = ref(proxy.getStorage('tenant-bucket-details'))
 const bucketName = ref(tenantBucketDetails.value.bucketName)
 const versionStatus = ref(tenantBucketDetails.value.versionStatus)
 console.log(`37 versionStatus`, versionStatus)
-versionStatus.value = 'Enabled'
 
 const data = ref([])
 const isRadioShow = ref(false)
