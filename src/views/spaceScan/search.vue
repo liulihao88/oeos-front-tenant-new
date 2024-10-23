@@ -10,6 +10,8 @@
 import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import { querySimple } from '@/api/searchApi.ts'
+import { preview } from '@/utils/remoteFunc.ts'
+
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 import { previewImage } from '@/api/spaceScan.ts'
 
@@ -30,21 +32,8 @@ const selections = ref([])
 
 const data = ref([])
 
-const preview = async (row) => {
-  const params = {
-    bucket: bucketName.value,
-    key: row.name,
-  }
-  let res = await previewImage(params)
-  if (res?.status !== 200 || !res) {
-    return proxy.$toast(res?.data?.message || '请求错误', 'error')
-  }
-  const byteArray = new Uint8Array(res.data) // 将二进制数据流转换为字节数组
-  const blob = new Blob([byteArray]) // 创建Blob对象
-  const imgUrl = URL.createObjectURL(blob) // 创建一个URL，用于表示blob对象
-  viewerApi({
-    images: [imgUrl],
-  })
+const previewImage = async (row) => {
+  preview(row.bucket, row.key)
 }
 const restoreRow = async (row) => {
   let params = {
@@ -85,11 +74,6 @@ const columns = [
     label: '操作',
     maxBtns: 5,
     btns: [
-      // {
-      //   content: '预览',
-      //   isShow: (row) => proxy.isImage(row.key),
-      //   handler: preview,
-      // },
       {
         content: '下载',
         handler: proxy.gDownload,
@@ -103,16 +87,12 @@ const columns = [
 ]
 
 const init = async () => {
-  if (!form.value.bucket) {
-    proxy.$toast('请先选择桶名后查询', 'e')
+  if (!bucketId.value) {
+    return proxy.$toast('请先选择桶名后查询', 'e')
   }
   let res = await querySimple(form.value)
   data.value = res
   proxy.$toast('查询成功')
-}
-
-if (bucketId.value) {
-  init()
 }
 
 const changeSelect = (value, label, options) => {
@@ -171,9 +151,18 @@ const selectionChange = (val, ...a) => {
       <div class="f-3 f-st-ct">
         <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @changeSelect="changeSelect" />
 
-        <o-input v-model="form.key" width="150" placeholder="请输入对象名称" class="mr2" @input="init" />
+        <o-input
+          v-model="form.key"
+          v-debounce.500="init"
+          width="150"
+          placeholder="请输入对象名称"
+          class="mr2"
+          :disabled="!bucketId"
+          @clear="init"
+        />
         <o-date-range
           v-model="timeRange"
+          :disabled="!bucketId"
           type="datetimerange"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
@@ -193,7 +182,7 @@ const selectionChange = (val, ...a) => {
       <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
         <template #name="{ scope, row }">
           <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text class="p-0" @click="preview(row)">{{ row.key }}</el-button>
+            <el-button type="primary" text class="p-0" @click="previewImage(row)">{{ row.key }}</el-button>
           </template>
           <span v-else>
             {{ row.key }}

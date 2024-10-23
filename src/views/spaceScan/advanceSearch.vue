@@ -14,6 +14,7 @@ import { querySimple } from '@/api/searchApi.ts'
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 import { previewImage } from '@/api/spaceScan.ts'
 import SearchConfigComp from '@/views/spaceScan/components/searchConfigComp.vue'
+import { preview } from '@/utils/remoteFunc.ts'
 
 const { proxy } = getCurrentInstance()
 let getBucketList = GetBucketList()
@@ -35,22 +36,6 @@ const selections = ref([])
 
 const data = ref([])
 
-const preview = async (row) => {
-  const params = {
-    bucket: bucketName.value,
-    key: row.name,
-  }
-  let res = await previewImage(params)
-  if (res?.status !== 200 || !res) {
-    return proxy.$toast(res?.data?.message || '请求错误', 'error')
-  }
-  const byteArray = new Uint8Array(res.data) // 将二进制数据流转换为字节数组
-  const blob = new Blob([byteArray]) // 创建Blob对象
-  const imgUrl = URL.createObjectURL(blob) // 创建一个URL，用于表示blob对象
-  viewerApi({
-    images: [imgUrl],
-  })
-}
 const restoreRow = async (row) => {
   let params = {
     bucket: bucketName.value,
@@ -103,11 +88,6 @@ const columns = [
     label: '操作',
     maxBtns: 5,
     btns: [
-      // {
-      //   content: '预览',
-      //   isShow: (row) => proxy.isImage(row.key),
-      //   handler: preview,
-      // },
       {
         content: '下载',
         handler: proxy.gDownload,
@@ -198,7 +178,7 @@ const selectionChange = (val, ...a) => {
       <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
         <template #name="{ scope, row }">
           <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text class="p-0" @click="preview(row)">{{ row.key }}</el-button>
+            <el-button type="primary" text class="p-0" @click="preview(row.bucket, row.key)">{{ row.key }}</el-button>
           </template>
           <span v-else>
             {{ row.key }}
