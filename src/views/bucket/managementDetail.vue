@@ -2,7 +2,9 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 
-import { getBucketTotal } from '@/api/bucket'
+import { QUOTA_OPTIONS, QUOTA_UNIT } from '@/assets/globalData.ts'
+
+import { getBucketTotal, editBucketTotal } from '@/api/bucket'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -14,8 +16,18 @@ console.log(`37 versionStatus`, versionStatus)
 
 const data = ref([])
 const isRadioShow = ref(false)
+const isQuotaShow = ref(false)
 const isKnow = ref(true)
 const radioCacheValue = ref()
+const validateNumber = (rule, value, callback) => {
+  let getQuota = proxy.formatBytesConvert(value + quotaForm.value.quotaUnit)
+  let minQuota = proxy.formatBytesConvert('0.5GB')
+  if (getQuota < minQuota) {
+    callback(new Error('请输入数字'))
+  } else {
+    callback()
+  }
+}
 const columns = [
   {
     label: '总容量',
@@ -34,6 +46,20 @@ const columns = [
     prop: 'createdDatetime',
   },
 ]
+const quotaForm = ref({
+  quota: tenantBucketDetails.value.quota,
+  quotaUnit: tenantBucketDetails.value.quotaUnit,
+  quotaType: tenantBucketDetails.value.quotaType,
+})
+const quotaRules = {
+  quota: [
+    {
+      validator: validateNumber,
+      trigger: ['change', 'blur'],
+      message: '桶最小为0.5GB',
+    },
+  ],
+}
 
 const init = async () => {
   let res = await Promise.all([getBucketTotal(bucketName.value)])
@@ -67,10 +93,19 @@ const radioMap = {
   Suspended: '暂停',
   Enabled: '启用',
 }
+const editQuota = () => {
+  isQuotaShow.value = true
+}
+const quotaConfirm = async () => {
+  await editBucketTotal(tenantBucketDetails.value.bucketName, quotaForm.value)
+  proxy.$toast('保存成功')
+  isQuotaShow.value = false
+}
 </script>
 
 <template>
   <div>
+    <o-title title="基本信息" l="-16" />
     <o-title title="存储桶使用情况" />
     <o-table ref="tableRef" :showPage="false" :columns="columns" :data="data" />
 
@@ -84,6 +119,29 @@ const radioMap = {
         <el-radio value="Enabled">{{ radioMap.Enabled }}</el-radio>
       </el-radio-group>
     </div>
+
+    <o-title title="属性" l="-16" />
+    <o-title title="修改容量属性">
+      <el-button type="primary" class="mlr" size="small" @click="editQuota">编辑</el-button>
+      <div class="bold-400">
+        当前容量:
+        <span class="cl-red">
+          {{ data[0].total }}
+        </span>
+      </div>
+    </o-title>
+
+    <o-title title="对象过期删除">
+      <el-button type="primary" class="mlr" size="small" @click="editQuota">编辑</el-button>
+      <div class="bold-400">
+        过期时间:
+        <span class="cl-red">未设置</span>
+      </div>
+      <div class="bold-400 ml2">
+        是否启用:
+        <span class="cl-red">未启用</span>
+      </div>
+    </o-title>
 
     <o-dialog ref="dialogRef" v-model="isRadioShow" title="存储桶版本控制" @confirm="radioConfirm">
       <o-title :title="`当前状态`">
@@ -100,6 +158,22 @@ const radioMap = {
       />
 
       <el-checkbox v-model="isKnow">我已了解更改存储桶版本控制的后果。</el-checkbox>
+    </o-dialog>
+
+    <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改存储容量" @confirm="quotaConfirm">
+      <el-form :model="quotaForm" :rules="quotaRules" label-width="auto">
+        <el-form-item label="存储" prop="quota">
+          <div class="f-st-ct">
+            <el-input-number v-model="quotaForm.quota" class="mr2" />
+
+            <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
+          </div>
+          <o-icon name="warning" size="12" class="ml2" content="新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB" />
+        </el-form-item>
+        <el-form-item label="类型" prop="">
+          <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+        </el-form-item>
+      </el-form>
     </o-dialog>
   </div>
 </template>

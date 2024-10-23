@@ -43,6 +43,11 @@ export function getBucketTotal(bucketName) {
   return request(`bucket/${bucketName}/config/quota`)
 }
 
+// 修改容量
+export function editBucketTotal(bucketName, data) {
+  return request(`bucket/${bucketName}/config/quota`, 'put', { data })
+}
+
 // 获取使用量
 export function getBucketUse(bucketName) {
   return request(`bucket/quota/limit/floor`, {

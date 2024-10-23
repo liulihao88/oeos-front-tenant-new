@@ -231,17 +231,15 @@ const previewImage = (row) => {
 
     <o-table :columns="columns" :data="data" class="m-t-24" :showPage="false" @selection-change="selectionChange">
       <template #name="{ scope, row }">
-        <div
-          v-if="row.injectTime"
-          :class="{
-            link: proxy.isImage(row.key),
-            'is-image': proxy.isImage(row.key),
-          }"
-          @click="previewImage(row)"
-        >
-          {{ row.name }}
-        </div>
-        <div v-else class="link f-st-ct" @click="inside(row)">
+        <template v-if="row.injectTime">
+          <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+            {{ row.name }}
+          </div>
+          <template v-else>
+            {{ row.name }}
+          </template>
+        </template>
+        <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
           <o-icon name="folder" class="mr" />
           {{ row.name }}
         </div>
@@ -256,5 +254,10 @@ const previewImage = (row) => {
 <style lang="scss" scoped>
 .is-image {
   cursor: pointer;
+}
+
+.middle {
+  display: flex;
+  flex-wrap: nowrap;
 }
 </style>

@@ -15,7 +15,7 @@ const changeFolder = (v, i) => {
 <template>
   <div class="folder-box">
     <template v-if="bucketSettings.prefixKeyArr.length !== 0">
-      <div class="cp" @click="bucketSettings.clearPrefixKey()">根目录</div>
+      <div class="text" @click="bucketSettings.clearPrefixKey()">根目录</div>
       <o-icon name="arrow-right" class="mlr" size="12" />
     </template>
     <div v-for="(v, i) in bucketSettings.prefixKeyArr" :key="i" class="item">
@@ -39,7 +39,6 @@ const changeFolder = (v, i) => {
   padding: 4px;
   overflow: auto;
   font-size: 14px;
-  // margin-top: 8px;
   color: var(--blue);
   background: #e9f3ff;
   border-radius: 4px;
@@ -50,6 +49,7 @@ const changeFolder = (v, i) => {
   }
 
   .text {
+    white-space: nowrap;
     cursor: pointer;
   }
 

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, getCurrentInstance } from 'vue'
 import { initBucket, saveBucket, getLimitCeiling } from '@/api/system.ts'
+import { QUOTA_OPTIONS } from '@/assets/globalData.ts'
 
 const { proxy } = getCurrentInstance()
 const form = ref({
@@ -28,10 +29,7 @@ const fieldList = [
     attrs: {
       width: 300,
       clearable: false,
-      options: [
-        { label: '硬容量', value: 'hard' },
-        { label: '软容量', value: 'soft' },
-      ],
+      options: QUOTA_OPTIONS,
     },
   },
 ]

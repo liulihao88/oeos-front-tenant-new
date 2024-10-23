@@ -2,6 +2,8 @@
 import { ref, getCurrentInstance, h } from 'vue'
 const { proxy } = getCurrentInstance()
 import { saveBucket } from '@/api/bucket.ts'
+import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
+
 import { spawn } from 'child_process'
 
 const model = ref({
@@ -14,12 +16,12 @@ const model = ref({
   bucketEncryptionEnabled: false,
   bucketNotification: true,
 })
+const isShow = ref(false)
 const formRef = ref()
 const emits = defineEmits(['success'])
 const validateNumber = (rule, value, callback) => {
   let getQuota = proxy.formatBytesConvert(value + model.value.quotaUnit)
   let minQuota = proxy.formatBytesConvert('0.5GB')
-  console.log(`53 minQuota`, minQuota)
   if (getQuota < minQuota) {
     callback(new Error('请输入数字'))
   } else {
@@ -70,10 +72,7 @@ const fieldList = [
 
     attrs: {
       clearable: false,
-      options: [
-        { label: '软容量', value: 'soft' },
-        { label: '硬容量', value: 'hard' },
-      ],
+      options: QUOTA_OPTIONS,
     },
   },
   // {
@@ -122,20 +121,13 @@ const fieldList = [
   // },
 ]
 
-const unitOptions = [
-  { label: 'GB', value: 'GB' },
-  { label: 'TB', value: 'TB' },
-  { label: 'PB', value: 'PB' },
-]
 async function confirm() {
   await formRef.value.validate()
   console.log(`16 model.value`, model.value)
-  proxy.log(` model.value`, model.value, '113行 bucket/newAddBucket.vue')
   await saveBucket(model.value)
   isShow.value = false
   emits('success')
 }
-const isShow = ref(false)
 
 function devTest() {
   if (proxy.$dev) {
@@ -159,14 +151,14 @@ defineExpose({
         <template #quota>
           <div class="f-st-ct w-100%">
             <div class="m-r-16">
-              <el-input-number v-model="model.quota" :precision="1" :min="0" />
+              <el-input-number v-model="model.quota" :precision="2" :min="0" />
             </div>
             <div>
-              <o-radio v-model="model.quotaUnit" :options="unitOptions" showType="button" />
+              <o-radio v-model="model.quotaUnit" :options="QUOTA_UNIT" showType="button" />
             </div>
           </div>
-          <o-icon name="warning" size="12" />
-          <div class="cl-45">新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB, 剩余空间为 1,012.00 GB</div>
+          <o-icon name="warning" size="12" class="mr" />
+          <div class="cl-45">新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB</div>
         </template>
       </o-form>
     </o-dialog>

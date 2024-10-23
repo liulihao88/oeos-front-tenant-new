@@ -74,7 +74,10 @@ app.component('vChart', VChart)
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 
+import request from '@/utils/request'
+
 app.config.globalProperties.$dev = import.meta.env.DEV
+app.config.globalProperties.request = request
 
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)
