@@ -206,7 +206,6 @@ const previewImage = (row) => {
 <template>
   <div>
     <div class="top f">
-      {{ bucketSettings.prevFolderList }}
       <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketSuccess" @change="bucketChange" />
       <UploadFile :bucketName="bucketName" @success="init" />
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>

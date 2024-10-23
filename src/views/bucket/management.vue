@@ -83,14 +83,10 @@ async function deleteRow(row) {
   init()
 }
 function viewRow(row) {
-  console.log(`83 row`, row)
-  console.log(`54 row.bucketID`, row.bucketID)
   router.push({
     name: 'Objectexplorer',
-    query: {
-      id: row.bucketID,
-    },
   })
+  proxy.setStorage('tenant-bucket-id', row.bucketID)
 }
 const handleDetail = (row, scope, e) => {
   proxy.jump({
