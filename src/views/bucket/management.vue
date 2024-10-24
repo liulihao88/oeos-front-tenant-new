@@ -16,6 +16,8 @@ import {
 } from '@/api/bucket.ts'
 import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
 import NewAddBucket from '@/views/bucket/newAddBucket.vue'
+import GetBucketList from '@/hooks/getBucketList.ts'
+const getBucketListHook = GetBucketList()
 
 import BucketCapacityPie from '@/views/bucket/bucketCapacityPie.vue'
 const totalCapacity = ref(0)
@@ -80,6 +82,7 @@ function add() {
 async function deleteRow(row) {
   await deleteBucket(row.bucketName)
   proxy.$toast('删除成功')
+  await getBucketListHook.update()
   init()
 }
 function viewRow(row) {
@@ -159,9 +162,6 @@ const columns = [
 const objectNumData = ref([])
 
 const bucketLists = ref([])
-// const searchHandler = throttle(function () {
-//   init()
-// }, 500)
 async function getTableList() {
   let params = {
     pageSize: 30,
