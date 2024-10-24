@@ -169,7 +169,9 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" @click="download">批量下载</el-button>
+        <el-button type="primary" icon="el-icon-download" :disabled="!data.length" @click="download">
+          批量下载
+        </el-button>
         <el-button type="primary" icon="el-icon-search" @click="init">编辑搜索表达式</el-button>
       </div>
     </div>
