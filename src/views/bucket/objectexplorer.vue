@@ -74,7 +74,6 @@ const columns = [
     label: '对象名称',
     prop: 'name',
     useSlot: true,
-    width: 300,
   },
   {
     label: '文件大小',
@@ -95,16 +94,17 @@ const columns = [
   {
     label: '对象版本号',
     prop: 'version',
+    width: 360,
   },
   {
     label: '更新时间',
-    width: 180,
+    width: proxy.TIME_WIDTH,
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),
   },
   {
     label: '写入时间',
-    width: 180,
+    width: proxy.TIME_WIDTH,
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),
   },

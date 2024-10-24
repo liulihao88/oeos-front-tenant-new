@@ -47,6 +47,7 @@ const columns = [
   {
     label: '保留期',
     prop: 'retentionPeriod',
+    width: 150,
   },
   {
     label: '任务内容',
@@ -55,6 +56,7 @@ const columns = [
   {
     label: '创建时间',
     prop: 'createTime',
+    width: proxy.TIME_WIDTH,
     filter: (val) => {
       return proxy.formatTimeByRule(val)
     },
@@ -62,6 +64,7 @@ const columns = [
   {
     label: '更新时间',
     prop: 'lastModifiedTime',
+    width: proxy.TIME_WIDTH,
     filter: (val) => {
       return proxy.formatTimeByRule(val)
     },

@@ -52,19 +52,14 @@ app.use(VueTippy)
 import 'oeos-components/dist/style.css'
 import OeosComponents, { utils } from 'oeos-components'
 app.use(OeosComponents)
-Object.keys(utils).forEach((v) => {
-  app.config.globalProperties[v] = utils[v]
-})
+
 import * as localUtils from '@/utils/gFunc'
-Object.keys(localUtils).forEach((v) => {
-  app.config.globalProperties[v] = localUtils[v]
-})
+import * as globalData from '@/assets/globalData.ts'
 
 // 引入全局组件
 import globComps from '@/utils/autoImportComps.js'
 app.use(globComps)
 import * as echarts from 'echarts'
-app.config.globalProperties.$echarts = echarts
 
 // 引入vChart
 import VChart from 'vue-echarts'
@@ -76,6 +71,18 @@ import VueViewer from 'v-viewer'
 
 import request from '@/utils/request'
 
+Object.keys(utils).forEach((v) => {
+  app.config.globalProperties[v] = utils[v]
+})
+
+Object.keys(localUtils).forEach((v) => {
+  app.config.globalProperties[v] = localUtils[v]
+})
+Object.keys(globalData).forEach((v) => {
+  app.config.globalProperties[v] = globalData[v]
+})
+
+app.config.globalProperties.$echarts = echarts
 app.config.globalProperties.$dev = import.meta.env.DEV
 app.config.globalProperties.request = request
 

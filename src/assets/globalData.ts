@@ -8,3 +8,5 @@ export const QUOTA_UNIT = [
   { label: 'TB', value: 'TB' },
   { label: 'PB', value: 'PB' },
 ]
+
+export const TIME_WIDTH = 160

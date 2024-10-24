@@ -67,7 +67,7 @@ const columns = [
     filter: (val, row, prop) => {
       return proxy.formatTime(val)
     },
-    width: 200,
+    width: proxy.TIME_WIDTH,
   },
   {
     key: 'operation',

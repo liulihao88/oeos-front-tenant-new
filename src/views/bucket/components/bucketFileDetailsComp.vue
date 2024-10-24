@@ -9,7 +9,7 @@ const options = computed(() => {
     { label: '租户', value: details.value.tenant },
     { label: '存储桶名称', value: details.value.bucket },
     {
-      label: '对象写入时间111111321321321312',
+      label: '对象写入时间',
       value: () => {
         return proxy.formatTime(details.value.injectTime)
       },
