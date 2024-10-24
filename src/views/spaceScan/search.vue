@@ -107,9 +107,7 @@ const multyRestore = async () => {
 }
 
 const timeChange = (value) => {
-  console.log(`43 value`, value)
-  console.log(`timeRange.value`, timeRange.value)
-  if (proxy.notEmpty(timeRange.value[0] && proxy.notEmpty(timeRange.value[1]))) {
+  if (proxy.notEmpty(timeRange.value?.[0] && proxy.notEmpty(timeRange.value?.[1]))) {
     form.value.injectTimeBegin = new Date(timeRange.value[0]).getTime()
     form.value.injectTimeEnd = new Date(timeRange.value[1]).getTime()
   } else {
@@ -167,6 +165,7 @@ const selectionChange = (val, ...a) => {
           start-placeholder="开始时间"
           end-placeholder="结束时间"
           @change="timeChange"
+          @clear="timeChange"
         />
       </div>
       <div class="f-1 f-ed-un">
