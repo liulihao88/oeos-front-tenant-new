@@ -9,7 +9,6 @@ const useBucketSettings = defineStore('bucketSettings', {
     prefixKeyArr: (state) => {
       if (!state.prefixKey) return []
       let splitArr = state.prefixKey.split('/')
-      // splitArr.unshift('根目录')
       console.log(`64 splitArr`, splitArr)
       return splitArr.filter((v) => v)
     },
@@ -17,6 +16,7 @@ const useBucketSettings = defineStore('bucketSettings', {
   actions: {
     changePrefixKey(key) {
       this.prefixKey = key
+      this.prevFolderList = []
     },
     changePrevFolder(key = '') {
       if (!key) {
@@ -27,6 +27,7 @@ const useBucketSettings = defineStore('bucketSettings', {
     },
     clearPrefixKey() {
       this.prefixKey = ''
+      this.prevFolderList = []
     },
     clear() {
       this.prefixKey = ''

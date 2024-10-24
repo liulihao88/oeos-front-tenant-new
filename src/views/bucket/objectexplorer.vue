@@ -183,9 +183,7 @@ const prev = () => {
 }
 const next = () => {
   let laskKey = data.value.at(-1).key
-  console.log(`21 laskKey`, laskKey)
   bucketSettings.changePrevFolder(laskKey)
-  init()
 }
 const toPrevFolder = () => {
   let nowPrefixKeyArr = bucketSettings.prefixKeyArr

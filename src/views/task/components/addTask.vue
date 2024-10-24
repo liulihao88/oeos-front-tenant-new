@@ -19,7 +19,7 @@ const selectRef = ref(null)
 const { proxy } = getCurrentInstance()
 const taskOptions = [
   { label: '标准数据冷冻', value: FREEZE },
-  { label: '零拷贝数据冷冻', value: FREEZE },
+  { label: '零拷贝数据冷冻', value: ZERO_COPY_FREEZE },
   { label: '数据解冻', value: UNFREEZE },
   { label: '数据过期', value: DELETE },
 ]
@@ -80,9 +80,11 @@ const open = async (row = '') => {
     isEdit.value = true
     actionChange()
     isTargetBucket.value = form.value.properties.includeBuckets.length === 0 ? true : false
+    isShow.value = true
   } else {
     isEdit.value = false
     form.value = proxy.clone(originForm)
+
     if (proxy.$dev) {
       form.value.name = proxy.uuid()
       form.value.action = FREEZE
@@ -90,15 +92,18 @@ const open = async (row = '') => {
         selectRef.value.$refs.selectRef.$emit('change', form.value.action)
       }, 300)
     }
+    isShow.value = true
+    await nextTick()
+    let highForm = highSettingsRef.value.originForm
+    highSave(highForm)
   }
-  isShow.value = true
 }
 
 const save = async () => {
   await proxy.validForm(formRef)
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     if (!isTargetBucket.value && form.value.properties.includeBuckets.length === 0) {
-      proxy.$toast('请选择桶')
+      proxy.$toast('请选择桶', 'w')
       return
     }
   }
@@ -106,6 +111,7 @@ const save = async () => {
   if (isTargetBucket.value) {
     copyForm.properties.includeBuckets = []
   }
+  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain')
   await saveTask(copyForm)
   isShow.value = false
   emits('success')
@@ -221,7 +227,7 @@ defineExpose({
               <g-bucket2
                 v-if="isTargetBucket"
                 ref="bucketRef2"
-                v-model="form.properties.excludeBuckes"
+                v-model="form.properties.excludeBuckets"
                 :disabled="!isTargetBucket"
                 title="作用例外桶"
                 width="100%"

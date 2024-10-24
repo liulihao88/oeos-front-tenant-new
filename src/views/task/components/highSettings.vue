@@ -63,10 +63,9 @@ const beforeChange = async () => {
 
 const confirm = async () => {
   await proxy.validForm(formRef)
-  console.log(`13 form.value.singleSizeRange`, form.value.singleSizeRange)
   proxy.log(`form.value`, form.value, '/cyrd/oeos-front-tenant-new/src/views/task/components/highSettings.vue')
   if (form.value.singleSizeRange[0] >= form.value.singleSizeRange[1]) {
-    return proxy.$toast('独立存储区间第一个值要小于第二个值')
+    return proxy.$toast('独立存储区间第一个值要小于第二个值', 'e')
   }
   isShow.value = false
   emits('save', form.value)
@@ -74,6 +73,7 @@ const confirm = async () => {
 
 defineExpose({
   open,
+  originForm,
 })
 </script>
 
