@@ -4,7 +4,8 @@ const { proxy } = getCurrentInstance()
 import { saveBucket } from '@/api/bucket.ts'
 import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
 
-import { spawn } from 'child_process'
+import GetBucketList from '@/hooks/getBucketList.ts'
+const getBucketList = GetBucketList()
 
 const model = ref({
   bucketName: '',
@@ -123,8 +124,8 @@ const fieldList = [
 
 async function confirm() {
   await formRef.value.validate()
-  console.log(`16 model.value`, model.value)
   await saveBucket(model.value)
+  await getBucketList.update()
   isShow.value = false
   emits('success')
 }

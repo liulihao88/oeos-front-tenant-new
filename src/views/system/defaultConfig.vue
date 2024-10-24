@@ -38,19 +38,19 @@ const rules = {
 }
 const save = async () => {
   if (form.value.quota < 0.5 && form.value.quotaUnit === 'GB') {
-    proxy.$toast('默认空间不能小于0.5GB', 'warn')
+    proxy.$toast('默认空间不能小于0.51GB', 'w')
     return false
   } else if (form.value.quota < 0.1 && form.value.quotaUnit === 'TB') {
-    proxy.$toast('默认空间不能小于0.1TB', 'warn')
+    proxy.$toast('默认空间不能小于0.1TB', 'w')
     return false
   } else if (form.value.quota < 0.01 && form.value.quotaUnit === 'PB') {
-    proxy.$toast('默认空间不能小于0.01PB', 'warn')
+    proxy.$toast('默认空间不能小于0.01PB', 'w')
     return false
   }
   let num = proxy.formatSize(form.value.quota + form.value.quotaUnit)
   console.log(`37 num`, num)
   if (num > limitMax.value) {
-    proxy.$toast('默认空间不能大于' + proxy.formatBytes(limitMax.value), 'warn')
+    proxy.$toast('默认空间不能大于' + proxy.formatBytes(limitMax.value), 'w')
     return false
   }
   await saveBucket(form.value)

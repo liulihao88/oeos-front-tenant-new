@@ -6,11 +6,11 @@ export function gDownload(item) {
   console.log(`34 item`, item)
 
   if (!item.bucket) {
-    $toast('不是有效数据，不支持下载!', 'warn')
+    $toast('不是有效数据，不支持下载!', 'w')
     return false
   } else {
     if (item.bucket.length <= 0) {
-      $toast('不是有效数据，不支持下载!', 'warn')
+      $toast('不是有效数据，不支持下载!', 'w')
     }
   }
   let getUrl = `/v1/admin/tenant/object/download` //接口
