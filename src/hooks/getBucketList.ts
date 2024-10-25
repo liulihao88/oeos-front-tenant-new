@@ -1,6 +1,7 @@
 /**
- * import useBucketList from '@/hooks/getBucketList.ts'
- * const bucketList = useBucketList()
+ *
+ import useBucketList from '@/hooks/getBucketList.ts'
+ const bucketList = useBucketList()
  */
 
 import { ref } from 'vue'
@@ -13,6 +14,7 @@ const useGetBucketList = defineStore('getBucketList', {
   }),
   actions: {
     async getBucketList() {
+      console.log(`71 this.bucketOptions.length`, this.bucketOptions.length)
       if (this.bucketOptions.length === 0) {
         let res = await getBucketOptions()
         this.bucketOptions = res ?? []
@@ -22,8 +24,7 @@ const useGetBucketList = defineStore('getBucketList', {
       let res = await getBucketOptions()
       this.bucketOptions = res ?? []
     },
-    async clear() {
-      await setTimeout(() => {}, 0)
+    clear() {
       this.bucketOptions = []
     },
   },

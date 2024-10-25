@@ -10,6 +10,8 @@ import { useRenderIcon } from '@/components/ReIcon/src/hooks'
 import JSEncrypt from 'jsencrypt'
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
+import useBucketList from '@/hooks/getBucketList.ts'
+const bucketList = useBucketList()
 
 import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
@@ -98,6 +100,7 @@ const onLogin = async (formEl) => {
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   let formatRes = await getFormat()
   proxy.setStorage('tenant-time-rule', formatRes)
+  await bucketList.getBucketList()
   return initRouter().then(() => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     console.log(`69 jumpPath`, jumpPath)
