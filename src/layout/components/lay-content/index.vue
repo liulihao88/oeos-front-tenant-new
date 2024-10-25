@@ -115,7 +115,7 @@ const transitionMain = defineComponent({
                   <component :is="Comp" v-else :key="fullPath" :frameInfo="frameInfo" class="main-content" />
                 </transitionMain>
               </div>
-              <LayFooter v-if="!hideFooter" />
+              <!-- <LayFooter v-if="!hideFooter" /> -->
             </el-scrollbar>
             <div v-else class="grow h-100%">
               <transitionMain :route="route">
@@ -131,7 +131,7 @@ const transitionMain = defineComponent({
     </router-view>
 
     <!-- 页脚 -->
-    <LayFooter v-if="!hideFooter && !fixedHeader" />
+    <!-- <LayFooter v-if="!hideFooter && !fixedHeader" /> -->
   </section>
 </template>
 
