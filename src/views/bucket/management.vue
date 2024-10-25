@@ -40,7 +40,6 @@ const rightTableColumns = [
   {
     label: '对象总大小',
     width: 130,
-    sortable: true,
     prop: 'objectSize',
     filter: (value) => proxy.formatBytes(value),
   },
@@ -106,6 +105,7 @@ const columns = [
   {
     label: '桶名称',
     prop: 'bucketName',
+    sortable: true,
     useSlot: true,
   },
   {
@@ -121,7 +121,6 @@ const columns = [
     label: '已用容量',
     prop: 'objectSize',
     width: 120,
-    sortable: true,
     filter: (value) => {
       return proxy.formatBytes(value)
     },
@@ -129,7 +128,6 @@ const columns = [
   {
     label: '总容量',
     prop: 'capacity',
-    sortable: true,
     width: 100,
     filter: (value, row) => {
       return row.quota + row.quotaUnit
