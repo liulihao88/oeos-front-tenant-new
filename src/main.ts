@@ -84,8 +84,8 @@ Object.keys(globalData).forEach((v) => {
 
 app.config.globalProperties.$echarts = echarts
 app.config.globalProperties.$dev = import.meta.env.DEV
-// app.config.globalProperties.$dev = false
-app.config.globalProperties.request = request
+app.config.globalProperties.$dev = false
+// app.config.globalProperties.request = request
 
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)

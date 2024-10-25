@@ -213,7 +213,7 @@ defineExpose({
                 inline-prompt
                 active-text="所有桶"
                 inactive-text="所有桶"
-                class="mr"
+                class="mr2"
               />
               <g-bucket2
                 v-if="!isTargetBucket"
@@ -223,7 +223,6 @@ defineExpose({
                 :clearable="true"
                 multiple
                 width="100%"
-                class="ml"
               />
               <g-bucket2
                 v-if="isTargetBucket"
@@ -249,7 +248,6 @@ defineExpose({
                 :clearable="true"
                 width="100%"
                 multiple
-                class="ml"
               />
             </div>
           </el-form-item>
