@@ -1,42 +1,22 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-const data = ref([
-  {
-    name: 'andy',
-  },
-  {
-    name: 'tom',
-  },
-])
-const columns = [
-  {
-    label: '名字',
-    prop: 'name',
-  },
-  {
-    key: 'operation',
-    label: '操作',
-    btns: [
-      {
-        content: '编辑',
-        isShow: (row) => {
-          return row.name === 'andy'
-        },
-      },
-      {
-        content: '删除',
-        isShow: (row) => {
-          return row.name === 'tom'
-        },
-      },
-    ],
-  },
-]
+function clearCacheWithPrefix(prefix) {
+  const storage = window.localStorage // 或者 window.sessionStorage
+  const keys = Object.keys(storage)
+  keys.forEach((key) => {
+    if (key.startsWith(prefix)) {
+      storage.removeItem(key)
+    }
+  })
+}
+
+// 使用函数清除以'tenant'为前缀的缓存
 </script>
 
 <template>
   <div>
-    <o-table ref="tableRef" :columns="columns" :data="data" />
+    <div>test/t1.vue</div>
+    <el-button type="primary" @click="clearCacheWithPrefix('tenant')">测试66</el-button>
   </div>
 </template>

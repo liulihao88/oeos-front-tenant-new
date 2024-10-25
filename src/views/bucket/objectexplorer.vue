@@ -25,7 +25,6 @@ let getBucketList = GetBucketList()
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
-console.log(`42 route`, route)
 
 const bucketId = ref()
 bucketId.value = proxy.getStorage('tenant-bucket-id') ?? ''

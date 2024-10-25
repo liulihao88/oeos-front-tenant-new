@@ -15,6 +15,8 @@ import { usePermissionStoreHook } from '@/store/modules/permission'
 import ExitFullscreen from '@iconify-icons/ri/fullscreen-exit-fill'
 import Fullscreen from '@iconify-icons/ri/fullscreen-fill'
 import { clearStorage } from 'oeos-components'
+import useBucketList from '@/hooks/getBucketList.ts'
+const bucketList = useBucketList()
 
 const errorInfo = 'The current routing configuration is incorrect, please check the configuration'
 
@@ -77,11 +79,22 @@ export function useNav() {
   }
 
   /** 退出登录 */
-  function logout() {
+  async function logout() {
+    bucketList.clear()
     clearStorage('token')
     let nowPath = router.currentRoute.value.path
-    console.log(`14 nowPath`, nowPath)
+    _clearCacheWithPrefix('tenant')
     router.push(`/login?redirect=${nowPath}`)
+  }
+
+  function _clearCacheWithPrefix(prefix) {
+    const storage = window.localStorage // 或者 window.sessionStorage
+    const keys = Object.keys(storage)
+    keys.forEach((key) => {
+      if (key.startsWith(prefix)) {
+        storage.removeItem(key)
+      }
+    })
   }
 
   function backTopMenu() {
