@@ -315,6 +315,7 @@ function _handleUsedData(usedSpace) {
               :total="total"
               :data="data"
               highlight-current-row
+              height="calc(100vh - 366px)"
               @current-change="currentChange"
             >
               <template #bucketName="{ scope, row }">

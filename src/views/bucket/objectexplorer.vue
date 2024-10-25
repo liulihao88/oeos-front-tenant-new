@@ -227,7 +227,14 @@ const previewImage = (row) => {
       <FolderNav class="ml2" />
     </div>
 
-    <o-table :columns="columns" :data="data" class="m-t-24" :showPage="false" @selection-change="selectionChange">
+    <o-table
+      :columns="columns"
+      :data="data"
+      class="m-t-24"
+      :showPage="false"
+      height="calc(100vh - 230px)"
+      @selection-change="selectionChange"
+    >
       <template #name="{ scope, row }">
         <template v-if="row.injectTime">
           <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">

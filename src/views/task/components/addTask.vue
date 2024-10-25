@@ -83,8 +83,8 @@ const open = async (row = '') => {
     isShow.value = true
   } else {
     isEdit.value = false
+    isTargetBucket.value = false
     form.value = proxy.clone(originForm)
-
     if (proxy.$dev) {
       form.value.name = proxy.uuid()
       form.value.action = FREEZE
@@ -164,7 +164,8 @@ defineExpose({
             @change="actionChange"
           />
         </el-form-item>
-        <hr class="m-tb-16" />
+
+        <el-divider />
         <template v-if="form.action !== UNFREEZE && form.action">
           <el-form-item label="数据保留时长" prop="">
             <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />
@@ -200,7 +201,7 @@ defineExpose({
 
         <!-- </template> -->
         <template v-if="form.action === FREEZE || form.action === ZERO_COPY_FREEZE">
-          <hr class="m-bt-16" />
+          <el-divider />
           <o-title title="数据空间配置: " />
           <el-form-item label="选择目标存储" prop="properties.targetStorageId">
             <o-select v-model="form.properties.targetStorageId" :options="targetOptions" label="name" />
