@@ -165,7 +165,6 @@ const selectionChange = (val, ...a) => {
           start-placeholder="开始时间"
           end-placeholder="结束时间"
           @change="timeChange"
-          @clear="timeChange"
         />
       </div>
       <div class="f-1 f-ed-un">
