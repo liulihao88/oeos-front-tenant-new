@@ -23,7 +23,7 @@ const useGetBucketList = defineStore('getBucketList', {
       this.bucketOptions = res ?? []
     },
     async clear() {
-      // await setTimeout(() => {}, 0)
+      await setTimeout(() => {}, 0)
       this.bucketOptions = []
     },
   },
