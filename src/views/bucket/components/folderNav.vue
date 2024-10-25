@@ -4,18 +4,25 @@ const { proxy } = getCurrentInstance()
 import useBucketSettings from '@/store/modules/bucketSettings.ts'
 const bucketSettings = useBucketSettings()
 
+const emits = defineEmits(['change'])
+
 const changeFolder = (v, i) => {
   const getNowIdx = bucketSettings.prefixKeyArr.findIndex((val) => val === v)
   const prefixKeyArr = proxy.clone(bucketSettings.prefixKeyArr)
   let sliceArr = prefixKeyArr.slice(0, getNowIdx + 1)
   bucketSettings.changePrefixKey(sliceArr.join('/') + '/')
+  emits('change')
+}
+const toRoot = () => {
+  bucketSettings.clearPrefixKey()
+  emits('change')
 }
 </script>
 
 <template>
   <div class="folder-box">
     <template v-if="bucketSettings.prefixKeyArr.length !== 0">
-      <div class="text" @click="bucketSettings.clearPrefixKey()">根目录</div>
+      <div class="text" @click="toRoot">根目录</div>
       <o-icon name="arrow-right" class="mlr" size="12" />
     </template>
     <div v-for="(v, i) in bucketSettings.prefixKeyArr" :key="i" class="item">

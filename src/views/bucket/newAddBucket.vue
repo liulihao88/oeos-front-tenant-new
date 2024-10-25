@@ -7,9 +7,9 @@ import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
 import GetBucketList from '@/hooks/getBucketList.ts'
 const getBucketList = GetBucketList()
 
-const model = ref({
+const originModel = ref({
   bucketName: '',
-  quota: '',
+  quota: '1.00',
   quotaUnit: 'GB',
   quotaType: 'hard',
   versionEnabled: false,
@@ -17,6 +17,7 @@ const model = ref({
   bucketEncryptionEnabled: false,
   bucketNotification: true,
 })
+const model = ref({})
 const isShow = ref(false)
 const formRef = ref()
 const emits = defineEmits(['success'])
@@ -137,6 +138,7 @@ function devTest() {
   }
 }
 function open() {
+  model.value = proxy.clone(originModel)
   devTest()
   isShow.value = true
 }

@@ -31,6 +31,7 @@ const bucketId = ref()
 bucketId.value = proxy.getStorage('tenant-bucket-id') ?? ''
 const bucketName = ref()
 const selectRef = ref(null)
+const bucketRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
 const BucketFileDetailsCompRef = ref(null)
@@ -112,7 +113,8 @@ const columns = [
     label: '操作',
     prop: 'operation',
     width: 300,
-    maxBtns: proxy.$dev ? 6 : null,
+    // maxBtns: proxy.$dev ? 6 : null,
+    maxBtns: 10,
     isShow: (row) => (row.injectTime ? true : false),
     btns: [
       { content: '恢复', handler: restoreRow },
@@ -124,6 +126,19 @@ const columns = [
   },
 ]
 const data = ref([])
+
+watch(
+  [bucketId, bucketName],
+  ([bId, bName], [bOldId, bOldName]) => {
+    if (bId && bName && bOldName !== bName) {
+      proxy.setStorage('tenant-bucket-id', bId)
+      init(true)
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 const selectDisabled = computed(() => {
   return selections.value.length === 0
@@ -137,7 +152,10 @@ async function getTableByBucket() {
     selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
   }
 }
-async function init() {
+async function init(isReset = false) {
+  if (isReset) {
+    bucketSettings.clear()
+  }
   let sendParams = {
     bucket: bucketName.value,
     pageMarker: bucketSettings.prevFolderList.at(-1) ?? '',
@@ -171,11 +189,10 @@ async function deleteRow(row) {
 async function historyRow(row) {
   bucketOverviewHistoryRef.value.open(row)
 }
-const bucketSuccess = () => {
-  init()
-}
+
 const bucketChange = (val) => {
   proxy.setStorage('tenant-bucket-id', val)
+  init()
 }
 const prev = () => {
   bucketSettings.changePrevFolder()
@@ -184,17 +201,18 @@ const prev = () => {
 const next = () => {
   let laskKey = data.value.at(-1).key
   bucketSettings.changePrevFolder(laskKey)
+  init()
 }
 const toPrevFolder = () => {
   let nowPrefixKeyArr = bucketSettings.prefixKeyArr
-  console.log(`61 nowPrefixKeyArr`, nowPrefixKeyArr)
   nowPrefixKeyArr.pop()
   let nowPrefixkey = nowPrefixKeyArr.length > 0 ? nowPrefixKeyArr.join('/') + '/' : ''
   bucketSettings.changePrefixKey(nowPrefixkey)
-  // init()
+  init()
 }
 const inside = (row) => {
   bucketSettings.changePrefixKey(row.key)
+  init()
 }
 const previewImage = (row) => {
   preview(bucketName.value, row.key)
@@ -204,7 +222,7 @@ const previewImage = (row) => {
 <template>
   <div>
     <div class="top f">
-      <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" @success="bucketSuccess" @change="bucketChange" />
+      <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
       <UploadFile :bucketName="bucketName" @success="init" />
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
@@ -224,7 +242,7 @@ const previewImage = (row) => {
       <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
       <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
       <el-button v-if="bucketSettings.prefixKey" type="primary" @click="toPrevFolder">返回上级目录</el-button>
-      <FolderNav class="ml2" />
+      <FolderNav class="ml2" @change="init" />
     </div>
 
     <o-table
