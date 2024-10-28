@@ -28,13 +28,15 @@ const form = ref({
   key: '',
   injectTimeBegin: '',
   injectTimeEnd: '',
-  pageNumber: 0,
-  pageSize: 30,
   bucket: bucketName.value,
 })
 const selections = ref([])
 
 const data = ref([])
+const allData = ref([])
+const pageSize = ref(30)
+const pageNumber = ref(1)
+const total = ref(0)
 
 const restoreRow = async (row) => {
   let params = {
@@ -100,21 +102,20 @@ const columns = [
   },
 ]
 
-const init = async () => {
+const editSearch = async () => {
   searchConfigCompRef.value.open()
 }
-const success = (sendData) => {
-  data.value = sendData
+
+const success = ({ details, total: t }) => {
+  allData.value = details
+  total.value = t
+  update(1, 30)
 }
 
-const changeSelect = (value, label, options) => {
-  bucketId.value = value
-  bucketName.value = label
-  form.value.bucket = label
-  proxy.setStorage('tenant-bucket-id', value)
-  proxy.setStorage('tenant-bucket-name', label)
-  init()
+const update = (num, size) => {
+  data.value = allData.value.slice((num - 1) * size, num * size)
 }
+
 const timeRange = ref([])
 
 const multyRestore = async () => {
@@ -122,18 +123,6 @@ const multyRestore = async () => {
   proxy.$toast('批量恢复成功')
 }
 
-const timeChange = (value) => {
-  console.log(`43 value`, value)
-  console.log(`timeRange.value`, timeRange.value)
-  if (proxy.notEmpty(timeRange.value[0] && proxy.notEmpty(timeRange.value[1]))) {
-    form.value.injectTimeBegin = new Date(timeRange.value[0]).getTime()
-    form.value.injectTimeEnd = new Date(timeRange.value[1]).getTime()
-  } else {
-    form.value.injectTimeBegin = ''
-    form.value.injectTimeEnd = ''
-  }
-  init()
-}
 const download = async () => {
   if (!bucketName.value) {
     proxy.$toast('请先选择桶名', 'e')
@@ -172,7 +161,7 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-download" :disabled="!data.length" @click="download">
           批量下载
         </el-button>
-        <el-button type="primary" icon="el-icon-search" @click="init">编辑搜索表达式</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
       </div>
     </div>
 
@@ -181,7 +170,10 @@ const selectionChange = (val, ...a) => {
         ref="tableRef"
         :columns="columns"
         :data="data"
+        :total="total"
+        :pageSize="pageSize"
         height="calc(100vh - 240px)"
+        @update="update"
         @selection-change="selectionChange"
       >
         <template #name="{ scope, row }">

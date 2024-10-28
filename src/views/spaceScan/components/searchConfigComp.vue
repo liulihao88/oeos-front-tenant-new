@@ -36,8 +36,8 @@ const confirm = async () => {
       values: [values],
     }
   })
-  copyForm.pageSize = 30
-  copyForm.pageNumber = 1
+  // copyForm.pageSize = 30
+  // copyForm.pageNumber = 1
   copyForm.buckets = proxy.clone(form.value.buckets)
   let res = await queryAdvance(copyForm)
   isShow.value = false
@@ -57,7 +57,7 @@ const devTest = async () => {
           name: 'objectKey',
           operator: 'contains',
           type: 'string',
-          values: 22,
+          values: '',
         },
       ],
       queryName: proxy.uuid('queryName'),

@@ -29,6 +29,7 @@ const form = ref({
   bucket: bucketName.value,
 })
 const selections = ref([])
+const total = ref(0)
 
 const data = ref([])
 
@@ -91,8 +92,15 @@ const init = async () => {
     return proxy.$toast('请先选择桶名后查询', 'e')
   }
   let res = await querySimple(form.value)
-  data.value = res
+  data.value = res.details
+  total.value = res.total
   proxy.$toast('查询成功')
+}
+
+const update = (num, size) => {
+  form.value.pageSize = size
+  form.value.pageNumber = num - 1
+  init()
 }
 
 const changeSelect = (value, label, options) => {
@@ -182,7 +190,10 @@ const selectionChange = (val, ...a) => {
         ref="tableRef"
         :columns="columns"
         :data="data"
+        :pageSize="form.pageSize"
+        :total="total"
         height="calc(100vh - 240px)"
+        @update="update"
         @selection-change="selectionChange"
       >
         <template #name="{ scope, row }">
