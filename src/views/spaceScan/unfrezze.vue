@@ -93,16 +93,24 @@ const init = async () => {
   <div>
     <div class="top">
       <div>
-        <g-bucket ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" @change="init" />
+        <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" @change="init" />
         <o-input
           v-model="prefixKey"
           v-throttle.input="init"
+          title="对象前缀"
           placeholder="请输入对象key的前缀"
-          width="150"
+          width="250"
           class="mr2"
           @clear="init"
         />
-        <o-select v-model="frezzeStatus" :options="frezzeOptions" width="100" :clearable="false" @change="init" />
+        <o-select
+          v-model="frezzeStatus"
+          :options="frezzeOptions"
+          width="200"
+          :clearable="false"
+          title="状态"
+          @change="init"
+        />
       </div>
       <div>
         <el-button type="primary" @click="init">查询</el-button>

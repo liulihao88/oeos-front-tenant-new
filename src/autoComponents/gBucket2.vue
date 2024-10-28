@@ -47,6 +47,7 @@ watch(
     ref="selectRef"
     v-bind="$attrs"
     v-model="sValue"
+    title="桶名称"
     placeholder="请选择桶名"
     :width="$attrs.width ?? 200"
     class="mr"

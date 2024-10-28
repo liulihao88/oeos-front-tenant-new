@@ -297,6 +297,7 @@ function _handleUsedData(usedSpace) {
               <o-input
                 v-model="searchValue"
                 v-throttle.300="init"
+                title="桶名称"
                 width="200"
                 class="ml"
                 placeholder="可筛选桶名"

@@ -259,10 +259,11 @@ const deleteTime = (v, i, val = '', idx = '') => {
         <o-input
           v-model.trim="searchValue"
           v-throttle.300="searchHandler"
+          title="任务名称"
           placeholder="请输入"
           @clear="searchHandler"
         />
-        <el-button size="small" type="primary" class="m-l-16" @click="reset">新建</el-button>
+        <el-button type="primary" class="m-l-16" @click="reset">新建</el-button>
       </div>
       <div>
         <o-table
@@ -277,7 +278,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
     </div>
     <div class="r">
       <div class="r-top">
-        <o-input v-model="taskName" addon-before="任务名" width="300" />
+        <o-input v-model="taskName" title="任务名称" width="300" />
         <el-button v-throttle="save" size="small" type="primary" class="m-l-16">保存</el-button>
       </div>
       <div class="r-content">

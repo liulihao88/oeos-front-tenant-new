@@ -152,9 +152,10 @@ const selectionChange = (val, ...a) => {
         <o-input
           v-model="form.key"
           v-debounce.500="init"
-          width="150"
+          width="250"
           placeholder="请输入对象名称"
           class="mr2"
+          title="对象名称"
           :disabled="!bucketId"
           @clear="init"
         />
