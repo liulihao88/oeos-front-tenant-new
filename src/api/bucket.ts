@@ -2,7 +2,7 @@ import request, { requestOld } from '@/utils/request.ts'
 
 // 获取桶列表
 export function getBucketList(params) {
-  return request('bucket/summary', { params })
+  return request('bucket/summary', { params, resolve: 'data' })
 }
 
 // 根据桶名称, 获取桶详情

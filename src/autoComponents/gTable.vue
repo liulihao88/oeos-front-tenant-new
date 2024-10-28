@@ -18,13 +18,29 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  pageSize: {
+    type: Number,
+    default: 10,
+  },
+  pageSizes: {
+    type: Array,
+    default: () => {
+      return [10, 30, 50, 100]
+    },
+  },
   total: {
     type: Number,
   },
+  emptyText: {
+    type: String,
+    default: '-',
+  },
 })
+const tableRef = ref(null)
 const tableTotal = computed(() => {
   return props.total || props.data.length
 })
+const sPageSize = ref(props.pageSize)
 const emits = defineEmits(['update'])
 const finalColumns = ref([])
 
@@ -54,20 +70,27 @@ const updateTable = () => {
       hideBtns: hideBtns, // 隐藏在...中的按钮
       maxBtns: item.maxBtns || 2, // 最大显示按钮个数，超出后显示...
     }
-    console.log(`item`, item)
     let res = Object.assign({}, defaultItems, item)
-    console.log(`res`, res)
     return res
   })
 }
 watch(
   () => props.columns,
-  () => {
+  (columns) => {
     updateTable()
   },
   {
     immediate: true,
     deep: true,
+  },
+)
+watch(
+  () => props.pageSize,
+  (val) => {
+    sPageSize.value = val
+  },
+  {
+    immediate: true,
   },
 )
 // isShow 或者 content支持 函数或字符串两种写法。
@@ -97,28 +120,44 @@ const parseDisabled = (disFn, row = '', scope = '') => {
     return disFn
   }
 }
-const currentPage = ref(1)
-const pageSize = ref(10)
+const parseIsShow = (isFn, row = '', scope = '') => {
+  if (typeof isFn === 'function') {
+    return isFn(row, scope)
+  } else {
+    if (isFn === undefined) {
+      return true
+    }
+    return isFn
+  }
+}
+const handleEmptyText = (scope, v) => {
+  if ((scope.row[v.prop] !== null && scope.row[v.prop] !== undefined) || scope.row[v.prop] !== '') {
+    return scope.row[v.prop]
+  }
+  return v.emptyText || props.emptyText
+}
+const pageNumber = ref(1)
+
 function handleSizeChange(val) {
-  pageSize.value = val
-  currentPage.value = 1
-  update()
+  sPageSize.value = val
+  pageNumber.value = 1
+  updatePage()
 }
 function handleCurrentChange(val) {
-  currentPage.value = val
-  update()
+  pageNumber.value = val
+  updatePage()
 }
-function update() {
-  emits('update', { pageSize: pageSize.value, currentPage: currentPage.value })
+function updatePage() {
+  emits('update', pageNumber.value, sPageSize.value)
 }
-defineExpose({})
 </script>
 
 <template>
   <div class="o-table">
     <el-table
-      :data="props.data"
       v-bind="$attrs"
+      ref="tableRef"
+      :data="props.data"
       border
       :header-cell-style="{
         background: '#f7f8fa',
@@ -130,69 +169,80 @@ defineExpose({})
       <el-table-column v-if="showIndex" type="index" width="50" />
       <template v-for="(v, i) in finalColumns" :key="i">
         <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
-        <el-table-column v-else-if="v.baseBtns && v.baseBtns.length > 0" v-bind="{ ...{ fixed: 'right' }, ...v }">
+        <el-table-column
+          v-else-if="v.baseBtns && v.baseBtns.length > 0"
+          v-bind="{ ...{ fixed: 'right', width: 200 }, ...v }"
+        >
           <template #default="scope">
-            <template v-for="(val, idx) in v.baseBtns" :key="idx">
-              <template v-if="val.reConfirm === true">
-                <o-popconfirm trigger="click" @confirm="val.handler?.(scope.row, scope)">
-                  <el-button
-                    v-if="!val.confirmInfo"
-                    v-bind="{ ...val }"
-                    link
-                    :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                  >
-                    {{ operatorBtnFn(val.content, scope.row, scope) }}
-                  </el-button>
-                </o-popconfirm>
+            <template v-if="parseIsShow(v.isShow, scope.row, scope)">
+              <template v-for="(val, idx) in v.baseBtns" :key="idx">
+                <template v-if="parseIsShow(val.isShow, scope.row, scope)">
+                  <slot v-if="val.useSlot" :name="val.prop" :row="scope.row" :scope="scope" />
+                  <template v-else-if="val.reConfirm === true">
+                    <o-popconfirm trigger="click" style="display: inline" @confirm="val.handler?.(scope.row, scope)">
+                      <el-button
+                        v-if="!val.confirmInfo"
+                        v-bind="{ ...val }"
+                        link
+                        class="linked"
+                        :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                      >
+                        {{ operatorBtnFn(val.content, scope.row, scope) }}
+                      </el-button>
+                    </o-popconfirm>
+                  </template>
+                  <template v-else>
+                    <el-button
+                      v-if="!val.confirmInfo"
+                      v-bind="{ ...val }"
+                      link
+                      :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                      class="linked"
+                      @click.stop="val.handler?.(scope.row, scope)"
+                    >
+                      {{ operatorBtnFn(val.content, scope.row, scope) }}
+                    </el-button>
+                  </template>
+                </template>
               </template>
-              <template v-else>
-                <el-button
-                  v-if="!val.confirmInfo"
-                  v-bind="{ ...val }"
-                  link
-                  :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                  class="linked"
-                  @click.stop="val.handler?.(scope.row, scope)"
-                >
-                  {{ operatorBtnFn(val.content, scope.row, scope) }}
-                </el-button>
-              </template>
-            </template>
 
-            <template v-if="v.hideBtns.length > 0">
-              <el-dropdown class="m-l-12 m-t-4" trigger="click">
-                <o-icon name="more" />
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item v-for="(val, idx) in v.hideBtns" :key="idx" :hide-on-click="false">
-                      <template v-if="val.reConfirm === true">
-                        <o-popconfirm trigger="hover" @confirm="val.handler?.(scope.row, scope)">
+              <template v-if="v.hideBtns.length > 0">
+                <el-dropdown class="m-l-12 m-t-4" trigger="click">
+                  <o-icon name="more" />
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item v-for="(val, idx) in v.hideBtns" :key="idx" :hide-on-click="false">
+                        <slot v-if="val.useSlot" :name="val.prop" :row="scope.row" :scope="scope" />
+                        <template v-else-if="val.reConfirm === true">
+                          <o-popconfirm trigger="hover" @confirm="val.handler?.(scope.row, scope)">
+                            <el-button
+                              v-if="!val.confirmInfo"
+                              v-bind="{ ...val }"
+                              link
+                              class="linked"
+                              :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                            >
+                              {{ operatorBtnFn(val.content, scope.row, scope) }}
+                            </el-button>
+                          </o-popconfirm>
+                        </template>
+                        <template v-else>
                           <el-button
                             v-if="!val.confirmInfo"
                             v-bind="{ ...val }"
                             link
+                            class="linked"
                             :disabled="parseDisabled(val.disabled, scope.row, scope)"
+                            @click.stop="val.handler?.(scope.row, scope)"
                           >
-                            ??{{ operatorBtnFn(val.content, scope.row, scope) }}
+                            {{ operatorBtnFn(val.content, scope.row, scope) }}
                           </el-button>
-                        </o-popconfirm>
-                      </template>
-                      <template v-else>
-                        <el-button
-                          v-if="!val.confirmInfo"
-                          v-bind="{ ...val }"
-                          link
-                          class="linked"
-                          :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                          @click.stop="val.handler?.(scope.row, scope)"
-                        >
-                          {{ operatorBtnFn(val.content, scope.row, scope) }}
-                        </el-button>
-                      </template>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+                        </template>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </template>
             </template>
           </template>
         </el-table-column>
@@ -201,13 +251,13 @@ defineExpose({})
           <template #default="scope">
             <slot v-if="v.useSlot" :name="v.prop" :row="scope.row" :scope="scope" />
             <span v-else-if="v.handler" class="linked" @click.stop="v.handler(scope.row, scope)">
-              <span>{{ v.filter ? v.filter(scope.row[v.prop], scope.row, scope) : scope.row[v.prop] || '-' }}??</span>
+              <span>{{ v.filter ? v.filter(scope.row[v.prop], scope.row, scope) : handleEmptyText(scope, v) }}</span>
             </span>
             <span v-else-if="v.filter">
               {{ v.filter(scope.row[v.prop], scope.row, scope) }}
             </span>
             <span v-else>
-              {{ scope.row[v.prop] || '-' }}
+              {{ handleEmptyText(scope, v) }}
             </span>
           </template>
         </el-table-column>
@@ -224,9 +274,9 @@ defineExpose({})
         <el-pagination
           class="tab_pagination"
           background
-          :current-page="currentPage"
-          :page-size="pageSize"
-          :page-sizes="[10, 30, 50, 100]"
+          :current-page="pageNumber"
+          :page-size="sPageSize"
+          :page-sizes="pageSizes"
           layout="prev, pager, next, sizes, jumper"
           :total="tableTotal"
           @size-change="handleSizeChange"

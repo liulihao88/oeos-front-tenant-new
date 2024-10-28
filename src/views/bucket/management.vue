@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed, nextTick } from 'vue'
-// import { throttle } from 'lodash-es'
+import { throttle } from 'lodash-es'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -18,6 +18,9 @@ import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
 import NewAddBucket from '@/views/bucket/newAddBucket.vue'
 import GetBucketList from '@/hooks/getBucketList.ts'
 const getBucketListHook = GetBucketList()
+
+const PAGE_SIZE = 30
+const PAGE_NUMBER = 1
 
 import BucketCapacityPie from '@/views/bucket/bucketCapacityPie.vue'
 const totalCapacity = ref(0)
@@ -101,6 +104,8 @@ function handleUpdate() {
 }
 const total = ref(0)
 const currentRow = ref({})
+const pageSize = ref(PAGE_SIZE)
+const pageNumber = ref(PAGE_NUMBER)
 const columns = [
   {
     label: '桶名称',
@@ -162,16 +167,21 @@ const objectNumData = ref([])
 const bucketLists = ref([])
 async function getTableList() {
   let params = {
-    pageSize: 30,
-    pageNumber: 1,
+    pageSize: pageSize.value,
+    pageNumber: pageNumber.value,
     bucketName: searchValue.value,
   }
   let res = await getBucketList(params)
-  bucketLists.value = res
-  data.value = res
+  bucketLists.value = res.details
+  data.value = res.details
+  total.value = res.total
   getBucketDetailByName()
 }
-async function init() {
+async function init(isReset = false) {
+  if (isReset) {
+    pageSize.value = PAGE_SIZE
+    pageNumber.value = PAGE_NUMBER
+  }
   reset()
   await getTableList()
   await getBucketUsed()
@@ -179,6 +189,17 @@ async function init() {
 }
 init()
 overviewApi()
+
+const update = (num, size) => {
+  pageSize.value = size
+  pageNumber.value = num
+  init()
+}
+
+const searchBucket = throttle(function () {
+  // 在这里执行你的逻辑操作
+  init()
+}, 500)
 
 async function reset() {
   await nextTick()
@@ -240,8 +261,6 @@ async function getBucketDetailByName() {
       return { ...v, ...item }
     })
   }
-
-  total.value = data.value.length
 }
 const data = ref([])
 const calcQuota = (num, unit) => {
@@ -296,15 +315,15 @@ function _handleUsedData(usedSpace) {
             <o-title title="桶列表" class="mb3">
               <o-input
                 v-model="searchValue"
-                v-throttle.300="init"
                 title="桶名称"
                 width="200"
                 class="ml"
                 placeholder="可筛选桶名"
-                @clear="init"
+                @input="searchBucket"
+                @clear="searchBucket()"
               />
               <template #right>
-                <el-button type="" icon="el-icon-refresh" @click="init">刷新</el-button>
+                <el-button type="" icon="el-icon-refresh" @click="init()">刷新</el-button>
                 <el-button type="primary" icon="el-icon-plus" @click="add">新增桶</el-button>
               </template>
             </o-title>
@@ -312,9 +331,11 @@ function _handleUsedData(usedSpace) {
               ref="tableRef"
               :columns="columns"
               :total="total"
+              :pageSize="pageSize"
               :data="data"
               highlight-current-row
               height="calc(100vh - 366px)"
+              @update="update"
               @current-change="currentChange"
             >
               <template #bucketName="{ scope, row }">
@@ -347,7 +368,7 @@ function _handleUsedData(usedSpace) {
         </div>
       </el-col>
     </el-row>
-    <NewAddBucket ref="addRef" @success="init" />
+    <NewAddBucket ref="addRef" @success="init()" />
   </div>
 </template>
 

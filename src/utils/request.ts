@@ -70,13 +70,13 @@ instance.interceptors.response.use(
         return Promise.reject(response.data)
       } else {
         // 返回正常数据
-        return Promise.resolve(response.data.details)
+        let resolveData = response.config.resolve ? response[response.config.resolve] : response.data.details
+        return Promise.resolve(resolveData)
       }
     } else {
       if (response.status === 401) {
         return devLogin()
       }
-      console.log(`55 response.status`, response.status)
       if (('' + response.status).startsWith('5')) {
         return $toast('系统繁忙, 请稍后再试', 'e')
       }
@@ -84,7 +84,6 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(`09 error`, error)
     let obj = JSON.parse(JSON.stringify(error))
     if (obj.message?.indexOf('401') !== -1) {
       return devLogin()
