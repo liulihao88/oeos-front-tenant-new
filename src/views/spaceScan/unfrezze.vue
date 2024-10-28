@@ -99,7 +99,7 @@ const init = async () => {
           v-throttle.input="init"
           title="对象前缀"
           placeholder="请输入对象key的前缀"
-          width="250"
+          width="300"
           class="mr2"
           @clear="init"
         />

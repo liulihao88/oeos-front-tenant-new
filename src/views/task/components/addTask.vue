@@ -268,3 +268,9 @@ defineExpose({
     </o-dialog>
   </div>
 </template>
+
+<style lang="scss" scoped>
+:deep(.el-form-item__content) {
+  line-height: unset;
+}
+</style>
