@@ -3,7 +3,6 @@
   <g-bucket v-model="bucketId" v-model:bucketName="bucketName" ref="bucketRef"></g-bucket>
 */
 import { ref, getCurrentInstance, watch, watchEffect } from 'vue'
-import { useVModels } from '@vueuse/core'
 const { proxy } = getCurrentInstance()
 import GetBucketList from '@/hooks/getBucketList.ts'
 let getBucketList = GetBucketList()

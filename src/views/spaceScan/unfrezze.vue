@@ -5,10 +5,6 @@ import { restoreList } from '@/api/spaceScan.ts'
 const { proxy } = getCurrentInstance()
 const bucketRef = ref(null)
 
-// nextTick(() => {
-//   let a = bucketRef.value.update()
-// })
-
 const bucketId = ref()
 const bucketName = ref()
 const frezzeStatus = ref('unfreezed')
@@ -35,12 +31,13 @@ const columns = [
   {
     label: '对象大小',
     prop: 'size',
+    width: 120,
     filter: (val) => proxy.formatBytes(val),
   },
   {
     label: '优先级',
     prop: 'priority',
-    width: 100,
+    width: 80,
   },
   {
     label: '注入时间',
@@ -79,6 +76,7 @@ const columns = [
 ]
 
 const init = async () => {
+  await nextTick()
   const sendData = {
     bucket: bucketName.value,
     prefixKey: prefixKey.value,
