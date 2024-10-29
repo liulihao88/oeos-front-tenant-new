@@ -51,7 +51,9 @@ function onFresh() {
       </o-tooltip>
 
       <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
-        <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+        <o-tooltip content="退出系统">
+          <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+        </o-tooltip>
       </div>
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />

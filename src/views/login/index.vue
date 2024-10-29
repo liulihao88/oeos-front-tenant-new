@@ -1,7 +1,6 @@
 <script setup>
 import Motion from './utils/motion'
 import { useRouter, useRoute } from 'vue-router'
-import { message } from '@/utils/message'
 import { useNav } from '@/layout/hooks/useNav'
 import { useLayout } from '@/layout/hooks/useLayout'
 import { initRouter, getTopMenu } from '@/router/utils'
@@ -110,7 +109,7 @@ const onLogin = async (formEl) => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     console.log(`69 jumpPath`, jumpPath)
     router.push(jumpPath).then(() => {
-      message('登录成功', { type: 'success' })
+      proxy.$toast('登录成功')
     })
   })
 }
@@ -120,7 +119,7 @@ const onLogin2 = () => {
   proxy.setStorage('token', token)
   return initRouter().then(() => {
     router.push('/test/t1').then(() => {
-      message('登录成功', { type: 'success' })
+      proxy.$toast('登录成功')
     })
   })
 }

@@ -35,11 +35,12 @@ const columns = [
   {
     label: '对象大小',
     prop: 'size',
-    filter: proxy.formatSize,
+    filter: (val) => proxy.formatBytes(val),
   },
   {
     label: '优先级',
     prop: 'priority',
+    width: 100,
   },
   {
     label: '注入时间',
@@ -79,7 +80,6 @@ const columns = [
 
 const init = async () => {
   const sendData = {
-    pageNumber: 0,
     bucket: bucketName.value,
     prefixKey: prefixKey.value,
     status: frezzeStatus.value,
