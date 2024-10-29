@@ -47,7 +47,7 @@ const save = async () => {
     proxy.$toast('默认空间不能小于0.01PB', 'w')
     return false
   }
-  let num = proxy.formatSize(form.value.quota + form.value.quotaUnit)
+  let num = proxy.formatBytes(form.value.quota + form.value.quotaUnit)
   console.log(`37 num`, num)
   if (num > limitMax.value) {
     proxy.$toast('默认空间不能大于' + proxy.formatBytes(limitMax.value), 'w')
@@ -56,9 +56,12 @@ const save = async () => {
   await saveBucket(form.value)
   proxy.$toast('保存成功')
 }
-async function init() {
+async function init(isReset = false) {
   let res = await initBucket()
   form.value = res
+  if (isReset) {
+    proxy.$toast('重置成功')
+  }
 }
 
 const getLimitCeilingFn = async () => {
@@ -76,7 +79,7 @@ init()
 
     <div>
       <el-button type="primary" @click="save">保存</el-button>
-      <el-button type="primary" @click="init">重置</el-button>
+      <el-button type="primary" @click="init(true)">重置</el-button>
     </div>
   </div>
 </template>

@@ -68,7 +68,7 @@ const init = async () => {
   data.value = res
 }
 init()
-setInterval(() => {
+timer.value = setInterval(() => {
   init()
 }, 5000)
 
