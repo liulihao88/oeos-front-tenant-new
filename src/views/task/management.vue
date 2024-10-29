@@ -129,7 +129,7 @@ async function deleteRow(row) {
       <el-button type="primary" icon="el-icon-plus" @click="add">添加</el-button>
     </div>
 
-    <o-table ref="tableRef" :columns="columns" :data="data" :pageSize="30">
+    <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false">
       <template #enable="{ scope, row }">
         <el-switch
           v-model="row.enabled"

@@ -90,7 +90,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <o-table ref="tableRef" :columns="columns" :data="data">
+    <o-table ref="tableRef" :columns="columns" :data="data" :pageSize="30" :showPage="false">
       <template #status="{ row, scope }">
         {{ row.statusTitle }}
       </template>
