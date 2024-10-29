@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { unref } from 'vue'
+import { unref, getCurrentInstance } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
 import LaySearch from '../lay-search/index.vue'
 // import LayNotice from '../lay-notice/index.vue'
@@ -12,6 +12,7 @@ import { handleAliveRoute, getTopMenu } from '@/router/utils'
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
 import RefreshRight from '@iconify-icons/ep/refresh-right'
+const { proxy } = getCurrentInstance()
 const { layout, device, logout, onPanel, pureApp, username, userAvatar, avatarsStyle, toggleSideBar } = useNav()
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -40,6 +41,9 @@ function onFresh() {
     <LayNavMix v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
+      <div class="mr">
+        {{ proxy.getStorage('tenant-sysdomain').name }}-{{ proxy.getStorage('tenant-sysdomain').id }}
+      </div>
       <o-tooltip content="快捷键:windows->ctrl+enter或者mac->cmd+enter">
         <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
           <IconifyIconOffline :icon="RefreshRight" />

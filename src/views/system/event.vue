@@ -138,6 +138,7 @@ init()
           label="name"
           placeholder="请选择事件等级"
           class="m-r-16"
+          width="460"
           @change="init"
         />
         <o-select

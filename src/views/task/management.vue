@@ -129,7 +129,7 @@ async function deleteRow(row) {
       <el-button type="primary" icon="el-icon-plus" @click="add">添加</el-button>
     </div>
 
-    <o-table ref="tableRef" :columns="columns" :data="data">
+    <o-table ref="tableRef" :columns="columns" :data="data" :pageSize="30">
       <template #enable="{ scope, row }">
         <el-switch
           v-model="row.enabled"
@@ -139,7 +139,6 @@ async function deleteRow(row) {
           active-text="启用"
           inactive-text="未启用"
         />
-        <!-- @change="enableChange(row.enabled, row)" -->
       </template>
     </o-table>
     <AddTask ref="addTaskRef" @success="init" />

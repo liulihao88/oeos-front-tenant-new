@@ -17,7 +17,7 @@ export async function devLogin() {
     let data = {
       username: 'admin',
       password: password_one,
-      sysdomain: getStorage('tenant-sysdomain'),
+      sysdomain: getStorage('tenant-sysdomain').id,
     }
     let res = await request('/auth/signin', 'put', {
       type: 'common',

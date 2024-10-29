@@ -95,7 +95,12 @@ const onLogin = async (formEl) => {
   let loginRes = await login(loginParams)
   let token = `${loginRes.tokenType} ${loginRes.token}`
   proxy.setStorage('tenant-token', token)
-  proxy.setStorage('tenant-sysdomain', ruleForm.tenantId)
+  const tenantName = tenantOptions.value.find((v) => v.value === ruleForm.tenantId).name
+  proxy.setStorage('tenant-sysdomain', {
+    id: ruleForm.tenantId,
+    name: tenantName,
+  })
+
   let menuRes = await getMenu()
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   let formatRes = await getFormat()
@@ -114,8 +119,7 @@ const onLogin2 = () => {
   let token = `测试登录`
   proxy.setStorage('token', token)
   return initRouter().then(() => {
-    console.log(`97 redirectUrl.value`, redirectUrl.value)
-    router.push(redirectUrl.value || '/test/t2').then(() => {
+    router.push('/test/t1').then(() => {
       message('登录成功', { type: 'success' })
     })
   })

@@ -111,7 +111,7 @@ const save = async () => {
   if (isTargetBucket.value) {
     copyForm.properties.includeBuckets = []
   }
-  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain')
+  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').id
   await saveTask(copyForm)
   isShow.value = false
   emits('success')

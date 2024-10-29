@@ -49,15 +49,25 @@ defineExpose({
 </script>
 
 <template>
-  <el-button v-show="isDev" id="nativeRefreshBtn" type="danger" class="po-f r-100 t-8 z-900" @click="nativeRefresh">
+  <el-button
+    v-show="isDev"
+    id="nativeRefreshBtn"
+    type="danger"
+    class="po-f r-500 t-8"
+    style=" right: calc(50% - 100px);z-index: 99999"
+    size="small"
+    @click="nativeRefresh"
+  >
     本地刷新
   </el-button>
-  <!-- <el-button
-    @click="changeMode"
-    :type="isDev ? 'danger' : 'primary'"
-    class="po-f r-200 t-8 z-900"
+  <el-button
     id="nativeRefreshBtn"
+    :type="isDev ? 'danger' : 'primary'"
+    class="po-f t-8"
+    style=" right: 50%;z-index: 99999"
+    size="small"
+    @click="changeMode"
   >
     {{ isDev ? '开发模式(便于测试)' : '生产模式' }}
-  </el-button> -->
+  </el-button>
 </template>
