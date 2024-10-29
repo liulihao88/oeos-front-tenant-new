@@ -44,7 +44,8 @@ const restoreRow = async (row) => {
     bucket: bucketName.value,
     key: row.key,
   }
-  await objectRestore(params)
+  let res = await objectRestore(params)
+  proxy.$toast(res)
 }
 const detailRow = async (row) => {
   let params = {

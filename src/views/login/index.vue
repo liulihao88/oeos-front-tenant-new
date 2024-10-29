@@ -104,7 +104,7 @@ const onLogin = async (formEl) => {
   let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   let formatRes = await getFormat()
   proxy.setStorage('tenant-time-rule', formatRes)
-  await bucketList.getBucketList()
+  await bucketList.update()
   return initRouter().then(() => {
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     console.log(`69 jumpPath`, jumpPath)
