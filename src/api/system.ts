@@ -28,17 +28,17 @@ export function getLevels() {
 }
 // 事件列表
 export function getEventList(data) {
-  return request(`event/query`, 'put', { data: data })
+  return request(`event/query`, 'put', { data: data, resolve: 'data' })
 }
 
 // 标记处理
 export function markHandle(id, type) {
-  return request(`mark/${id}/${type}`, 'put')
+  return request(`event/mark/${id}/${type}`, 'put')
 }
 
 // 删除事件
 export function deleteEvent(id) {
-  return request(`delete/${id}`, 'delete')
+  return request(`event/delete/${id}`, 'delete')
 }
 
 // 租户事件导出

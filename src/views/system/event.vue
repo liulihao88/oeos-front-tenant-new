@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, onUnmounted } from 'vue'
 const { proxy } = getCurrentInstance()
 import { getEventList, getLevels, markHandle, deleteEvent, exportEvent } from '@/api/system.ts'
 
@@ -19,12 +19,17 @@ import { getEventList, getLevels, markHandle, deleteEvent, exportEvent } from '@
   "pageSize": "30"
 }
  */
+
 const searchForm = ref({
-  beginDateTime: '',
-  endDateTime: '',
+  beginDatetime: '',
+  endDatetime: '',
   levels: [],
-  mark: '',
+  mark: null,
+  pageNumber: 1,
+  pageSize: 30,
 })
+const timer = ref(null)
+const total = ref(0)
 const levelOptions = ref([])
 const dateRangeValue = ref([])
 const statusOptions = ref([
@@ -45,28 +50,41 @@ const columns = [
   {
     label: '事件等级',
     prop: 'level',
+    width: 100,
+    filter: (val) => {
+      console.log(`44 val`, val)
+    },
+    useSlot: true,
   },
   {
     label: '服务',
-    prop: 'appID',
+    prop: 'appId',
+    width: 100,
   },
   {
     label: '节点',
-    prop: 'nodeID',
+    prop: 'nodeId',
+    width: 100,
   },
   {
     label: '发生时间',
     prop: 'datetime',
+    width: proxy.TIME_WIDTH,
     filter: (val) => proxy.formatTimeByRule(val),
   },
   {
     label: '状态',
     prop: 'mark',
+    width: 120,
+    filter: (val) => {
+      return statusOptions.value.find((v) => v.value === val)?.label || '-'
+    },
   },
   {
     key: 'operation',
     label: '操作',
-    maxBtns: 5,
+    maxBtns: 10,
+    width: 300,
     btns: [
       {
         content: '标记确认',
@@ -82,14 +100,20 @@ const columns = [
       },
       {
         content: '删除',
-        confirm: '您确定删除该事件信息?',
+        reConfirm: true,
         handler: deleteRow,
       },
     ],
   },
 ]
 const init = async () => {
-  await getEventList(searchForm.value)
+  const copyForm = proxy.clone(searchForm.value)
+  if (!copyForm.mark) {
+    copyForm.mark = null
+  }
+  let res = await getEventList(copyForm)
+  data.value = res.details
+  total.value = res.total
 }
 const getLevelOptions = async () => {
   let res = await getLevels()
@@ -110,8 +134,9 @@ const exportEvent = async () => {
     nodes: [],
     levels: searchForm.value.levels,
     mark: searchForm.value.mark,
-    beginDatetime: searchForm.value.beginDateTime,
-    endDatetime: searchForm.value.endDateTime,
+
+    beginDatetime: searchForm.value.beginDatetime,
+    endDatetime: searchForm.value.endDatetime,
   }
   let res = await exportEvent(_data)
   let data = res
@@ -122,8 +147,62 @@ const exportEvent = async () => {
   link.click()
 }
 
+const parseLevelType = (level) => {
+  const map = {
+    INFO: 'success',
+    WARN: 'warning',
+    ERROR: 'danger',
+    FATAL: 'danger',
+    DEBUG: 'primary',
+  }
+  return map[level]
+}
+/**
+[
+  {
+    "name": "信息",
+    "value": "INFO"
+  },
+  {
+    "name": "警告",
+    "value": "WARN"
+  },
+  {
+    "name": "错误",
+    "value": "ERROR"
+  },
+  {
+    "name": "致命",
+    "value": "FATAL"
+  },
+  {
+    "name": "调试",
+    "value": "DEBUG"
+  }
+]
+ * @param level
+ */
+const parseLevel = (level) => {
+  let res = levelOptions.value.find((v) => v.value === level)?.name
+  return res
+}
+
 getLevelOptions()
+
 init()
+timer.value = setInterval(() => {
+  init()
+}, 3000)
+
+const update = (num, size) => {
+  searchForm.value.pageNumber = num
+  searchForm.value.pageSize = size
+  init()
+}
+
+onUnmounted(() => {
+  clearInterval(timer.value)
+})
 </script>
 
 <template>
@@ -147,13 +226,28 @@ init()
           width="200"
           :options="statusOptions"
           placeholder="请选择状态"
+          @change="init"
         />
-        <o-date-range v-model="dateRangeValue" title="日期" class="m-l-16" width="600" />
+        <o-date-range v-model="dateRangeValue" title="日期" class="m-l-16" width="600" @change="init" />
       </div>
       <div class="w-100">
         <el-button type="primary" @click="exportEvent">导出</el-button>
       </div>
     </div>
-    <o-table ref="tableRef" :columns="columns" :data="data" />
+    <o-table
+      ref="tableRef"
+      :columns="columns"
+      height="calc(100vh - 240px)"
+      :data="data"
+      :total="total"
+      :pageSize="searchForm.pageSize"
+      @update="update"
+    >
+      <template #level="{ scope, row }">
+        <el-tag :type="parseLevelType(row.level)" effect="dark">
+          {{ parseLevel(row.level) }}
+        </el-tag>
+      </template>
+    </o-table>
   </div>
 </template>

@@ -21,3 +21,4 @@ tests/**/coverage/
 *.sln
 tsconfig.tsbuildinfo
 tenant
+src/views/test/*.js
