@@ -9,6 +9,7 @@ import {
   getBucketList,
   getBucketDetail,
   getSpaceHistogram,
+  getSpace,
   getHistogram,
   getUsage,
   getOverview,
@@ -175,6 +176,7 @@ async function getTableList() {
   bucketLists.value = res.details
   data.value = res.details
   total.value = res.total
+  topObj.value[2].value = res.total
   getBucketDetailByName()
 }
 async function init(isReset = false) {
@@ -189,6 +191,13 @@ async function init(isReset = false) {
 }
 init()
 overviewApi()
+
+const getSpaceInit = async () => {
+  let res = await getSpace()
+  topObj.value[0].value = res.objectCount
+  topObj.value[1].value = res.objectSize
+}
+getSpaceInit()
 
 const update = (num, size) => {
   pageSize.value = size
@@ -304,10 +313,15 @@ function _handleUsedData(usedSpace) {
               <div>
                 <o-icon name="delete" size="40" />
               </div>
-              <div>
-                {{ proxy.formatThousands(v.value) }}
+              <div class="f-st-ct" style="flex-direction: column">
+                <div>{{ v.name }}</div>
+                <div>
+                  <template v-if="v.title === 'objectSize'">
+                    {{ proxy.formatThousands(proxy.formatBytes(v.value)) }}
+                  </template>
+                  <template v-else>{{ proxy.formatThousands(v.value) }}个</template>
+                </div>
               </div>
-              <o-tooltip :content="v.name" class="fs-12" />
             </div>
           </div>
 

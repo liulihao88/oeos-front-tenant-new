@@ -103,7 +103,7 @@ const moveToView = async (index: number): Promise<void> => {
 
 const closeAllPage = () => {
   const allRoute = multiTags.value
-  if (allRoute.length <= 2) {
+  if (allRoute.length <= 1) {
     return proxy.$toast('至少保留一个菜单', 'e')
   }
   onClickDrop(5, '')

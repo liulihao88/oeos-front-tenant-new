@@ -5,6 +5,11 @@ export function getBucketList(params) {
   return request('bucket/summary', { params, resolve: 'data' })
 }
 
+// 获取桶对象总数和总大小
+export function getSpace() {
+  return request('space/gauge')
+}
+
 // 根据桶名称, 获取桶详情
 export function getBucketDetail(bucketName) {
   return request(`bucket/${bucketName}/gauge`)
