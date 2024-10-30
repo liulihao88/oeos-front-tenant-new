@@ -137,6 +137,54 @@ export default [
     ],
   },
   {
+    path: '/apps/security',
+    component: Layout,
+    redirect: '/apps/security/user',
+    meta: {
+      icon: 'ep:home-filled',
+      title: '安全权限',
+    },
+    children: [
+      {
+        path: '/apps/security/user',
+        name: 'User',
+        component: () => import('@/views/security/user.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '用户管理',
+        },
+      },
+      {
+        path: '/apps/security/user',
+        meta: {
+          title: '用户管理',
+        },
+        children: [
+          {
+            path: '/apps/security/user/addUser',
+            name: 'addUser',
+            meta: {
+              title: '新建用户',
+              activePath: '/apps/security/user',
+              showLink: false,
+              keepAlive: true,
+            },
+            component: async () => await import('@/views/security/addUser.vue'),
+          },
+        ],
+      },
+      {
+        path: '/apps/security/group',
+        name: 'Group',
+        component: () => import('@/views/security/group.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '组管理',
+        },
+      },
+    ],
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/t1',
