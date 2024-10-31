@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
-import { userStatistic, getUsers, deleteUser, enableUser, disableUser } from '@/api/securityApi.ts'
+import { userStatistic, addUser, getUsers, deleteUser, enableUser, disableUser } from '@/api/securityApi.ts'
+import JSEncrypt from 'jsencrypt'
+
+import { encrypt } from '@/api/login.ts'
+import { omit } from 'lodash-es'
 import { ROLE_OPTIONS } from '@/assets/globalData.ts'
 
 const statusOptions = [
@@ -9,6 +13,7 @@ const statusOptions = [
   { label: '未启用', value: 'off' },
 ]
 const data = ref([])
+
 const statisticData = ref({})
 const form = ref({
   perPage: 10000,
@@ -94,6 +99,25 @@ const columns = [
   },
 ]
 
+const isShow = ref(false)
+const dialogForm = ref({})
+const formRef = ref(null)
+const originForm = ref({})
+const rules = computed(() => {
+  return {
+    username: [proxy.validate('custom', { message: '3-10位字符且只支持数字、英文', reg: /^[0-9a-zA-Z]{3,10}$/ })],
+    fullName: [proxy.validate('length', { min: 3, max: 20 })],
+    pwd: [
+      proxy.validate('length', { min: 8, max: 40 }),
+      proxy.validate('same', { value: dialogForm.value.confirmPwd }),
+    ],
+    confirmPwd: [
+      proxy.validate('length', { min: 8, max: 40 }),
+      proxy.validate('same', { value: dialogForm.value.pwd }),
+    ],
+  }
+})
+
 function editRow(row) {
   proxy.setStorage('tenant-user-details', row)
   proxy.jump(`/apps/security/user/addUser`)
@@ -127,9 +151,18 @@ const statisticInit = async () => {
 statisticInit()
 init()
 
-const addUser = () => {
-  proxy.clearStorage('tenant-user-details')
-  proxy.jump('/apps/security/user/addUser')
+const newAddUser = () => {
+  dialogForm.value = proxy.clone(originForm)
+  if (proxy.$dev) {
+    dialogForm.value = {
+      username: proxy.uuid('andy'),
+      fullName: proxy.uuid('andyFull'),
+      pwd: 'adminadmin',
+      confirmPwd: 'adminadmin',
+      description: proxy.uuid('description'),
+    }
+  }
+  isShow.value = true
 }
 const switchChange = async (row) => {
   console.log(`92 row`, row)
@@ -141,6 +174,20 @@ const switchChange = async (row) => {
   proxy.$toast('操作成功')
   statisticInit()
   return true
+}
+const confirm = async () => {
+  await proxy.validForm(formRef)
+  const sendForm = omit(dialogForm.value, ['pwd', 'confirmPwd'])
+  let encRes = await encrypt(dialogForm.value.pwd)
+  const encryptor = new JSEncrypt()
+  const publickKey = encRes.communicationKey
+  encryptor.setPublicKey(publickKey)
+  const pwd = encryptor.encrypt(dialogForm.value.pwd)
+  sendForm.password = pwd
+  await addUser(sendForm)
+  proxy.$toast('保存成功')
+  isShow.value = false
+  init()
 }
 </script>
 
@@ -162,7 +209,7 @@ const switchChange = async (row) => {
         <o-select v-model="form.status" title="状态" :options="statusOptions" @change="init" />
       </div>
       <div class="w-100">
-        <el-button type="primary" icon="el-icon-plus" @click="addUser">新增用户</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="newAddUser">新增用户</el-button>
       </div>
     </div>
     <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false">
@@ -193,6 +240,31 @@ const switchChange = async (row) => {
         />
       </template>
     </o-table>
+
+    <o-dialog ref="dialogRef" v-model="isShow" title="新增用户" @confirm="confirm">
+      <el-form ref="formRef" :model="dialogForm" :rules="rules" label-width="auto">
+        <el-form-item label="名称" prop="username">
+          <o-input v-model="dialogForm.username" v-focus placeholder="3-10位字符且只支持数字、英文" />
+        </el-form-item>
+        <el-form-item label="用户全称" prop="fullName">
+          <o-input v-model="dialogForm.fullName" placeholder="1-20位字符" />
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <o-input v-model="dialogForm.pwd" placeholder="8-40位字符组合、特殊字符可选" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPwd">
+          <o-input v-model="dialogForm.confirmPwd" placeholder="8-40位字符组合、特殊字符可选" />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <o-input
+            v-model="dialogForm.description"
+            placeholder="请输入描述信息, 限制50个字符"
+            type="textarea"
+            :maxlength="50"
+          />
+        </el-form-item>
+      </el-form>
+    </o-dialog>
   </div>
 </template>
 

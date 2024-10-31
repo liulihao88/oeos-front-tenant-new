@@ -263,6 +263,7 @@ devTest()
   <div class="">
     <o-title :title="isEdit ? '用户编辑' : '用户新增'">
       <el-button type="primary" class="ml2" @click="save">保存</el-button>
+      <el-button class="ml2" @click="proxy.jump('/apps/security/user')">取消</el-button>
     </o-title>
     <o-title title="基本信息" type="simple" />
     <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>
