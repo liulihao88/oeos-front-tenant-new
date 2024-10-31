@@ -51,3 +51,48 @@ export function getBucketPermission(name) {
 export function updateBucketPermission(name, data) {
   return request(`security/user/${name}/permission`, 'put', { data })
 }
+
+/**
+ * 组管理
+ */
+
+// 获取组列表
+export function getGroupList() {
+  return request(`security/groups`)
+}
+
+// 组详情
+export function getGroupDetails(groupName) {
+  return request(`security/group/${groupName}`)
+}
+
+// 新增组 security/group
+
+export function addNewGroupApi(data) {
+  return request(`security/group`, 'put', { data })
+}
+
+// 某个组的组用户
+export function getGroupMember(groupName) {
+  return request(`security/group/${groupName}/member/list`)
+}
+
+// 增加组用户  security/group/aaa1/member/add
+export function addGroupMember(name, data) {
+  return request(`security/group/${name}/member/add`, 'put', { data })
+}
+
+// 移除组用户
+export function removeMember(name, memberList) {
+  console.log(`56 memberList`, memberList)
+  return request(`security/group/${name}/member/remove`, 'put', { data: memberList })
+}
+
+// 获取某个组的桶权限
+export function getGroupMemberPermission(name) {
+  return request(`security/group/${name}/permission`)
+}
+// 更改某个组的桶权限
+export function putGroupMemberPermission(name, data) {
+  return request(`security/group/${name}/permission`, 'put', { data })
+}
