@@ -61,6 +61,7 @@ const columns = [
     label: '用户名',
     prop: 'username',
     width: 120,
+    handler: editRow,
   },
   {
     label: '用户全称',
