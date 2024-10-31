@@ -154,7 +154,6 @@ const saveAll = async () => {
         <GroupBaseInfo ref="groupBaseInfoEditRef" isEdit />
 
         <GroupMemberData ref="groupMemberDataRef" />
-        <o-title title="桶操作权限" />
         <BucketPermission ref="bucketPermissionRef" :sendName="selectedRows.name" :src="getGroupMemberPermission" />
       </div>
     </div>

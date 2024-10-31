@@ -213,8 +213,6 @@ defineExpose({
     <g-warning
       title=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
     />
-    {{ props }}
-
     <o-title title="单个桶权限" tb="8">
       <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>
       <o-input
