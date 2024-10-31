@@ -261,9 +261,10 @@ devTest()
 
 <template>
   <div class="">
-    <o-title :title="isEdit ? '用户编辑' : '用户新增'" sub-title="基本信息">
+    <o-title :title="isEdit ? '用户编辑' : '用户新增'">
       <el-button type="primary" class="ml2" @click="save">保存</el-button>
     </o-title>
+    <o-title title="基本信息" type="simple" />
     <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>
       <el-form-item label="名称" prop="username">
         <o-input v-model="form.username" :disabled="isEdit" placeholder="3-10位字符且只支持数字、英文" />
@@ -289,7 +290,7 @@ devTest()
 
     <template v-if="isEdit">
       <o-title title="用户角色" />
-      <o-title title="所属角色">
+      <o-title title="所属角色" type="simple">
         <div class="ml fw-400">修改角色权限保存后, 5分钟后生效</div>
       </o-title>
       <div class="f-st-ct">
@@ -298,7 +299,7 @@ devTest()
       </div>
 
       <o-title title="桶操作权限" />
-      <o-title title="桶管理权限">
+      <o-title title="桶管理权限" type="simple">
         <el-checkbox v-model="permissionBucketAdmin" class="ml" label="全部权限" true-value="PERMISSION_BUCKET_ADMIN" />
         <o-icon
           class="ml"
@@ -307,7 +308,7 @@ devTest()
 包括创建新桶权限以及[浏览/读取/写入/删除/管理]"
         />
       </o-title>
-      <o-title title="所有桶权限">
+      <o-title title="所有桶权限" type="simple">
         <div class="ml">
           <o-checkbox
             v-model="permissionValues"

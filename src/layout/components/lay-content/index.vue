@@ -107,7 +107,7 @@ const transitionMain = defineComponent({
               <el-backtop title="回到顶部" target=".app-main .el-scrollbar__wrap">
                 <BackTopIcon />
               </el-backtop>
-              <div class="grow h-100%">
+              <div class="grow" style="height: calc(100vh - 100px)">
                 <transitionMain :route="route">
                   <keep-alive v-if="isKeepAlive" :include="usePermissionStoreHook().cachePageList">
                     <component :is="Comp" :key="fullPath" :frameInfo="frameInfo" class="main-content" />
@@ -117,7 +117,7 @@ const transitionMain = defineComponent({
               </div>
               <!-- <LayFooter v-if="!hideFooter" /> -->
             </el-scrollbar>
-            <div v-else class="grow h-100%">
+            <div v-else class="grow" style="height: calc(100vh - 100px)">
               <transitionMain :route="route">
                 <keep-alive v-if="isKeepAlive" :include="usePermissionStoreHook().cachePageList">
                   <component :is="Comp" :key="fullPath" :frameInfo="frameInfo" class="main-content" />

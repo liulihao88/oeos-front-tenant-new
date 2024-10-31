@@ -164,7 +164,7 @@ export default [
             path: '/apps/security/user/addUser',
             name: 'addUser',
             meta: {
-              title: '新建用户',
+              title: '用户处理',
               activePath: '/apps/security/user',
               showLink: false,
               keepAlive: true,

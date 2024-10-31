@@ -316,7 +316,6 @@ const deleteTime = (v, i, val = '', idx = '') => {
 <style scoped lang="scss">
 .task-container {
   display: flex;
-  height: calc(100vh - 124px);
 
   .l {
     position: absolute;
