@@ -13,13 +13,17 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  src: {
+    type: Function,
+    required: true,
+  },
 })
 
 const columns = [
   {
     label: '桶名',
     prop: 'name',
-    width: 500,
+    width: 100,
   },
   {
     label: '浏览',
@@ -51,6 +55,7 @@ const columns = [
 const permissionBucketAdmin = ref()
 const data = ref([])
 const searchValue = ref('')
+const baseData = ref([])
 const permissionValues = ref([])
 const originData = ref([])
 const sendPermissionData = ref({
@@ -61,6 +66,7 @@ watch(
   () => getBucketList.bucketOptions,
   (val) => {
     data.value = proxy.clone(val)
+    baseData.value = proxy.clone(val)
     originData.value = proxy.clone(val)
     getPermission()
   },
@@ -71,9 +77,17 @@ watch(
 )
 
 async function getPermission() {
-  let res = await getBucketPermission(props.sendName)
-
+  let res = await props.src(props.sendName)
+  data.value = proxy.clone(baseData.value)
+  if (proxy.isEmpty(res.bucketPermission)) {
+    permissionValues.value = []
+    permissionBucketAdmin.value = false
+  }
   Object.entries(res.bucketPermission).map(([k, v]) => {
+    if (!k.hasOwnProperty('*')) {
+      permissionValues.value = []
+      permissionBucketAdmin.value = false
+    }
     if (k === '*') {
       const cachePermissionValues = []
       v.forEach((val) => {
@@ -171,6 +185,7 @@ const checkboxChange = async () => {
 
 defineExpose({
   $getData: $getData,
+  getPermission: getPermission,
 })
 </script>
 
@@ -198,6 +213,7 @@ defineExpose({
     <g-warning
       title=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
     />
+    {{ props }}
 
     <o-title title="单个桶权限" tb="8">
       <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>

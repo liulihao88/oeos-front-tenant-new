@@ -122,6 +122,6 @@ const save = async () => {
       <o-icon name="warning" raw-content :content="roleInfos" class="ml2" />
     </div>
 
-    <BucketPermission ref="bucketPermissionRef" :sendName="userDetails.username" />
+    <BucketPermission ref="bucketPermissionRef" :sendName="userDetails.username" :src="getBucketPermission" />
   </div>
 </template>

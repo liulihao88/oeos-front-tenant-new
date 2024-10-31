@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, nextTick, onMounted } from 'vue'
-import { getGroupList, getGroupDetails, addNewGroupApi, getGroupMember } from '@/api/securityApi.ts'
+import {
+  getGroupList,
+  getGroupDetails,
+  addNewGroupApi,
+  getGroupMember,
+  getGroupMemberPermission,
+  putGroupMemberPermission,
+} from '@/api/securityApi.ts'
 import GroupBaseInfo from '@/views/security/groupBaseInfo.vue'
 import GroupMemberData from '@/views/security/groupMemberData.vue'
+import BucketPermission from '@/views/security/bucketPermission.vue'
 
 const { proxy } = getCurrentInstance()
 
 const tableRef = ref(null)
+const bucketPermissionRef = ref(null)
 const groupBaseInfoRef = ref(null)
 const groupBaseInfoEditRef = ref(null)
 const groupMemberDataRef = ref(null)
@@ -88,6 +97,7 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
     groupDetails.value = res
     groupBaseInfoEditRef.value.open(res)
     groupMemberDataRef.value.init(currentRow.name)
+    bucketPermissionRef.value.getPermission()
   }
 }
 const confirm = async () => {
@@ -97,6 +107,14 @@ const confirm = async () => {
   isShow.value = false
   proxy.setStorage('tenant-group-name', groupBaseInfoRef.value.form.groupname)
   init()
+}
+
+const saveAll = async () => {
+  await proxy.validForm(groupBaseInfoEditRef.value.$refs.formRef)
+  await addNewGroupApi(groupBaseInfoEditRef.value.form)
+  let permissionData = await bucketPermissionRef.value.$getData()
+  await putGroupMemberPermission(selectedRows.value.name, permissionData)
+  proxy.$toast('保存成功')
 }
 </script>
 
@@ -130,11 +148,14 @@ const confirm = async () => {
         <o-empty content="暂无数据" class="h-100%" />
       </div>
       <div v-else>
-        <o-title title="组基本信息" />
+        <o-title title="组基本信息" b="8">
+          <el-button type="primary" class="ml" @click="saveAll">全部保存</el-button>
+        </o-title>
         <GroupBaseInfo ref="groupBaseInfoEditRef" isEdit />
 
         <GroupMemberData ref="groupMemberDataRef" />
         <o-title title="桶操作权限" />
+        <BucketPermission ref="bucketPermissionRef" :sendName="selectedRows.name" :src="getGroupMemberPermission" />
       </div>
     </div>
 
