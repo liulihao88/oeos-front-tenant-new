@@ -54,7 +54,7 @@ defineExpose({
     id="nativeRefreshBtn"
     type="danger"
     class="po-f r-500 t-8"
-    style=" right: calc(50% - 100px);z-index: 99999"
+    style="right: calc(50% - 100px); z-index: 99999"
     size="small"
     @click="nativeRefresh"
   >
@@ -64,10 +64,10 @@ defineExpose({
     id="nativeRefreshBtn"
     :type="isDev ? 'danger' : 'primary'"
     class="po-f t-8"
-    style=" right: 50%;z-index: 99999"
+    style="right: 50%; z-index: 99999"
     size="small"
     @click="changeMode"
   >
-    {{ isDev ? '开发模式(便于测试)' : '生产模式' }}
+    {{ isDev ? '开发' : '生产' }}
   </el-button>
 </template>

@@ -10,7 +10,9 @@ const statusOptions = [
 ]
 const data = ref([])
 const statisticData = ref({})
-const form = ref({})
+const form = ref({
+  perPage: 10000,
+})
 const countNameData = ref([
   {
     value: 'total',
@@ -53,6 +55,7 @@ const columns = [
   {
     label: '用户名',
     prop: 'username',
+    width: 120,
   },
   {
     label: '用户全称',
@@ -61,6 +64,7 @@ const columns = [
   {
     label: '用户角色',
     prop: 'roles',
+    useSlot: true,
     filter: (val) => val.join(',') || '-',
   },
   {
@@ -90,7 +94,10 @@ const columns = [
   },
 ]
 
-function editRow(row) {}
+function editRow(row) {
+  proxy.setStorage('tenant-user-details', row)
+  proxy.jump(`/apps/security/user/addUser`)
+}
 async function deleteRow(row) {
   await deleteUser(row.username)
   proxy.$toast('删除成功')
@@ -121,6 +128,7 @@ statisticInit()
 init()
 
 const addUser = () => {
+  proxy.clearStorage('tenant-user-details')
   proxy.jump('/apps/security/user/addUser')
 }
 const switchChange = async (row) => {
@@ -158,10 +166,21 @@ const switchChange = async (row) => {
       </div>
     </div>
     <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false">
+      <template #roles="{ scope, row }">
+        <template v-if="proxy.isEmpty(row.roles)">-</template>
+        <template v-else>
+          <div class="f w-100%" style="flex-wrap: nowrap">
+            <el-tag v-for="(v, i) in row.roles" :key="i" class="mr">
+              {{ proxy.ROLE_OPTIONS.find((item) => item.value === v)?.label }}
+            </el-tag>
+          </div>
+        </template>
+      </template>
       <template #status="{ scope, row }">
         <el-switch
           v-model="row.status"
           inline-prompt
+          class="switch-box"
           active-text="启用"
           inactive-text="未启用"
           active-value="on"
@@ -188,5 +207,10 @@ const switchChange = async (row) => {
   align-items: center;
   justify-content: space-between;
   margin: 8px;
+}
+
+/* 设置 el-switch 的宽度 */
+.switch-box :deep(.el-switch__core) {
+  width: 60px; /* 你可以根据需要调整这个值 */
 }
 </style>

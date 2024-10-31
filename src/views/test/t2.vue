@@ -1,14 +1,23 @@
 <script setup lang="ts">
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance, watch, ref } from 'vue'
 const { proxy } = getCurrentInstance()
-import useBucketList from '@/hooks/getBucketList.ts'
-const bucketList = useBucketList()
+
+const checked = ref()
+
+watch(
+  checked,
+  (val) => {
+    console.log(`53 9行 test/t2.vue val`, val)
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+)
 </script>
 
 <template>
   <div>
-    <el-button type="primary" @click="bucketList.clear()">测试07</el-button>
-
-    {{ bucketList.bucketOptions }}
+    <el-checkbox v-model="checked">备选项</el-checkbox>
   </div>
 </template>

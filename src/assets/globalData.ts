@@ -17,3 +17,26 @@ export const ROLE_OPTIONS = [
   { label: '监控管理员', value: 'ROLE_ADMIN_MONITOR' },
   { label: '数据管理员', value: 'ROLE_ADMIN_DATA' },
 ]
+
+export const PERMISSION_OPTIONS = [
+  {
+    label: '浏览',
+    value: 'PERMISSION_BUCKET_BROWSE',
+  },
+  {
+    label: '读',
+    value: 'PERMISSION_BUCKET_READ',
+  },
+  {
+    label: '写',
+    value: 'PERMISSION_BUCKET_WRITE',
+  },
+  {
+    label: '删除',
+    value: 'PERMISSION_BUCKET_DELETE',
+  },
+  {
+    label: '管理',
+    value: 'PERMISSION_BUCKET_MANAGEMENT',
+  },
+]

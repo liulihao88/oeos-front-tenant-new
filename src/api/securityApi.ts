@@ -25,7 +25,7 @@ export function disableUser(user) {
   return request(`/security/user/${user}/disable`, 'put')
 }
 
-// 用户新增
+// 用户新增或编辑
 /**
 description:"dddd"
 fullName:"aaa"
@@ -35,4 +35,19 @@ username:"aaa"
  */
 export function addUser(data) {
   return request('security/user', 'put', { data })
+}
+
+// security/user/andy1/roles
+export function putRoles(name, data) {
+  return request(`security/user/${name}/roles`, 'put', { data })
+}
+
+// 获取桶操作权限
+export function getBucketPermission(name) {
+  return request(`security/user/${name}/permission`)
+}
+
+// 更新桶操作权限
+export function updateBucketPermission(name, data) {
+  return request(`security/user/${name}/permission`, 'put', { data })
 }
