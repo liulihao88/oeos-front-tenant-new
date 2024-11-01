@@ -37,6 +37,7 @@ const columns = [
   {
     label: '状态',
     prop: 'status',
+    width: 100,
     filter: (val) => {
       return val === 'on' ? '启用' : val === 'off' ? '未启用' : '-'
     },
@@ -48,6 +49,7 @@ const columns = [
   {
     key: 'operation',
     label: '操作',
+    width: 150,
     btns: [
       {
         content: '移除',
@@ -62,7 +64,6 @@ const usernameSelection = computed(() => {
 })
 
 const init = async (sendGroupName) => {
-  console.log(`23 sendGroupName`, sendGroupName)
   groupName.value = sendGroupName
   let res = await getGroupMember(sendGroupName)
   data.value = res

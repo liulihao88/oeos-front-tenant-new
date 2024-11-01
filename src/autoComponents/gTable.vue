@@ -37,8 +37,9 @@ const props = defineProps({
   },
 })
 const tableRef = ref(null)
+const sData = ref([])
 const tableTotal = computed(() => {
-  return props.total || props.data.length
+  return props.total || sData.value.length
 })
 const sPageSize = ref(props.pageSize)
 const emits = defineEmits(['update'])
@@ -93,6 +94,16 @@ watch(
     immediate: true,
   },
 )
+watch(
+  () => props.data,
+  (val) => {
+    sData.value = val
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+)
 // isShow 或者 content支持 函数或字符串两种写法。
 const operatorBtnFn = (cont, row = '', scope = '') => {
   if (typeof cont === 'function') {
@@ -131,10 +142,12 @@ const parseIsShow = (isFn, row = '', scope = '') => {
   }
 }
 const handleEmptyText = (scope, v) => {
-  if ((scope.row[v.prop] !== null && scope.row[v.prop] !== undefined) || scope.row[v.prop] !== '') {
-    return scope.row[v.prop]
+  // 判断'   '为空
+  const trimIsEmpty = proxy.getType(scope.row[v.prop]) === 'string' && scope.row[v.prop].trim().length === 0
+  if (scope.row[v.prop] === null || scope.row[v.prop] === undefined || scope.row[v.prop] === '' || trimIsEmpty) {
+    return v.emptyText || props.emptyText
   }
-  return v.emptyText || props.emptyText
+  return scope.row[v.prop]
 }
 const pageNumber = ref(1)
 
@@ -157,7 +170,7 @@ function updatePage() {
     <el-table
       v-bind="$attrs"
       ref="tableRef"
-      :data="props.data"
+      :data="sData"
       border
       :header-cell-style="{
         background: '#f7f8fa',
@@ -214,7 +227,11 @@ function updatePage() {
                       <el-dropdown-item v-for="(val, idx) in v.hideBtns" :key="idx" :hide-on-click="false">
                         <slot v-if="val.useSlot" :name="val.prop" :row="scope.row" :scope="scope" />
                         <template v-else-if="val.reConfirm === true">
-                          <o-popconfirm trigger="hover" @confirm="val.handler?.(scope.row, scope)">
+                          <o-popconfirm
+                            trigger="hover"
+                            style="display: inline"
+                            @confirm="val.handler?.(scope.row, scope)"
+                          >
                             <el-button
                               v-if="!val.confirmInfo"
                               v-bind="{ ...val }"

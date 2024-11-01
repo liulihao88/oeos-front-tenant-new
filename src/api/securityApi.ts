@@ -67,9 +67,13 @@ export function getGroupDetails(groupName) {
 }
 
 // 新增组 security/group
-
 export function addNewGroupApi(data) {
   return request(`security/group`, 'put', { data })
+}
+
+// 删除组
+export function deleteGroupApi(name) {
+  return request(`security/group/${name}`, 'delete')
 }
 
 // 某个组的组用户

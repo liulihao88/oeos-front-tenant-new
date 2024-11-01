@@ -319,6 +319,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
 
   .l {
     position: absolute;
+    z-index: 1;
     width: 280px;
     height: 100%;
     height: calc(100vh - 124px);

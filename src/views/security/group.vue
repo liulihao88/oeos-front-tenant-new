@@ -4,6 +4,7 @@ import {
   getGroupList,
   getGroupDetails,
   addNewGroupApi,
+  deleteGroupApi,
   getGroupMember,
   getGroupMemberPermission,
   putGroupMemberPermission,
@@ -23,7 +24,7 @@ const originData = ref([])
 const searchValue = ref()
 const isShow = ref(false)
 const groupDetails = ref({})
-const selectedRows = ref([])
+const selectedRows = ref({})
 
 const data = ref([])
 const columns = [
@@ -44,7 +45,11 @@ const columns = [
   },
 ]
 
-async function deleteRow(row) {}
+async function deleteRow(row) {
+  await deleteGroupApi(row.name)
+  proxy.$toast('删除成功')
+  init()
+}
 
 const searchHandler = () => {
   if (!searchValue.value) {
@@ -90,9 +95,9 @@ const newAdd = async () => {
   groupBaseInfoRef.value.open()
 }
 const handleCurrentChange = async (currentRow, oldCurrentRow) => {
-  selectedRows.value = currentRow
-  proxy.setStorage('tenant-group-name', currentRow?.name ?? '')
   if (proxy.notEmpty(currentRow)) {
+    proxy.setStorage('tenant-group-name', currentRow?.name ?? '')
+    selectedRows.value = currentRow
     let res = await getGroupDetails(currentRow.name)
     groupDetails.value = res
     groupBaseInfoEditRef.value.open(res)
@@ -144,7 +149,7 @@ const saveAll = async () => {
       </div>
     </div>
     <div class="r">
-      <div v-if="data.length === 0" class="h-100%">
+      <div v-if="originData.length === 0" class="h-100%">
         <o-empty content="暂无数据" class="h-100%" />
       </div>
       <div v-else>
@@ -154,11 +159,16 @@ const saveAll = async () => {
         <GroupBaseInfo ref="groupBaseInfoEditRef" isEdit />
 
         <GroupMemberData ref="groupMemberDataRef" />
-        <BucketPermission ref="bucketPermissionRef" :sendName="selectedRows.name" :src="getGroupMemberPermission" />
+        <BucketPermission
+          ref="bucketPermissionRef"
+          :sendName="selectedRows.name"
+          :src="getGroupMemberPermission"
+          tableHeight="calc(100vh - 680px)"
+        />
       </div>
     </div>
 
-    <o-dialog ref="dialogRef" v-model="isShow" title="新增组" @confirm="confirm">
+    <o-dialog ref="dialogRef" v-model="isShow" title="新增组" width="700px" @confirm="confirm">
       <GroupBaseInfo ref="groupBaseInfoRef" />
     </o-dialog>
   </div>
@@ -170,6 +180,7 @@ const saveAll = async () => {
 
   .l {
     position: absolute;
+    z-index: 99;
     width: 280px;
     height: 100%;
     height: calc(100vh - 124px);

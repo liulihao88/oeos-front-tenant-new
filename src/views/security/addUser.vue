@@ -79,7 +79,7 @@ const save = async () => {
   await putRoles(userDetails.value.username, roleValues.value)
   let dataRes = await bucketPermissionRef.value.$getData()
   updateBucketPermission(userDetails.value.username, dataRes)
-  // proxy.jump('/apps/security/user')
+  proxy.jump('/apps/security/user')
 }
 </script>
 
@@ -122,6 +122,11 @@ const save = async () => {
       <o-icon name="warning" raw-content :content="roleInfos" class="ml2" />
     </div>
 
-    <BucketPermission ref="bucketPermissionRef" :sendName="userDetails.username" :src="getBucketPermission" />
+    <BucketPermission
+      ref="bucketPermissionRef"
+      :sendName="userDetails.username"
+      :src="getBucketPermission"
+      tableHeight="calc(100vh - 510px)"
+    />
   </div>
 </template>
