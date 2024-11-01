@@ -48,10 +48,12 @@ watch(
     v-model="sValue"
     title="桶名称"
     placeholder="请选择桶名"
-    :width="$attrs.width ?? 200"
+    :width="$attrs.width ?? 240"
     class="mr"
     :clearable="false"
     :options="getBucketList.bucketOptions"
     label="name"
-  />
+  >
+    <template #prefix>{{ getBucketList.bucketOptions.length }}个</template>
+  </o-select>
 </template>

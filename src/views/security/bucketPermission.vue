@@ -137,8 +137,9 @@ const handlePermissionDataItem = (item, rowIsTrue, type) => {
 }
 
 const $getData = async () => {
+  sendPermissionData.value.bucketPermission = {}
   sendPermissionData.value.bucketPermission['*'] = permissionBucketAdmin.value
-    ? [permissionBucketAdmin.value].concat(permissionValues.value)
+    ? [permissionBucketAdmin.value]
     : permissionValues.value
   if (!permissionBucketAdmin.value) {
     originData.value.forEach((v) => {
@@ -194,16 +195,8 @@ async function getPermission() {
       permissionBucketAdmin.value = false
     }
     if (k === '*') {
-      const cachePermissionValues = []
-      v.forEach((val) => {
-        if (val === 'PERMISSION_BUCKET_ADMIN') {
-          permissionBucketAdmin.value = val
-        } else {
-          let filterPermission = proxy.PERMISSION_OPTIONS.map((item) => item.value).filter((item) => item === val)
-          cachePermissionValues.push(...filterPermission)
-        }
-      })
-      permissionValues.value = proxy.clone(cachePermissionValues)
+      permissionBucketAdmin.value = v.find((v) => v === 'PERMISSION_BUCKET_ADMIN') ?? false
+      permissionValues.value = v.filter((v) => v !== 'PERMISSION_BUCKET_ADMIN')
     } else {
       data.value = data.value.map((val) => {
         if (val.name === k) {
@@ -261,7 +254,7 @@ defineExpose({
     <g-warning
       title=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
     />
-    <o-title title="单个桶权限" tb="8">
+    <o-title title="单个桶权限" tb="8" type="simple">
       <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>
       <o-input
         v-model.trim="searchValue"

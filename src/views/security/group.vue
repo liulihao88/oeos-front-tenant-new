@@ -65,7 +65,7 @@ const _handleRowClick = () => {
   let localTaskName = proxy.getStorage('tenant-group-name') || ''
   let clickIdx = 0
   if (data.value.length === 0) {
-    newAdd()
+    // newAdd()
     return
   }
   if (localTaskName) {
