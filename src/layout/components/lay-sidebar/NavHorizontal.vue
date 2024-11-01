@@ -7,6 +7,7 @@ import LayNotice from '../lay-notice/index.vue'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
+import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
@@ -16,6 +17,11 @@ const menuRef = ref()
 const { route, title, logout, onPanel, getLogo, username, userAvatar, backTopMenu, avatarsStyle } = useNav()
 
 const defaultActive = computed(() => (!isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path))
+const modifyPasswordRef = ref(null)
+
+const modifyPasswordHandler = () => {
+  modifyPasswordRef.value.open()
+}
 
 nextTick(() => {
   menuRef.value?.handleResize()
@@ -57,8 +63,12 @@ nextTick(() => {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="modifyPasswordHandler">
+              <o-icon name="edit" class="mr" />
+              修改密码
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -68,6 +78,7 @@ nextTick(() => {
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
+    <ModifyPassword ref="modifyPasswordRef" />
   </div>
 </template>
 

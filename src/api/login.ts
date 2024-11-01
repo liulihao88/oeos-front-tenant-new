@@ -1,4 +1,5 @@
-import request, { requestOld } from '@/utils/request'
+import request from '@/utils/request'
+import JSEncrypt from 'jsencrypt'
 
 export function getTenants() {
   return request('sys/tenant/tenants?filter=Actived', {
@@ -7,12 +8,6 @@ export function getTenants() {
 }
 
 export function login(data) {
-  // return requestOld({
-  //   url: 'auth/signin',
-  //   method: 'put',
-  //   type: 'common',
-  //   data: data,
-  // })
   return request('auth/signin', 'put', { type: 'common', data: data })
 }
 export function encrypt(pwd) {
@@ -29,4 +24,22 @@ export function getFormat() {
   return request('sys/ui/format', {
     type: 'common',
   })
+}
+
+// 修改密码
+export function changePwdApi(data) {
+  return request('security/changepwd', 'put', { data })
+}
+
+// 生成加密后的密码
+export async function encryptionPassword(...rest) {
+  let enRes = await request('common/communicationkey', { type: 'common' })
+  let publicKey = enRes.communicationKey
+  const encryptor = new JSEncrypt()
+  encryptor.setPublicKey(publicKey)
+  let genPwdList = []
+  for (let i = 0; i < rest.length; i++) {
+    genPwdList.push(encryptor.encrypt(rest[i]))
+  }
+  return genPwdList
 }

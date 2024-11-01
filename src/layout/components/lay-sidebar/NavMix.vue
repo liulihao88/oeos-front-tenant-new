@@ -9,6 +9,7 @@ import { getParentPaths, findRouteByPath } from '@/router/utils'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarExtraIcon from '../lay-sidebar/components/SidebarExtraIcon.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
+import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
@@ -25,6 +26,12 @@ function getDefaultActive(routePath) {
   defaultActive.value = !isAllEmpty(route.meta?.activePath)
     ? route.meta.activePath
     : findRouteByPath(parentRoutes, wholeMenus)?.children[0]?.path
+}
+
+const modifyPasswordRef = ref(null)
+
+const modifyPasswordHandler = () => {
+  modifyPasswordRef.value.open()
 }
 
 onMounted(() => {
@@ -90,8 +97,12 @@ watch(
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="modifyPasswordHandler">
+              <o-icon name="edit" class="mr" />
+              修改密码
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -101,6 +112,7 @@ watch(
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
+    <ModifyPassword ref="modifyPasswordRef" />
   </div>
 </template>
 

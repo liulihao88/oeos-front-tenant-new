@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { unref, getCurrentInstance } from 'vue'
+import { unref, getCurrentInstance, ref } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
 import LaySearch from '../lay-search/index.vue'
 // import LayNotice from '../lay-notice/index.vue'
@@ -7,6 +7,7 @@ import LayNavMix from '../lay-sidebar/NavMix.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 import LaySidebarBreadCrumb from '../lay-sidebar/components/SidebarBreadCrumb.vue'
 import LaySidebarTopCollapse from '../lay-sidebar/components/SidebarTopCollapse.vue'
+import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 import { handleAliveRoute, getTopMenu } from '@/router/utils'
 
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
@@ -17,6 +18,7 @@ const { layout, device, logout, onPanel, pureApp, username, userAvatar, avatarsS
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
+const modifyPasswordRef = ref(null)
 function onFresh() {
   const { fullPath, query } = unref(route)
   router.replace({
@@ -24,6 +26,9 @@ function onFresh() {
     query,
   })
   handleAliveRoute(route, 'refresh')
+}
+const modifyPasswordHandler = () => {
+  modifyPasswordRef.value.open()
 }
 </script>
 
@@ -69,8 +74,12 @@ function onFresh() {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="modifyPasswordHandler">
+              <o-icon name="edit" class="mr" />
+              修改密码
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
+              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -80,6 +89,7 @@ function onFresh() {
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
+    <ModifyPassword ref="modifyPasswordRef" />
   </div>
 </template>
 
