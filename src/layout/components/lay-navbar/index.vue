@@ -2,13 +2,13 @@
 import { unref, getCurrentInstance, ref } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
 import LaySearch from '../lay-search/index.vue'
-// import LayNotice from '../lay-notice/index.vue'
 import LayNavMix from '../lay-sidebar/NavMix.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 import LaySidebarBreadCrumb from '../lay-sidebar/components/SidebarBreadCrumb.vue'
 import LaySidebarTopCollapse from '../lay-sidebar/components/SidebarTopCollapse.vue'
 import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 import { handleAliveRoute, getTopMenu } from '@/router/utils'
+import DropdownLayout from '@/layout/components/dropdownLayout.vue'
 
 import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
@@ -26,9 +26,6 @@ function onFresh() {
     query,
   })
   handleAliveRoute(route, 'refresh')
-}
-const modifyPasswordHandler = () => {
-  modifyPasswordRef.value.open()
 }
 </script>
 
@@ -67,24 +64,7 @@ const modifyPasswordHandler = () => {
       <!-- 消息通知 -->
       <!-- <LayNotice id="header-notice" /> -->
       <!-- 退出登录 -->
-      <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="modifyPasswordHandler">
-              <o-icon name="edit" class="mr" />
-              修改密码
-            </el-dropdown-item>
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
-              退出系统
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <DropdownLayout />
       <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
@@ -113,41 +93,11 @@ const modifyPasswordHandler = () => {
     min-width: 280px;
     height: 48px;
     color: #000000d9;
-
-    .el-dropdown-link {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      height: 48px;
-      padding: 10px;
-      color: #000000d9;
-      cursor: pointer;
-
-      p {
-        font-size: 14px;
-      }
-
-      img {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-      }
-    }
   }
 
   .breadcrumb-container {
     float: left;
     margin-left: 16px;
-  }
-}
-
-.logout {
-  width: 120px;
-
-  ::v-deep(.el-dropdown-menu__item) {
-    display: inline-flex;
-    flex-wrap: wrap;
-    min-width: 100%;
   }
 }
 </style>

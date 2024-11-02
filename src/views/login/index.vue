@@ -9,14 +9,18 @@ import { useRenderIcon } from '@/components/ReIcon/src/hooks'
 import JSEncrypt from 'jsencrypt'
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
+import { getTenants, encrypt, login, getMenu, getFormat, getInitLogo } from '@/api/login.ts'
 import useBucketList from '@/hooks/getBucketList.ts'
 const bucketList = useBucketList()
 
 import dayIcon from '@/assets/svg/day.svg?component'
 import darkIcon from '@/assets/svg/dark.svg?component'
+import globalLogoSettings from '@/config/settings.ts'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
-import { getTenants, encrypt, login, getMenu, getFormat } from '@/api/login.ts'
+
+import useLogoSettings from '@/store/modules/logoSettings.ts'
+const storeLogoSettings = useLogoSettings()
 
 defineOptions({
   name: 'Login',
@@ -56,9 +60,15 @@ async function init() {
     let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'liu')
     ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex })
   }
-  proxy.$toast('成功')
 }
 init()
+const logoInit = async () => {
+  storeLogoSettings.changeSettings(globalLogoSettings.nativeLogo.favariteIcon)
+  let res = await getInitLogo()
+  proxy.setStorage('tenant-logo-settings', res)
+  storeLogoSettings.changeSettings(res)
+}
+logoInit()
 
 // 匹配本地缓存的菜单route是否包含在服务器返回的路由中, 如果不包含, 取服务器返回路由的第一个
 const _findSubMenu = (menuItems, linkToFind, sendArr = []) => {
@@ -163,9 +173,20 @@ onBeforeUnmount(() => {
 
       <div class="login-box">
         <div class="login-form">
-          <avatar class="avatar" />
+          <!-- <avatar class="avatar" /> -->
+          <img
+            :src="
+              storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
+            "
+            width="100"
+          />
           <Motion>
-            <h2 class="outline-none">{{ title }}</h2>
+            <h2 class="outline-none">
+              {{
+                storeLogoSettings.nativeLogo?.tenantManagementTitle ||
+                globalLogoSettings.nativeLogo.tenantManagementTitle
+              }}
+            </h2>
           </Motion>
 
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" size="large">

@@ -26,6 +26,11 @@ export function getFormat() {
   })
 }
 
+// 获取初始化logo和数据
+export function getInitLogo() {
+  return request('/common/logo', { type: 'common' })
+}
+
 // 修改密码
 export function changePwdApi(data) {
   return request('security/changepwd', 'put', { data })

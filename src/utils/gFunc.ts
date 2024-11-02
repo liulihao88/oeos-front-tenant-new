@@ -81,3 +81,11 @@ export function isImage(str) {
   const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp|tif|tiff)$/i
   return imageRegex.test(str)
 }
+
+export function setFavIcon(icon) {
+  let link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+  link.type = 'image/x-icon'
+  link.rel = 'shortcut icon'
+  link.href = icon
+  document.getElementsByTagName('head')[0].appendChild(link)
+}

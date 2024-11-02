@@ -7,6 +7,9 @@ import remainingRouter from './modules/remaining'
 import { useMultiTagsStoreHook } from '@/store/modules/multiTags'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import { isUrl, openLink, storageLocal, isAllEmpty } from '@pureadmin/utils'
+import { getStorage } from 'oeos-components'
+import { setFavIcon } from '@/utils/gFunc.ts'
+import settings from '@/config/settings.ts'
 import {
   ascending,
   getTopMenu,
@@ -19,7 +22,6 @@ import {
   formatFlatteningRoutes,
 } from './utils'
 import { type Router, createRouter, type RouteRecordRaw, type RouteComponent, createWebHistory } from 'vue-router'
-import { getStorage } from 'oeos-components'
 import { type DataInfo, userKey, removeToken, multipleTabsKey } from '@/utils/auth'
 
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
@@ -106,9 +108,12 @@ router.beforeEach((to: ToRouteType, _from, next) => {
   if (!externalLink) {
     to.matched.some((item) => {
       if (!item.meta.title) return ''
-      const Title = getConfig().Title
+      const Title =
+        getStorage('tenant-logo-settings')?.tenantManagementTitle ?? settings.nativeLogo?.tenantManagementTitle
       if (Title) document.title = `${item.meta.title} | ${Title}`
       else document.title = item.meta.title as string
+      let icon = getStorage('tenant-logo-settings')?.favariteIcon ?? settings.nativeLogo?.favariteIcon
+      setFavIcon(icon)
     })
   }
   /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */

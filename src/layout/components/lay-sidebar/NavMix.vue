@@ -9,9 +9,8 @@ import { getParentPaths, findRouteByPath } from '@/router/utils'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarExtraIcon from '../lay-sidebar/components/SidebarExtraIcon.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
-import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
+import DropdownLayout from '@/layout/components/dropdownLayout.vue'
 
-import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
 import Setting from '@iconify-icons/ri/settings-3-line'
 
 const menuRef = ref()
@@ -26,12 +25,6 @@ function getDefaultActive(routePath) {
   defaultActive.value = !isAllEmpty(route.meta?.activePath)
     ? route.meta.activePath
     : findRouteByPath(parentRoutes, wholeMenus)?.children[0]?.path
-}
-
-const modifyPasswordRef = ref(null)
-
-const modifyPasswordHandler = () => {
-  modifyPasswordRef.value.open()
 }
 
 onMounted(() => {
@@ -90,29 +83,11 @@ watch(
       <!-- 消息通知 -->
       <LayNotice id="header-notice" />
       <!-- 退出登录 -->
-      <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="modifyPasswordHandler">
-              <o-icon name="edit" class="mr" />
-              修改密码
-            </el-dropdown-item>
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
-              退出系统
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <DropdownLayout />
       <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
-    <ModifyPassword ref="modifyPasswordRef" />
   </div>
 </template>
 

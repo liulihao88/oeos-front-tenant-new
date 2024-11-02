@@ -89,7 +89,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 1001;
+    z-index: 6;
     width: $sideBarWidth !important;
     height: 100%;
     overflow: visible;
@@ -494,7 +494,6 @@
         img {
           width: 22px;
           height: 22px;
-          border-radius: 50%;
         }
       }
     }

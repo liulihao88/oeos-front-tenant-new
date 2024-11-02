@@ -7,9 +7,9 @@ import LayNotice from '../lay-notice/index.vue'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
-import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 
-import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
+import DropdownLayout from '@/layout/components/dropdownLayout.vue'
+
 import Setting from '@iconify-icons/ri/settings-3-line'
 
 const menuRef = ref()
@@ -17,11 +17,6 @@ const menuRef = ref()
 const { route, title, logout, onPanel, getLogo, username, userAvatar, backTopMenu, avatarsStyle } = useNav()
 
 const defaultActive = computed(() => (!isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path))
-const modifyPasswordRef = ref(null)
-
-const modifyPasswordHandler = () => {
-  modifyPasswordRef.value.open()
-}
 
 nextTick(() => {
   menuRef.value?.handleResize()
@@ -56,44 +51,16 @@ nextTick(() => {
       <!-- 消息通知 -->
       <LayNotice id="header-notice" />
       <!-- 退出登录 -->
-      <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover">
-          <img :src="userAvatar" :style="avatarsStyle" />
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="modifyPasswordHandler">
-              <o-icon name="edit" class="mr" />
-              修改密码
-            </el-dropdown-item>
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" class="mr" />
-              退出系统
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <DropdownLayout />
       <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
-    <ModifyPassword ref="modifyPasswordRef" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 :deep(.el-loading-mask) {
   opacity: 0.45;
-}
-
-.logout {
-  width: 120px;
-
-  ::v-deep(.el-dropdown-menu__item) {
-    display: inline-flex;
-    flex-wrap: wrap;
-    min-width: 100%;
-  }
 }
 </style>
