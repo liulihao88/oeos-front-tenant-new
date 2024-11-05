@@ -9,6 +9,7 @@ import { router } from './index'
 import { isProxy, toRaw } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
 import { isString, cloneDeep, isAllEmpty, intersection, storageLocal, isIncludeAllChildren } from '@pureadmin/utils'
+import { clone, getStorage, setStorage } from 'oeos-components'
 import { getConfig } from '@/config'
 import { buildHierarchyTree } from '@/utils/tree'
 import { userKey, type DataInfo } from '@/utils/auth'
@@ -18,6 +19,8 @@ import { usePermissionStoreHook } from '@/store/modules/permission'
 const IFrame = () => import('@/layout/frame.vue')
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob('/src/views/**/*.{vue,tsx}')
+import TenantRouter from '@/router/tenant-router.js'
+import DynamicRouter from '@/router/dynamic-router.js'
 
 // 动态路由
 import { getAsyncRoutes } from '@/api/routes'
@@ -155,7 +158,7 @@ function handleAsyncRoutes(routeList) {
 function initRouter() {
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地localStorage
-    const key = 'async-routes'
+    const key = 'tenant-async-routes'
     const asyncRouteList = storageLocal().getItem(key) as any
     if (asyncRouteList && asyncRouteList?.length > 0) {
       return new Promise((resolve) => {
@@ -164,8 +167,11 @@ function initRouter() {
       })
     } else {
       return new Promise((resolve) => {
-        getAsyncRoutes().then(({ data }) => {
-          handleAsyncRoutes(cloneDeep(data))
+        getAsyncRoutes().then((remoteData) => {
+          // remoteData = remoteData.slice(4)
+          let data = mergeMenus(TenantRouter, remoteData)
+          setStorage('tenant-async-routes', data)
+          handleAsyncRoutes(clone(data))
           storageLocal().setItem(key, data)
           resolve(router)
         })
@@ -173,12 +179,75 @@ function initRouter() {
     }
   } else {
     return new Promise((resolve) => {
-      getAsyncRoutes().then(({ data }) => {
-        handleAsyncRoutes(cloneDeep(data))
+      getAsyncRoutes().then((remoteData) => {
+        // remoteData = remoteData.slice(4)
+        let data = mergeMenus(TenantRouter, remoteData)
+        setStorage('tenant-async-routes', data)
+        handleAsyncRoutes(clone(data))
         resolve(router)
       })
     })
   }
+}
+
+function mergeMenus(baseMenus, remoteMenus) {
+  const mergedMenus = []
+
+  baseMenus.forEach((baseItem) => {
+    const remoteItem = remoteMenus.find((item) => item.id === baseItem.id)
+    console.log(`94 remoteItem`, remoteItem)
+    if (remoteItem) {
+      // 如果在remoteMenus中找到了匹配的id，则合并这两个菜单项
+      if (remoteItem.visable) {
+        const mergedItem = {
+          ...baseItem,
+          meta: {
+            ...baseItem.meta,
+            path: baseItem.path,
+            title: remoteItem.title ?? baseItem.title,
+          },
+          children: mergeSubMenus(baseItem.children || [], remoteItem.submenu),
+        }
+        mergedMenus.push(mergedItem)
+      }
+    } else {
+      // 如果没有找到匹配的id，则直接添加baseItem
+      if (!baseItem.id) {
+        mergedMenus.push(baseItem)
+      }
+    }
+  })
+
+  return mergedMenus
+}
+
+function mergeSubMenus(baseChildren, remoteSubMenus) {
+  const mergedChildren = []
+  baseChildren.forEach((baseChild) => {
+    const remoteChild = remoteSubMenus?.find((item) => item.id === baseChild.id)
+    if (remoteChild) {
+      // 如果在remoteSubMenus中找到了匹配的id，则合并这两个子菜单项
+      if (remoteChild.visable) {
+        const mergedChild = {
+          ...baseChild,
+          meta: {
+            ...baseChild.meta,
+            path: baseChild.meta.path,
+            title: remoteChild.title ?? baseChild.meta.title,
+            children: mergeSubMenus(baseChild.meta.children || [], remoteChild.submenu || []),
+          },
+        }
+        mergedChildren.push(mergedChild)
+      }
+    } else {
+      // 如果没有找到匹配的id，则直接添加baseChild
+      if (!baseChild.id) {
+        mergedChildren.push(baseChild)
+      }
+    }
+  })
+
+  return mergedChildren
 }
 
 /**
@@ -274,7 +343,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
       const index = v?.component
-        ? modulesRoutesKeys.findIndex((ev) => ev.includes(v.component as any))
+        ? modulesRoutesKeys.findIndex((ev) => (('' + v.component) as any).includes(ev))
         : modulesRoutesKeys.findIndex((ev) => ev.includes(v.path))
       v.component = modulesRoutes[modulesRoutesKeys[index]]
     }

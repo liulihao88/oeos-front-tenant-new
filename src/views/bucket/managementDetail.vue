@@ -64,10 +64,9 @@ const quotaRules = {
 const init = async () => {
   let res = await Promise.all([getBucketTotal(bucketName.value)])
   console.log(`24 res`, res)
-
   data.value = [
     {
-      total: res[0].quota + res[0].quotaUnit,
+      total: res[0]?.quota + res[0]?.quotaUnit,
       usage: proxy.formatBytes(tenantBucketDetails.value.objectSize),
       fileTotal: 10,
       createdDatetime: tenantBucketDetails.value.createdDatetime,
@@ -126,7 +125,7 @@ const quotaConfirm = async () => {
       <div class="bold-400">
         当前容量:
         <span class="cl-red">
-          {{ data[0].total }}
+          {{ data[0]?.total }}
         </span>
       </div>
     </o-title>

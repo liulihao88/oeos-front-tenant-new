@@ -5,21 +5,31 @@ export default {
   path: '/',
   name: 'Home',
   component: Layout,
-  redirect: '/welcome',
+  redirect: '/overview',
   meta: {
     icon: 'ep:home-filled',
-    title: '首页',
+    title: '租户概览首页',
     rank: 0,
   },
   children: [
-    {
-      path: '/welcome',
-      name: 'Welcome',
-      component: () => import('@/views/welcome/index.vue'),
-      meta: {
-        title: '首页',
-        showLink: false,
-      },
-    },
+    // {
+    //   path: '/welcome',
+    //   name: 'Welcome',
+    //   component: () => import('@/views/welcome/index.vue'),
+    //   meta: {
+    //     title: '首页',
+    //     showLink: false,
+    //   },
+    // },
+    // {
+    //   path: '/overview',
+    //   name: 'Overview',
+    //   component: () => import('@/views/overview/index.vue'),
+    //   meta: {
+    //     icon: 'ep:home-filled',
+    //     title: '租户概览---',
+    //     showLink: false,
+    //   },
+    // },
   ],
 } satisfies RouteConfigsTable

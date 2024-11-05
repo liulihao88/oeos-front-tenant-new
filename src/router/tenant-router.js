@@ -1,8 +1,8 @@
 const Layout = () => import('@/layout/index.vue')
 export default [
   {
-    path: '/apps',
-    name: 'Overview',
+    id: 'TM000',
+    path: '/overview',
     component: Layout,
     meta: {
       icon: 'ep:home-filled',
@@ -10,28 +10,49 @@ export default [
     },
     children: [
       {
-        path: '/apps/overview',
+        path: '/overview',
         name: 'Overview',
         component: () => import('@/views/overview/index.vue'),
         meta: {
           icon: 'ep:home-filled',
           title: '租户概览',
-          path: '/apps/overview',
         },
       },
     ],
   },
   {
-    path: '/apps/bucket',
+    id: 'TM010',
+    path: '/bucket',
     component: Layout,
-    redirect: '/apps/bucket/management',
     meta: {
       icon: 'ep:home-filled',
-      title: '空间管理',
+      title: '空间管理222',
     },
+    redirect: '/bucket/management',
     children: [
       {
-        path: '/apps/bucket/management',
+        path: '/bucket/management',
+        meta: {
+          title: '桶列表',
+          name: 'Management',
+        },
+        children: [
+          {
+            path: '/bucket/managementDetail',
+            name: 'ManagementDetail',
+            meta: {
+              title: '桶详情',
+              activePath: '/bucket/management',
+              showLink: false,
+              // showParent: true,
+            },
+            component: () => import('@/views/bucket/managementDetail.vue'),
+          },
+        ],
+      },
+      {
+        id: 'TM011',
+        path: '/bucket/management',
         name: 'Management',
         component: () => import('@/views/bucket/management.vue'),
         meta: {
@@ -40,26 +61,8 @@ export default [
         },
       },
       {
-        path: '/apps/bucket/management',
-        meta: {
-          title: '桶列表',
-        },
-        children: [
-          {
-            path: '/apps/bucket/management/detail',
-            name: 'ManagementDetail',
-            meta: {
-              title: '桶详情',
-              activePath: '/apps/bucket/management',
-              showLink: false,
-              keepAlive: true,
-            },
-            component: async () => await import('@/views/bucket/managementDetail.vue'),
-          },
-        ],
-      },
-      {
-        path: '/apps/bucket/objectexplorer',
+        id: 'TM012',
+        path: '/bucket/objectexplorer',
         name: 'Objectexplorer',
         component: () => import('@/views/bucket/objectexplorer.vue'),
         meta: {
@@ -70,36 +73,40 @@ export default [
     ],
   },
   {
-    path: '/apps/object',
+    id: 'TM030',
+    path: '/object',
     component: Layout,
-    redirect: '/apps/object/search',
+    redirect: '/object/search',
     meta: {
       icon: 'ep:home-filled',
       title: '空间浏览',
     },
     children: [
       {
-        path: '/apps/object/search',
+        id: 'TM031',
+        path: '/object/search',
         name: 'Search',
-        component: () => import('@/views/spaceScan/search.vue'),
+        component: () => import('@/views/object/search.vue'),
         meta: {
           icon: 'ep:home-filled',
           title: '简单搜索',
         },
       },
       {
-        path: '/apps/object/advancesearch',
+        id: 'TM032',
+        path: '/object/advancesearch',
         name: 'AdvanceSearch',
-        component: () => import('@/views/spaceScan/advanceSearch.vue'),
+        component: () => import('@/views/object/advanceSearch.vue'),
         meta: {
           icon: 'ep:home-filled',
           title: '高级搜索',
         },
       },
       {
-        path: '/apps/task/unfrezze',
+        id: 'TM034',
+        path: '/object/unfrezze',
         name: 'Unfrezze',
-        component: () => import('@/views/spaceScan/unfrezze.vue'),
+        component: () => import('@/views/object/unfrezze.vue'),
         meta: {
           icon: 'ep:home-filled',
           title: '解冻浏览',
@@ -108,16 +115,18 @@ export default [
     ],
   },
   {
-    path: '/apps/task',
+    id: 'TM020',
+    path: '/task',
     component: Layout,
-    redirect: '/apps/task/management',
+    redirect: '/task/management',
     meta: {
       icon: 'ep:home-filled',
       title: '任务管理',
     },
     children: [
       {
-        path: '/apps/task/management',
+        id: 'TM021',
+        path: '/task/management',
         name: 'TaskManagement',
         component: () => import('@/views/task/management.vue'),
         meta: {
@@ -126,7 +135,8 @@ export default [
         },
       },
       {
-        path: '/apps/task/schedule',
+        id: 'TM022',
+        path: '/task/schedule',
         name: 'Schedule',
         component: () => import('@/views/task/schedule.vue'),
         meta: {
@@ -137,16 +147,18 @@ export default [
     ],
   },
   {
-    path: '/apps/security',
+    id: 'TM040',
+    path: '/security',
     component: Layout,
-    redirect: '/apps/security/user',
+    redirect: '/security/user',
     meta: {
       icon: 'ep:home-filled',
       title: '安全权限',
     },
     children: [
       {
-        path: '/apps/security/user',
+        id: 'TM041',
+        path: '/security/user',
         name: 'User',
         component: () => import('@/views/security/user.vue'),
         meta: {
@@ -155,17 +167,17 @@ export default [
         },
       },
       {
-        path: '/apps/security/user',
+        path: '/security/user',
         meta: {
           title: '用户管理',
         },
         children: [
           {
-            path: '/apps/security/user/addUser',
+            path: '/security/user/addUser',
             name: 'addUser',
             meta: {
               title: '用户处理',
-              activePath: '/apps/security/user',
+              activePath: '/security/user',
               showLink: false,
               keepAlive: true,
             },
@@ -174,7 +186,8 @@ export default [
         ],
       },
       {
-        path: '/apps/security/group',
+        id: 'TM042',
+        path: '/security/group',
         name: 'Group',
         component: () => import('@/views/security/group.vue'),
         meta: {
@@ -239,6 +252,7 @@ export default [
   },
   {
     path: '/test3',
+
     component: Layout,
     redirect: '/test/t3',
     meta: {
@@ -326,16 +340,18 @@ export default [
     ],
   },
   {
-    path: '/apps/feature',
+    id: 'TM050',
+    path: '/feature',
     component: Layout,
-    redirect: '/apps/feature/management',
+    redirect: '/feature/management',
     meta: {
       icon: 'ep:home-filled',
       title: '服务管理',
     },
     children: [
       {
-        path: '/apps/feature/command',
+        id: 'TM051',
+        path: '/feature/command',
         name: 'InnerCommand',
         component: () => import('@/views/system/innerCommand.vue'),
         meta: {
@@ -347,16 +363,18 @@ export default [
     ],
   },
   {
-    path: '/apps/monitor',
+    id: 'TM060',
+    path: '/monitor',
     component: Layout,
-    redirect: '/apps/monitor/event',
+    redirect: '/monitor/event',
     meta: {
       icon: 'ep:home-filled',
       title: '租户监控',
     },
     children: [
       {
-        path: '/apps/monitor/event',
+        id: 'TM061',
+        path: '/monitor/event',
         name: 'Event',
         component: () => import('@/views/system/event.vue'),
         meta: {
@@ -368,16 +386,18 @@ export default [
     ],
   },
   {
-    path: '/apps/config',
+    id: 'TM070',
+    path: '/config',
     component: Layout,
-    redirect: '/apps/config/default',
+    redirect: '/config/default',
     meta: {
       icon: 'ep:home-filled',
       title: '系统配置',
     },
     children: [
       {
-        path: '/apps/config/default',
+        id: 'TM071',
+        path: '/config/default',
         name: 'DefaultConfig',
         component: () => import('@/views/system/defaultConfig.vue'),
         meta: {
@@ -388,52 +408,4 @@ export default [
       },
     ],
   },
-
-  // {
-  //   path: '/test3',
-  //   component: Layout,
-  //   redirect: '/test3/t3',
-  //   meta: {
-  //     icon: 'ep:home-filled',
-  //     title: '测试页',
-  //     rank: 0,
-  //   },
-  //   children: [
-  //     {
-  //       path: '/test3/t3',
-  //       name: 'T3',
-  //       redirect: '/test3/t3/t4',
-  //       component: () => import('@/views/test/t3.vue'),
-  //       meta: {
-  //         title: '测试页3',
-  //       },
-  //       children: [
-  //         {
-  //           path: '/test3/t3/t4',
-  //           name: 'T4',
-  //           component: () => import('@/views/test/t4.vue'),
-  //           meta: {
-  //             title: '测试页4',
-  //           },
-  //         },
-  //         {
-  //           path: '/test3/t3/t5',
-  //           name: 'T5',
-  //           component: () => import('@/views/test/t5.vue'),
-  //           meta: {
-  //             title: '测试页5',
-  //           },
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       path: '/t6',
-  //       name: 'T6',
-  //       component: () => import('@/views/test/t6.vue'),
-  //       meta: {
-  //         title: '测试页6',
-  //       },
-  //     },
-  //   ],
-  // },
 ]

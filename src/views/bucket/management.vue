@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed, nextTick } from 'vue'
+defineOptions({
+  name: 'Management',
+})
 import { throttle } from 'lodash-es'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()

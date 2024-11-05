@@ -1,13 +1,214 @@
-import { http } from '@/utils/http'
-
-type Result = {
-  success: boolean
-  data: Array<any>
-}
+import { getMenu } from '@/api/login.ts'
+let testRes = [
+  {
+    id: 'TM000',
+    title: '租户概览',
+    link: '/apps/overview',
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [],
+  },
+  {
+    id: 'TM010',
+    title: '空间管理',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: false,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM011',
+        title: '桶列表',
+        link: '/apps/bucket/management',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+      {
+        id: 'TM012',
+        title: '桶浏览',
+        link: '/apps/bucket/objectexplorer',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM030',
+    title: '空间浏览',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM033',
+        title: '文件浏览',
+        link: '/apps/bucket/objectexplorer',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+      {
+        id: 'TM031',
+        title: '简单搜索',
+        link: '/apps/object/search',
+        tip: null,
+        type: 'Normal',
+        visable: false,
+        disable: true,
+      },
+      {
+        id: 'TM032',
+        title: '高级搜索',
+        link: '/apps/object/advancesearch',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+      {
+        id: 'TM034',
+        title: '解冻浏览',
+        link: '/apps/task/unfreeze',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM020',
+    title: '任务管理',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM021',
+        title: '桶任务',
+        link: '/apps/task/management',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+      {
+        id: 'TM022',
+        title: '任务计划',
+        link: '/apps/task/schedule',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM040',
+    title: '安全权限',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: false,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM041',
+        title: '用户管理',
+        link: '/apps/security/user',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+      {
+        id: 'TM042',
+        title: '组管理',
+        link: '/apps/security/group',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM050',
+    title: '服务管理',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM051',
+        title: '内置命令',
+        link: '/apps/feature/command',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM060',
+    title: '租户监控',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM061',
+        title: '租户事件',
+        link: '/apps/monitor/event',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+  {
+    id: 'TM070',
+    title: '系统配置',
+    link: null,
+    tip: null,
+    type: 'Normal',
+    visable: true,
+    disable: true,
+    submenu: [
+      {
+        id: 'TM071',
+        title: '默认配置',
+        link: '/apps/config/default',
+        tip: null,
+        type: 'Normal',
+        visable: true,
+        disable: true,
+      },
+    ],
+  },
+]
 
 export const getAsyncRoutes = () => {
-  return new Promise((resolve, reject) => {
-    resolve({ data: [] })
-  })
-  // return http.request<Result>('get', '/get-async-routes')
+  return getMenu()
+  // return new Promise((resolve, reject) => {
+  //   resolve(testRes)
+  // })
 }

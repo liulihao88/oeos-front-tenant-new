@@ -12,8 +12,7 @@ import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple } from '@/api/searchApi.ts'
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
-import { previewImage } from '@/api/spaceScan.ts'
-import SearchConfigComp from '@/views/spaceScan/components/searchConfigComp.vue'
+import SearchConfigComp from '@/views/object/components/searchConfigComp.vue'
 import { preview } from '@/utils/remoteFunc.ts'
 
 const { proxy } = getCurrentInstance()

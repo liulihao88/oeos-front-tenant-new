@@ -58,7 +58,7 @@ async function init() {
   tenantOptions.value = optionsRes
   if (proxy.$dev) {
     let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'liu')
-    ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex })
+    ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex === -1 ? 0 : nameIndex })
   }
 }
 init()
@@ -71,20 +71,20 @@ const logoInit = async () => {
 logoInit()
 
 // 匹配本地缓存的菜单route是否包含在服务器返回的路由中, 如果不包含, 取服务器返回路由的第一个
-const _findSubMenu = (menuItems, linkToFind, sendArr = []) => {
+const _findSubMenu = (menuItems, pathToFind, sendArr = []) => {
   for (const menuItem of menuItems) {
-    if (menuItem.visable && menuItem.visable === true) {
-      if (menuItem.link && !sendArr[1]) {
-        sendArr[1] = menuItem.link
-      }
-      if (menuItem.link === linkToFind && linkToFind) {
-        sendArr[0] = linkToFind
-      } else {
-        if (menuItem.submenu && menuItem.submenu.length > 0) {
-          _findSubMenu(menuItem.submenu, linkToFind, sendArr)
-        }
+    // if (menuItem.visable && menuItem.visable === true) {
+    if (menuItem.path && !sendArr[1]) {
+      sendArr[1] = menuItem.path
+    }
+    if (menuItem.path === pathToFind && pathToFind) {
+      sendArr[0] = pathToFind
+    } else {
+      if (menuItem.submenu && menuItem.submenu.length > 0) {
+        _findSubMenu(menuItem.submenu, pathToFind, sendArr)
       }
     }
+    // }
   }
   return sendArr
 }
@@ -110,25 +110,17 @@ const onLogin = async (formEl) => {
     name: tenantName,
   })
 
-  let menuRes = await getMenu()
-  let matchedRouteArr = _findSubMenu(menuRes, redirectUrl.value)
   let formatRes = await getFormat()
-  proxy.setStorage('tenant-time-rule', formatRes)
   await bucketList.update()
-  return initRouter().then(() => {
+  return initRouter().then((routerRes) => {
+    console.log(`39 routerRes`, routerRes)
+    let matchedRouteArr = _findSubMenu(proxy.getStorage('tenant-async-routes'), redirectUrl.value)
+    console.log(`97 matchedRouteArr`, matchedRouteArr)
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     console.log(`69 jumpPath`, jumpPath)
+    // jumpPath = '/test/t1'
+    // jumpPath = '/overview'
     router.push(jumpPath).then(() => {
-      proxy.$toast('登录成功')
-    })
-  })
-}
-
-const onLogin2 = () => {
-  let token = `测试登录`
-  proxy.setStorage('token', token)
-  return initRouter().then(() => {
-    router.push('/test/t1').then(() => {
       proxy.$toast('登录成功')
     })
   })
@@ -228,17 +220,6 @@ onBeforeUnmount(() => {
                 @click="onLogin(ruleFormRef)"
               >
                 登录
-              </el-button>
-            </Motion>
-            <Motion :delay="250">
-              <el-button
-                class="w-full mt-4"
-                size="default"
-                type="primary"
-                :loading="loading"
-                @click="onLogin2(ruleFormRef)"
-              >
-                本地登录(不请求接口)
               </el-button>
             </Motion>
           </el-form>

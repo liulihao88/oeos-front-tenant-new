@@ -84,7 +84,7 @@ export function useNav() {
     clearStorage('token')
     let nowPath = router.currentRoute.value.path
     _clearCacheWithPrefix('tenant')
-    router.push(`/login?redirect=${nowPath}`)
+    router.push(`/login/index?redirect=${nowPath}`)
   }
 
   function _clearCacheWithPrefix(prefix) {
