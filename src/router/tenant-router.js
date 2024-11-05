@@ -170,16 +170,17 @@ export default [
         path: '/security/user',
         meta: {
           title: '用户管理',
+          name: 'User',
         },
         children: [
           {
             path: '/security/user/addUser',
-            name: 'addUser',
+            name: 'AddUser',
             meta: {
-              title: '用户处理',
+              title: '用户编辑',
               activePath: '/security/user',
               showLink: false,
-              keepAlive: true,
+              // keepAlive: true,
             },
             component: async () => await import('@/views/security/addUser.vue'),
           },

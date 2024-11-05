@@ -1,4 +1,8 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'AddUser',
+})
+
 import { ref, getCurrentInstance, computed, onMounted, watch } from 'vue'
 import { omit } from 'lodash-es'
 import JSEncrypt from 'jsencrypt'

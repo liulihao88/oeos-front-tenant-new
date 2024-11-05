@@ -1,4 +1,8 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'User',
+})
+
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 import { userStatistic, addUser, getUsers, deleteUser, enableUser, disableUser } from '@/api/securityApi.ts'
@@ -121,7 +125,7 @@ const rules = computed(() => {
 
 function editRow(row) {
   proxy.setStorage('tenant-user-details', row)
-  proxy.jump(`/apps/security/user/addUser`)
+  proxy.jump(`/security/user/addUser`)
 }
 async function deleteRow(row) {
   await deleteUser(row.username)
