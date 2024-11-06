@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 
 import { QUOTA_OPTIONS, QUOTA_UNIT } from '@/assets/globalData.ts'
 
-import { getBucketTotal, editBucketTotal } from '@/api/bucket'
+import { getBucketTotal, editBucketTotal, retentionAutodelete, getRetentionAutodelete } from '@/api/bucket'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -12,7 +12,10 @@ const tenantBucketDetails = ref(proxy.getStorage('tenant-bucket-details'))
 
 const bucketName = ref(tenantBucketDetails.value.bucketName)
 const versionStatus = ref(tenantBucketDetails.value.versionStatus)
-console.log(`37 versionStatus`, versionStatus)
+const retentionAutoObj = ref({})
+const dateForm = ref({})
+const dateFormRef = ref(null)
+const isShowDate = ref(false)
 
 const data = ref([])
 const isRadioShow = ref(false)
@@ -61,9 +64,18 @@ const quotaRules = {
   ],
 }
 
+const dateRules = computed(() => {
+  let res = {
+    expireAfterDays: dateForm.value.enable ? [proxy.validate()] : [],
+  }
+  return res
+})
+const rules = {
+  name: [proxy.validate()],
+}
+
 const init = async () => {
   let res = await Promise.all([getBucketTotal(bucketName.value)])
-  console.log(`24 res`, res)
   data.value = [
     {
       total: res[0]?.quota + res[0]?.quotaUnit,
@@ -74,9 +86,14 @@ const init = async () => {
   ]
 }
 init()
+async function getRetentionAutodeleteInit() {
+  let res = await getRetentionAutodelete(bucketName.value)
+  dateForm.value = res
+  retentionAutoObj.value = proxy.clone(res)
+}
+getRetentionAutodeleteInit()
 
 const radioInput = (value) => {
-  console.log(`26 value`, value)
   radioCacheValue.value = value
   isRadioShow.value = true
 }
@@ -99,6 +116,15 @@ const quotaConfirm = async () => {
   await editBucketTotal(tenantBucketDetails.value.bucketName, quotaForm.value)
   proxy.$toast('保存成功')
   isQuotaShow.value = false
+  let mergeDetails = Object.assign(tenantBucketDetails.value, quotaForm.value)
+  data.value[0].total = quotaForm.value.quota
+  proxy.setStorage('tenant-bucket-details', mergeDetails)
+}
+const dateConfirm = async () => {
+  await proxy.validForm(dateFormRef)
+  await retentionAutodelete(bucketName.value, dateForm.value)
+  getRetentionAutodeleteInit()
+  isDateShow.value = false
 }
 </script>
 
@@ -125,20 +151,22 @@ const quotaConfirm = async () => {
       <div class="bold-400">
         当前容量:
         <span class="cl-red">
-          {{ data[0]?.total }}
+          {{ quotaForm.quota }}
+          {{ quotaForm.quotaUnit }}
+          ({{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }})
         </span>
       </div>
     </o-title>
 
     <o-title title="对象过期删除">
-      <el-button type="primary" class="mlr" size="small" @click="editQuota">编辑</el-button>
+      <el-button type="primary" class="mlr" size="small" @click="isShowDate = true">编辑</el-button>
       <div class="bold-400">
         过期时间:
-        <span class="cl-red">未设置</span>
+        <span class="cl-red">{{ retentionAutoObj.expireAfterDays ?? '未设置' }}</span>
       </div>
       <div class="bold-400 ml2">
         是否启用:
-        <span class="cl-red">未启用</span>
+        <span class="cl-red">{{ retentionAutoObj.enable ? '启用' : '未启用' }}</span>
       </div>
     </o-title>
 
@@ -160,7 +188,8 @@ const quotaConfirm = async () => {
     </o-dialog>
 
     <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改存储容量" @confirm="quotaConfirm">
-      <el-form :model="quotaForm" :rules="quotaRules" label-width="auto">
+      <el-form :model="quotaForm" :rules="quotaRules" label-width="auto" class="mb2">
+        <g-warning title=" 用户按需选择相应存储单位，修改存储容量" class="mb2" />
         <el-form-item label="存储" prop="quota">
           <div class="f-st-ct">
             <el-input-number v-model="quotaForm.quota" class="mr2" />
@@ -171,6 +200,19 @@ const quotaConfirm = async () => {
         </el-form-item>
         <el-form-item label="类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+        </el-form-item>
+      </el-form>
+    </o-dialog>
+
+    <o-dialog ref="dialogRef" v-model="isShowDate" title="对象过期删除" @confirm="dateConfirm">
+      <g-warning title=" 未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" class="mb2" />
+      <el-form ref="dateFormRef" :model="dateForm" :rules="dateRules">
+        <el-form-item label="过期时间" prop="expireAfterDays">
+          <!-- <o-input v-model="dateForm.expireAfterDays" /> -->
+          <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="2" />
+        </el-form-item>
+        <el-form-item label="是否开启" prop="enable">
+          <el-switch v-model="dateForm.enable" />
         </el-form-item>
       </el-form>
     </o-dialog>

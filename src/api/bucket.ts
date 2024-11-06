@@ -61,3 +61,13 @@ export function getBucketUse(bucketName) {
     },
   })
 }
+
+// 获取过期时间
+export function getRetentionAutodelete(bucketName, data) {
+  return request(`bucket/${bucketName}/config/retention/autodelete`)
+}
+
+// 设置过期时间
+export function retentionAutodelete(bucketName, data) {
+  return request(`bucket/${bucketName}/config/retention/autodelete`, 'put', { data })
+}
