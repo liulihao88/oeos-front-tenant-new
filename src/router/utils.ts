@@ -182,6 +182,7 @@ function initRouter() {
       getAsyncRoutes().then((remoteData) => {
         // remoteData = remoteData.slice(4)
         let data = mergeMenus(TenantRouter, remoteData)
+        console.log(`38 data`, data)
         setStorage('tenant-async-routes', data)
         handleAsyncRoutes(clone(data))
         resolve(router)
@@ -203,9 +204,9 @@ function mergeMenus(baseMenus, remoteMenus) {
           ...baseItem,
           meta: {
             ...baseItem.meta,
-            path: baseItem.path,
             title: remoteItem.title ?? baseItem.title,
           },
+          path: remoteItem.link || baseItem.path,
           children: mergeSubMenus(baseItem.children || [], remoteItem.submenu),
         }
         mergedMenus.push(mergedItem)
@@ -232,11 +233,12 @@ function mergeSubMenus(baseChildren, remoteSubMenus) {
           ...baseChild,
           meta: {
             ...baseChild.meta,
-            path: baseChild.meta.path,
             title: remoteChild.title ?? baseChild.meta.title,
             children: mergeSubMenus(baseChild.meta.children || [], remoteChild.submenu || []),
           },
+          path: remoteChild.link || baseChild.path,
         }
+
         mergedChildren.push(mergedChild)
       }
     } else {

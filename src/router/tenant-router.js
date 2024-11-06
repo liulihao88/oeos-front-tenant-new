@@ -28,8 +28,17 @@ export default [
       icon: 'ep:home-filled',
       title: '空间管理222',
     },
-    redirect: '/bucket/management',
     children: [
+      {
+        id: 'TM011',
+        path: '/bucket/management',
+        name: 'Management',
+        component: () => import('@/views/bucket/management.vue'),
+        meta: {
+          icon: 'ep:home-filled',
+          title: '桶列表',
+        },
+      },
       {
         path: '/bucket/management',
         meta: {
@@ -44,21 +53,11 @@ export default [
               title: '桶详情',
               activePath: '/bucket/management',
               showLink: false,
-              // showParent: true,
+              showParent: true,
             },
-            component: () => import('@/views/bucket/managementDetail.vue'),
+            component: async () => await import('@/views/bucket/managementDetail.vue'),
           },
         ],
-      },
-      {
-        id: 'TM011',
-        path: '/bucket/management',
-        name: 'Management',
-        component: () => import('@/views/bucket/management.vue'),
-        meta: {
-          icon: 'ep:home-filled',
-          title: '桶列表',
-        },
       },
       {
         id: 'TM012',
@@ -76,7 +75,6 @@ export default [
     id: 'TM030',
     path: '/object',
     component: Layout,
-    redirect: '/object/search',
     meta: {
       icon: 'ep:home-filled',
       title: '空间浏览',
@@ -118,7 +116,6 @@ export default [
     id: 'TM020',
     path: '/task',
     component: Layout,
-    redirect: '/task/management',
     meta: {
       icon: 'ep:home-filled',
       title: '任务管理',
@@ -150,7 +147,6 @@ export default [
     id: 'TM040',
     path: '/security',
     component: Layout,
-    redirect: '/security/user',
     meta: {
       icon: 'ep:home-filled',
       title: '安全权限',
@@ -167,10 +163,10 @@ export default [
         },
       },
       {
-        path: '/security/user',
+        path: '',
         meta: {
           title: '用户管理',
-          name: 'User',
+          // name: 'User',
         },
         children: [
           {
@@ -180,6 +176,7 @@ export default [
               title: '用户编辑',
               activePath: '/security/user',
               showLink: false,
+              showParent: false,
               // keepAlive: true,
             },
             component: async () => await import('@/views/security/addUser.vue'),
@@ -201,7 +198,6 @@ export default [
   {
     path: '/test',
     component: Layout,
-    redirect: '/test/t1',
     meta: {
       icon: 'ep:home-filled',
       showLink: import.meta.env.MODE === 'development',
@@ -223,7 +219,6 @@ export default [
   {
     path: '/test2',
     component: Layout,
-    redirect: '/test/t2',
     meta: {
       showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
@@ -255,7 +250,6 @@ export default [
     path: '/test3',
 
     component: Layout,
-    redirect: '/test/t3',
     meta: {
       showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
@@ -277,7 +271,6 @@ export default [
   {
     path: '/test4',
     component: Layout,
-    redirect: '/test/t4',
     meta: {
       showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
@@ -299,7 +292,6 @@ export default [
   {
     path: '/test5',
     component: Layout,
-    redirect: '/test/t5',
     meta: {
       showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
@@ -321,7 +313,6 @@ export default [
   {
     path: '/test6',
     component: Layout,
-    redirect: '/test/t6',
     meta: {
       showLink: import.meta.env.MODE === 'development',
       icon: 'ep:home-filled',
@@ -344,7 +335,6 @@ export default [
     id: 'TM050',
     path: '/feature',
     component: Layout,
-    redirect: '/feature/management',
     meta: {
       icon: 'ep:home-filled',
       title: '服务管理',
@@ -367,7 +357,6 @@ export default [
     id: 'TM060',
     path: '/monitor',
     component: Layout,
-    redirect: '/monitor/event',
     meta: {
       icon: 'ep:home-filled',
       title: '租户监控',
@@ -390,7 +379,6 @@ export default [
     id: 'TM070',
     path: '/config',
     component: Layout,
-    redirect: '/config/default',
     meta: {
       icon: 'ep:home-filled',
       title: '系统配置',
