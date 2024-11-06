@@ -169,6 +169,7 @@ const selectionChange = (val, ...a) => {
         />
         <o-date-range
           v-model="timeRange"
+          title="写入时间"
           :disabled="!bucketId"
           type="datetimerange"
           start-placeholder="开始时间"
@@ -180,8 +181,10 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" @click="download">下载</el-button>
-        <el-button type="primary" icon="el-icon-search" @click="init">查询</el-button>
+        <el-button type="primary" icon="el-icon-download" :disabled="data.length === 0" @click="download">
+          下载
+        </el-button>
+        <el-button type="primary" icon="el-icon-search" :disabled="!bucketId" @click="init">查询</el-button>
       </div>
     </div>
 

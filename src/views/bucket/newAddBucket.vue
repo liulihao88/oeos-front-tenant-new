@@ -71,23 +71,11 @@ const fieldList = [
     label: '类型',
     prop: 'quotaType',
     comp: 'o-select',
-
     attrs: {
       clearable: false,
       options: QUOTA_OPTIONS,
     },
   },
-  // {
-  //   label: '桶事件通知',
-  //   prop: 'bucketNotification',
-  //   comp: 'o-radio',
-  //   attrs: {
-  //     options: [
-  //       { label: '启用', value: true },
-  //       { label: '禁用', value: false },
-  //     ],
-  //   },
-  // },
   {
     label: '桶版本',
     prop: 'versionEnabled',
