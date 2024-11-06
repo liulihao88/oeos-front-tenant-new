@@ -111,6 +111,7 @@ const onLogin = async (formEl) => {
   })
 
   let formatRes = await getFormat()
+  proxy.setStorage('tenant-time-rule', formatRes)
   await bucketList.update()
   return initRouter().then((routerRes) => {
     console.log(`39 routerRes`, routerRes)

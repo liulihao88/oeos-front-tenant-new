@@ -217,18 +217,17 @@ onUnmounted(() => {
           label="name"
           placeholder="请选择事件等级"
           class="m-r-16"
-          width="460"
           @change="init"
         />
         <o-select
           v-model="searchForm.mark"
           title="状态"
-          width="200"
           :options="statusOptions"
           placeholder="请选择状态"
+          class="m-r-16"
           @change="init"
         />
-        <o-date-range v-model="dateRangeValue" title="日期" class="m-l-16" width="600" @change="init" />
+        <o-date-range v-model="dateRangeValue" title="发生时间" width="600" @change="init" />
       </div>
       <div class="w-100">
         <el-button type="primary" @click="exportEvent">导出</el-button>
