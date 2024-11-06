@@ -196,7 +196,6 @@ function mergeMenus(baseMenus, remoteMenus) {
 
   baseMenus.forEach((baseItem) => {
     const remoteItem = remoteMenus.find((item) => item.id === baseItem.id)
-    console.log(`94 remoteItem`, remoteItem)
     if (remoteItem) {
       // 如果在remoteMenus中找到了匹配的id，则合并这两个菜单项
       if (remoteItem.visable) {
@@ -219,6 +218,7 @@ function mergeMenus(baseMenus, remoteMenus) {
     }
   })
 
+  console.log(`59 mergedMenus`, mergedMenus)
   return mergedMenus
 }
 
@@ -345,7 +345,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
       const index = v?.component
-        ? modulesRoutesKeys.findIndex((ev) => (('' + v.component) as any).includes(ev))
+        ? modulesRoutesKeys.findIndex((ev) => ev.includes(v.component as any))
         : modulesRoutesKeys.findIndex((ev) => ev.includes(v.path))
       v.component = modulesRoutes[modulesRoutesKeys[index]]
     }

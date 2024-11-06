@@ -12,7 +12,7 @@ export default [
       {
         path: '/overview',
         name: 'Overview',
-        component: () => import('@/views/overview/index.vue'),
+        component: 'overview/index',
         meta: {
           icon: 'ep:home-filled',
           title: '租户概览',
@@ -33,7 +33,7 @@ export default [
         id: 'TM011',
         path: '/bucket/management',
         name: 'Management',
-        component: () => import('@/views/bucket/management.vue'),
+        component: 'bucket/management',
         meta: {
           icon: 'ep:home-filled',
           title: '桶列表',
@@ -55,7 +55,7 @@ export default [
               showLink: false,
               showParent: true,
             },
-            component: async () => await import('@/views/bucket/managementDetail.vue'),
+            component: 'bucket/managementDetail',
           },
         ],
       },
@@ -63,7 +63,7 @@ export default [
         id: 'TM012',
         path: '/bucket/objectexplorer',
         name: 'Objectexplorer',
-        component: () => import('@/views/bucket/objectexplorer.vue'),
+        component: 'bucket/objectexplorer',
         meta: {
           icon: 'ep:home-filled',
           title: '桶浏览',
@@ -84,7 +84,7 @@ export default [
         id: 'TM031',
         path: '/object/search',
         name: 'Search',
-        component: () => import('@/views/object/search.vue'),
+        component: 'object/search',
         meta: {
           icon: 'ep:home-filled',
           title: '简单搜索',
@@ -94,7 +94,7 @@ export default [
         id: 'TM032',
         path: '/object/advancesearch',
         name: 'AdvanceSearch',
-        component: () => import('@/views/object/advanceSearch.vue'),
+        component: 'object/advancesearch',
         meta: {
           icon: 'ep:home-filled',
           title: '高级搜索',
@@ -104,7 +104,7 @@ export default [
         id: 'TM034',
         path: '/object/unfrezze',
         name: 'Unfrezze',
-        component: () => import('@/views/object/unfrezze.vue'),
+        component: 'object/unfrezze',
         meta: {
           icon: 'ep:home-filled',
           title: '解冻浏览',
@@ -125,7 +125,7 @@ export default [
         id: 'TM021',
         path: '/task/management',
         name: 'TaskManagement',
-        component: () => import('@/views/task/management.vue'),
+        component: 'task/management.vue',
         meta: {
           icon: 'ep:home-filled',
           title: '桶任务',
@@ -135,7 +135,7 @@ export default [
         id: 'TM022',
         path: '/task/schedule',
         name: 'Schedule',
-        component: () => import('@/views/task/schedule.vue'),
+        component: 'task/schedule',
         meta: {
           icon: 'ep:home-filled',
           title: '任务计划',
@@ -156,17 +156,17 @@ export default [
         id: 'TM041',
         path: '/security/user',
         name: 'User',
-        component: () => import('@/views/security/user.vue'),
+        component: 'security/user.vue',
         meta: {
           icon: 'ep:home-filled',
           title: '用户管理',
         },
       },
       {
-        path: '',
+        path: '/security/user',
         meta: {
           title: '用户管理',
-          // name: 'User',
+          name: 'User',
         },
         children: [
           {
@@ -177,9 +177,8 @@ export default [
               activePath: '/security/user',
               showLink: false,
               showParent: false,
-              // keepAlive: true,
             },
-            component: async () => await import('@/views/security/addUser.vue'),
+            component: 'security/addUser',
           },
         ],
       },
@@ -187,7 +186,7 @@ export default [
         id: 'TM042',
         path: '/security/group',
         name: 'Group',
-        component: () => import('@/views/security/group.vue'),
+        component: 'security/group',
         meta: {
           icon: 'ep:home-filled',
           title: '组管理',
@@ -208,7 +207,7 @@ export default [
       {
         path: '/test/t1',
         name: 'T1',
-        component: () => import('@/views/test/t1.vue'),
+        component: 'test/t1',
         meta: {
           title: '测试页1',
           showLink: true,
@@ -229,7 +228,7 @@ export default [
       {
         path: '/test/t2',
         name: 'T2',
-        component: () => import('@/views/test/t2.vue'),
+        component: 'test/t2',
         meta: {
           title: '测试页2',
           showLink: true,
@@ -238,7 +237,7 @@ export default [
       {
         path: '/test/t22',
         name: 'T22',
-        component: () => import('@/views/test/t22.vue'),
+        component: 'test/t22',
         meta: {
           title: '测试页22',
           showLink: false,
@@ -260,7 +259,7 @@ export default [
       {
         path: '/test/t3',
         name: 'T3',
-        component: () => import('@/views/test/t3.vue'),
+        component: 'test/t3',
         meta: {
           title: '测试页3',
           showLink: true,
@@ -281,7 +280,7 @@ export default [
       {
         path: '/test/t4',
         name: 'T4',
-        component: () => import('@/views/test/t4.vue'),
+        component: 'test/t4',
         meta: {
           title: '测试页4',
           showLink: true,
@@ -302,7 +301,7 @@ export default [
       {
         path: '/test/t5',
         name: 'T5',
-        component: () => import('@/views/test/t5.vue'),
+        component: 'test/t5',
         meta: {
           title: '测试页5',
           showLink: true,
@@ -323,7 +322,7 @@ export default [
       {
         path: '/test/t6',
         name: 'T6',
-        component: () => import('@/views/test/t6.vue'),
+        component: 'test/t6',
         meta: {
           title: '测试页6',
           showLink: true,
@@ -344,7 +343,7 @@ export default [
         id: 'TM051',
         path: '/feature/command',
         name: 'InnerCommand',
-        component: () => import('@/views/system/innerCommand.vue'),
+        component: 'system/innerCommand',
         meta: {
           icon: 'ep:home-filled',
           title: '内置命令',
@@ -366,7 +365,7 @@ export default [
         id: 'TM061',
         path: '/monitor/event',
         name: 'Event',
-        component: () => import('@/views/system/event.vue'),
+        component: 'system/event',
         meta: {
           icon: 'ep:home-filled',
           title: '租户事件',
@@ -388,7 +387,7 @@ export default [
         id: 'TM071',
         path: '/config/default',
         name: 'DefaultConfig',
-        component: () => import('@/views/system/defaultConfig.vue'),
+        component: 'system/defaultConfig',
         meta: {
           icon: 'ep:home-filled',
           title: '默认配置',
