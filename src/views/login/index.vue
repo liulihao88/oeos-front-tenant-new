@@ -29,7 +29,7 @@ const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
 const loading = ref(false)
-const ruleFormRef = ref()
+const ruleFormRef = ref(null)
 const tenantOptions = ref([])
 const redirectUrl = ref()
 
@@ -128,7 +128,8 @@ const onLogin = async (formEl) => {
 
 /** 使用公共函数，避免`removeEventListener`失效 */
 function onkeypress(code) {
-  if (code === 'Enter') {
+  console.log(`83 code`, code)
+  if (code.code === 'Enter') {
     onLogin(ruleFormRef.value)
   }
 }
