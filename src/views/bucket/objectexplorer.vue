@@ -10,6 +10,7 @@ import {
   objectRestoreBatch,
   objectPropertyDetail,
   objectDownloadBatch,
+  addDirectory,
 } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
@@ -34,6 +35,14 @@ const bucketRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
 const BucketFileDetailsCompRef = ref(null)
+const isShow = ref(false)
+const form = ref({
+  name: '',
+})
+const rules = {
+  name: [proxy.validate()],
+}
+const formRef = ref(null)
 
 function selectableFn(row, index) {
   return row.injectTime
@@ -169,6 +178,20 @@ const selectionChange = (val, ...a) => {
   console.log(`65 val`, val)
   selections.value = val
 }
+const addDir = async () => {
+  form.value = {}
+  isShow.value = true
+}
+const addDirConfirm = async () => {
+  await proxy.validForm(formRef.value)
+  let sendData = {
+    bucket: bucketName.value,
+    dir: form.value.name,
+  }
+  await addDirectory(sendData)
+  isShow.value = false
+  init()
+}
 const refresh = () => {
   init()
 }
@@ -223,9 +246,12 @@ const previewImage = (row) => {
   <div>
     <div class="top f">
       <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
-      <UploadFile :bucketName="bucketName" @success="init" />
+      <el-button type="primary" class="mr" icon="el-icon-plus" @click="addDir">新建目录</el-button>
+      <UploadFile :bucketName="bucketName" @success="init">
+        <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
+      </UploadFile>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
-      <el-button type="primary" icon="el-icon-plus" @click="easySearch">高级搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="easySearch">高级搜索</el-button>
       <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
         批量下载
       </el-button>
@@ -271,6 +297,14 @@ const previewImage = (row) => {
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
+
+    <o-dialog ref="dialogRef" v-model="isShow" title="新建目录" @confirm="addDirConfirm">
+      <el-form ref="formRef" :model="form" :rules="rules">
+        <el-form-item label="目录" prop="name">
+          <o-input v-model="form.name" v-focus />
+        </el-form-item>
+      </el-form>
+    </o-dialog>
   </div>
 </template>
 

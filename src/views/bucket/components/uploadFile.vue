@@ -98,6 +98,6 @@ const beforeUpload = (file) => {
 
 <template>
   <g-upload class="m-r-10" multiple :onChange="onChange" :before-upload="beforeUpload">
-    <el-button type="primary" icon="el-icon-upload">上传文件</el-button>
+    <slot />
   </g-upload>
 </template>

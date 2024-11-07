@@ -48,7 +48,7 @@ watch(
     v-model="sValue"
     title="桶名称"
     placeholder="请选择桶名"
-    :width="$attrs.width ?? 240"
+    :width="$attrs.width ?? 300"
     class="mr"
     :clearable="false"
     :options="getBucketList.bucketOptions"

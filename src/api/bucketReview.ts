@@ -19,6 +19,11 @@ export function uploadFile(data) {
     },
   })
 }
+// 创建目录
+export function addDirectory(data) {
+  return request(`object/directory`, 'post', { params: data })
+  // return request(`object/directory?bucket=${data.bucket}&dir=${data.dir}`, 'post')
+}
 export function deleteBatch(data) {
   return request('object/delete/batch', 'put', { data: data })
 }
