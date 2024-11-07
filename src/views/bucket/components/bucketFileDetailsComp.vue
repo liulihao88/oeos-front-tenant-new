@@ -59,7 +59,7 @@ defineExpose({
 <template>
   <div>
     <o-dialog ref="dialogRef" v-model="isShow" title="文件详情" width="80%">
-      <o-description :column="2" :options="options" />
+      <o-description :column="2" :options="options" label-width="140" />
 
       <o-title title="存储位置" tb="20" />
       <o-table ref="tableRef" :columns="columns" :data="details.contentLocations" :showPage="false" />
