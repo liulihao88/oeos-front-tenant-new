@@ -446,7 +446,7 @@ onUnmounted(() => removeMatchMedia)
             @change="hideFooterChange"
           />
         </li> -->
-        <li>
+        <!-- <li>
           <span class="dark:text-white">Logo</span>
           <el-switch
             v-model="logoVal"
@@ -457,7 +457,7 @@ onUnmounted(() => removeMatchMedia)
             inactive-text="关"
             @change="logoChange"
           />
-        </li>
+        </li> -->
         <li>
           <span class="dark:text-white">页签持久化</span>
           <el-switch

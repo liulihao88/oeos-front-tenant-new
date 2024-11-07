@@ -47,6 +47,7 @@ const restoreRow = async (row) => {
 const columns = [
   {
     type: 'selection',
+    selectable: selectableFn,
   },
   {
     label: '对象名称',
@@ -88,6 +89,9 @@ const columns = [
     key: 'operation',
     label: '操作',
     maxBtns: 5,
+    isShow: (val) => {
+      return val.size > 0
+    },
     btns: [
       {
         content: '下载',
@@ -100,6 +104,10 @@ const columns = [
     ],
   },
 ]
+
+function selectableFn(row, index) {
+  return row.size && row.size > 0
+}
 
 const editSearch = async () => {
   searchConfigCompRef.value.open()
@@ -123,26 +131,10 @@ const multyRestore = async () => {
 }
 
 const download = async () => {
-  if (!bucketName.value) {
-    proxy.$toast('请先选择桶名', 'e')
-  }
-  if (!data.value.length) {
-    proxy.$toast('无数据可下载！', 'e')
-  }
   // 全部下载
-  if (selections.value.length === 0) {
-    const sendData = {
-      bucket: bucketName.value,
-      injectTimeBegin: form.value.injectTimeBegin,
-      injectTimeEnd: form.value.injectTimeEnd,
-      key: form.value.key,
-    }
-    proxy.gDownloadUrl('/v1/admin/tenant/object/download/simplequery', sendData)
-  } else {
-    // 不分下载
-    let res = await objectDownloadBatch(selections.value)
-    proxy.gDownloadAll(res)
-  }
+
+  let res = await objectDownloadBatch(selections.value)
+  proxy.gDownloadAll(res)
 }
 const selectionChange = (val, ...a) => {
   selections.value = val
@@ -157,7 +149,7 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" :disabled="!data.length" @click="download">
+        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
           批量下载
         </el-button>
         <el-button type="primary" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
@@ -176,12 +168,18 @@ const selectionChange = (val, ...a) => {
         @selection-change="selectionChange"
       >
         <template #name="{ scope, row }">
-          <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text class="p-0" @click="preview(row.bucket, row.key)">{{ row.key }}</el-button>
+          <template v-if="row.size > 0">
+            <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+              {{ row.name }}
+            </div>
+            <template v-else>
+              {{ row.name }}
+            </template>
           </template>
-          <span v-else>
-            {{ row.key }}
-          </span>
+          <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
+            <o-icon name="folder" class="mr" />
+            {{ row.name }}
+          </div>
         </template>
       </o-table>
     </div>
