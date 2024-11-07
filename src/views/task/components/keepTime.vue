@@ -38,9 +38,7 @@ watch(
 
 const changeInputNumber = () => {
   const mergeHoursNumber = Number(hours.value) + Number((minutes.value / 60).toFixed(2))
-  console.log(`35 mergeHoursNumber`, mergeHoursNumber)
   let res = `${years.value}y${months.value}m${days.value}d${mergeHoursNumber}h`
-  console.log(`97 res`, res)
   emits('update:modelValue', res)
 }
 </script>
@@ -52,7 +50,7 @@ const changeInputNumber = () => {
         <span>年</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="months" :min="0" :max="12" class="mlr" :precision="0" @change="changeInputNumber">
+    <el-input-number v-model="months" :min="0" :max="12" class="m" :precision="0" @change="changeInputNumber">
       <template #prefix>
         <span>月</span>
       </template>
@@ -62,7 +60,7 @@ const changeInputNumber = () => {
         <span>日</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="hours" :min="0" :max="24" class="mlr" :precision="0" @change="changeInputNumber">
+    <el-input-number v-model="hours" :min="0" :max="24" class="m" :precision="0" @change="changeInputNumber">
       <template #prefix>
         <span>时</span>
       </template>

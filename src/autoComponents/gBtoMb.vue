@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, watch } from 'vue'
-// import { useVModel } from '@vueuse/core'
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
@@ -9,8 +8,6 @@ const props = defineProps({
     type: [String, Number],
   },
 })
-// const data = useVModel(props)
-// console.log(data.value) // props.data
 
 const data = ref()
 const emits = defineEmits(['update:modelValue'])
@@ -27,7 +24,6 @@ watch(
 watch(
   data,
   (val) => {
-    console.log(`25 val`, val)
     emits('update:modelValue', val * 1024 * 1024)
   },
   {

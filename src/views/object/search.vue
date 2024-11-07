@@ -7,7 +7,7 @@
  bucket: bucketnamemyjw
  key: aaa
  */
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, watch } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import { querySimple } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
@@ -17,7 +17,7 @@ import { previewImage } from '@/api/spaceScan.ts'
 
 const { proxy } = getCurrentInstance()
 
-const bucketId = ref()
+const bucketId = ref(proxy.getStorage('tenant-bucket-id'))
 const bucketName = ref()
 
 const form = ref({
@@ -46,11 +46,13 @@ const restoreRow = async (row) => {
 const columns = [
   {
     type: 'selection',
+    selectable: selectableFn,
   },
   {
     label: '对象名称',
     useSlot: true,
     prop: 'name',
+    useSlot: true,
   },
   {
     label: '对象大小',
@@ -74,6 +76,9 @@ const columns = [
     key: 'operation',
     label: '操作',
     maxBtns: 5,
+    isShow: (val) => {
+      return val.size > 0
+    },
     btns: [
       {
         content: '下载',
@@ -86,6 +91,24 @@ const columns = [
     ],
   },
 ]
+
+function selectableFn(row, index) {
+  return row.size && row.size > 0
+}
+
+watch(
+  [bucketId, bucketName],
+  ([bId, bName], [bOldId, bOldName]) => {
+    if (bId && bName && bOldName !== bName) {
+      form.value.bucket = bName
+      proxy.setStorage('tenant-bucket-id', bId)
+      init()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 const init = async () => {
   if (!bucketId.value) {
@@ -200,12 +223,18 @@ const selectionChange = (val, ...a) => {
         @selection-change="selectionChange"
       >
         <template #name="{ scope, row }">
-          <template v-if="proxy.isImage(row.key)">
-            <el-button type="primary" text class="p-0" @click="previewImage(row)">{{ row.key }}</el-button>
+          <template v-if="row.size > 0">
+            <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+              {{ row.name }}
+            </div>
+            <template v-else>
+              {{ row.name }}
+            </template>
           </template>
-          <span v-else>
-            {{ row.key }}
-          </span>
+          <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
+            <o-icon name="folder" class="mr" />
+            {{ row.name }}
+          </div>
         </template>
       </o-table>
     </div>

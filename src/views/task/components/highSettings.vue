@@ -63,7 +63,6 @@ const beforeChange = async () => {
 
 const confirm = async () => {
   await proxy.validForm(formRef)
-  proxy.log(`form.value`, form.value, '/cyrd/oeos-front-tenant-new/src/views/task/components/highSettings.vue')
   if (form.value.singleSizeRange[0] >= form.value.singleSizeRange[1]) {
     return proxy.$toast('独立存储区间第一个值要小于第二个值', 'e')
   }

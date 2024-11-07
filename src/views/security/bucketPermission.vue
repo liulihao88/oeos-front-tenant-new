@@ -173,10 +173,6 @@ const checkboxChange = async () => {
     })
     return v
   })
-  setTimeout(() => {
-    proxy.log(`data`, data, '/cyrd/oeos-front-tenant-new/src/views/security/bucketPermission.vue')
-    proxy.log(`originData`, originData, '/cyrd/oeos-front-tenant-new/src/views/security/bucketPermission.vue')
-  }, 2000)
 }
 
 async function getPermission() {
