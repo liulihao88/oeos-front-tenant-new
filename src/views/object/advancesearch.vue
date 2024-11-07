@@ -10,7 +10,7 @@
 import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
-import { querySimple } from '@/api/searchApi.ts'
+import { querySimple, queryAdvance } from '@/api/searchApi.ts'
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 import SearchConfigComp from '@/views/object/components/searchConfigComp.vue'
 import { preview } from '@/utils/remoteFunc.ts'
@@ -19,6 +19,9 @@ const { proxy } = getCurrentInstance()
 let getBucketList = GetBucketList()
 getBucketList.getBucketList()
 const searchConfigCompRef = ref(null)
+const expressionValue = ref('')
+const options = ref([])
+options.value = proxy.getStorage('tenant-advance-expression') ?? []
 
 const bucketId = ref(proxy.getStorage('tenant-bucket-id') ?? '')
 const bucketName = ref(proxy.getStorage('tenant-bucket-name') ?? '')
@@ -116,7 +119,9 @@ const editSearch = async () => {
 const success = ({ details, total: t }) => {
   allData.value = details
   total.value = t
-  update(1, 30)
+  options.value = proxy.getStorage('tenant-advance-expression')
+  expressionValue.value = ''
+  update(1, 10000)
 }
 
 const update = (num, size) => {
@@ -139,6 +144,14 @@ const download = async () => {
 const selectionChange = (val, ...a) => {
   selections.value = val
 }
+const changeSelect = async (val, label, obj) => {
+  if (proxy.notEmpty(obj)) {
+    let res = await queryAdvance(obj)
+    allData.value = res.details
+    total.value = res.total
+    update(1, 10000)
+  }
+}
 </script>
 
 <template>
@@ -152,7 +165,16 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
           批量下载
         </el-button>
-        <el-button type="primary" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
+        <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
+
+        <o-select
+          v-model="expressionValue"
+          :options="options"
+          label="queryName"
+          value="queryName"
+          title="搜索表达式"
+          @changeSelect="changeSelect"
+        />
       </div>
     </div>
 
@@ -169,7 +191,7 @@ const selectionChange = (val, ...a) => {
       >
         <template #name="{ scope, row }">
           <template v-if="row.size > 0">
-            <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+            <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.key)">
               {{ row.name }}
             </div>
             <template v-else>

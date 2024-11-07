@@ -13,7 +13,6 @@ import { querySimple } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
 
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
-import { previewImage } from '@/api/spaceScan.ts'
 
 const { proxy } = getCurrentInstance()
 
@@ -33,9 +32,6 @@ const total = ref(0)
 
 const data = ref([])
 
-const previewImage = async (row) => {
-  preview(row.bucket, row.key)
-}
 const restoreRow = async (row) => {
   let params = {
     bucket: bucketName.value,
@@ -224,7 +220,7 @@ const selectionChange = (val, ...a) => {
       >
         <template #name="{ scope, row }">
           <template v-if="row.size > 0">
-            <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+            <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.key)">
               {{ row.name }}
             </div>
             <template v-else>

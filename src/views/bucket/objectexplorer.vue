@@ -237,9 +237,6 @@ const inside = (row) => {
   bucketSettings.changePrefixKey(row.key)
   init()
 }
-const previewImage = (row) => {
-  preview(bucketName.value, row.key)
-}
 </script>
 
 <template>
@@ -281,7 +278,7 @@ const previewImage = (row) => {
     >
       <template #name="{ scope, row }">
         <template v-if="row.injectTime">
-          <div v-if="proxy.isImage(row.key)" class="link cp" @click="previewImage(row)">
+          <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.name)">
             {{ row.name }}
           </div>
           <template v-else>

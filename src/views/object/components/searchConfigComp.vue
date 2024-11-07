@@ -13,6 +13,19 @@ const emits = defineEmits(['success'])
 let getBucketList = GetBucketList()
 getBucketList.getBucketList()
 
+const handleExpression = (cForm) => {
+  let nowAdvanceExpression = proxy.getStorage('tenant-advance-expression') ?? []
+  let findIndex = nowAdvanceExpression.findIndex((v) => {
+    return v.queryName === cForm.queryName
+  })
+  if (findIndex > -1) {
+    nowAdvanceExpression.splice(findIndex, 1)
+  }
+  nowAdvanceExpression.push(cForm)
+  let last20Expression = nowAdvanceExpression.slice(-20)
+  proxy.setStorage('tenant-advance-expression', last20Expression)
+}
+
 const confirm = async () => {
   if (proxy.isEmpty(form.value.matchFields)) {
     proxy.$toast('请至少添加一个搜索条件', 'e')
@@ -36,11 +49,10 @@ const confirm = async () => {
       values: [values],
     }
   })
-  // copyForm.pageSize = 30
-  // copyForm.pageNumber = 1
   copyForm.buckets = proxy.clone(form.value.buckets)
   let res = await queryAdvance(copyForm)
   isShow.value = false
+  handleExpression(copyForm)
   emits('success', res)
 }
 const selectRef = ref(null)
