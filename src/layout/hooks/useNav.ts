@@ -80,11 +80,10 @@ export function useNav() {
 
   /** 退出登录 */
   async function logout() {
-    bucketList.clear()
     clearStorage('token')
     let nowPath = router.currentRoute.value.path
     _clearCacheWithPrefix('tenant')
-    router.push(`/login/index?redirect=${nowPath}`)
+    router.push(`/login?redirect=${nowPath}`)
   }
 
   function _clearCacheWithPrefix(prefix) {

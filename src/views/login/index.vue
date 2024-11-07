@@ -73,18 +73,16 @@ logoInit()
 // 匹配本地缓存的菜单route是否包含在服务器返回的路由中, 如果不包含, 取服务器返回路由的第一个
 const _findSubMenu = (menuItems, pathToFind, sendArr = []) => {
   for (const menuItem of menuItems) {
-    // if (menuItem.visable && menuItem.visable === true) {
     if (menuItem.path && !sendArr[1]) {
       sendArr[1] = menuItem.path
     }
     if (menuItem.path === pathToFind && pathToFind) {
       sendArr[0] = pathToFind
     } else {
-      if (menuItem.submenu && menuItem.submenu.length > 0) {
-        _findSubMenu(menuItem.submenu, pathToFind, sendArr)
+      if (menuItem.children && menuItem.children.length > 0) {
+        _findSubMenu(menuItem.children, pathToFind, sendArr)
       }
     }
-    // }
   }
   return sendArr
 }
@@ -114,13 +112,8 @@ const onLogin = async (formEl) => {
   proxy.setStorage('tenant-time-rule', formatRes)
   await bucketList.update()
   return initRouter().then((routerRes) => {
-    console.log(`39 routerRes`, routerRes)
     let matchedRouteArr = _findSubMenu(proxy.getStorage('tenant-async-routes'), redirectUrl.value)
-    console.log(`97 matchedRouteArr`, matchedRouteArr)
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
-    console.log(`69 jumpPath`, jumpPath)
-    // jumpPath = '/test/t1'
-    // jumpPath = '/overview'
     router.push(jumpPath).then(() => {
       proxy.$toast('登录成功')
     })

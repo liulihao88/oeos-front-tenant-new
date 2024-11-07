@@ -209,7 +209,9 @@ const dateConfirm = async () => {
       <el-form ref="dateFormRef" :model="dateForm" :rules="dateRules">
         <el-form-item label="过期时间" prop="expireAfterDays">
           <!-- <o-input v-model="dateForm.expireAfterDays" /> -->
-          <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="2" />
+          <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="1">
+            <template #suffix>天</template>
+          </el-input-number>
         </el-form-item>
         <el-form-item label="是否开启" prop="enable">
           <el-switch v-model="dateForm.enable" />

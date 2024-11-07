@@ -58,7 +58,7 @@ defineExpose({
     size="small"
     @click="nativeRefresh"
   >
-    本地刷新
+    刷新
   </el-button>
   <el-button
     id="nativeRefreshBtn"

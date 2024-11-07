@@ -81,7 +81,6 @@ const initOptions = {
 watch(
   () => props.data,
   (val) => {
-    proxy.log(`val`, val, '84行 bucket/bucketCapacityPie.vue')
     _handleUsedPercent(val)
     initOptions.series[0].data = val
     options.value = proxy.clone(initOptions)
