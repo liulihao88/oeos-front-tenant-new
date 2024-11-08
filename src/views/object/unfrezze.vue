@@ -155,7 +155,7 @@ const cancelUnFreeze = async () => {
         <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" @change="init" />
         <o-input
           v-model="prefixKey"
-          v-throttle.debounce="init"
+          v-debounce.200="init"
           title="对象前缀"
           placeholder="请输入对象key的前缀"
           :disabled="!bucketId"

@@ -28,7 +28,7 @@ const handleExpression = (cForm) => {
 
 const confirm = async () => {
   if (proxy.isEmpty(form.value.matchFields)) {
-    proxy.$toast('请至少添加一个搜索条件', 'e')
+    return proxy.$toast('请至少添加一个搜索条件', 'e')
   }
   await proxy.validForm(formRef)
   const copyForm = proxy.clone(form)
@@ -157,7 +157,7 @@ const addNew = () => {
     name: 'objectKey',
     operator: 'contains',
     type: 'string',
-    values: proxy.uuid(),
+    values: '',
   }
   form.value.matchFields.push(obj)
 }
@@ -178,6 +178,7 @@ const changeName = (idx, isInput) => {
   } else {
     form.value.matchFields[idx].name = 'objectKey'
   }
+  formRef.value.clearValidate(`matchFields.${idx}.name`)
 }
 const open = () => {
   isShow.value = true
@@ -215,7 +216,7 @@ defineExpose({
         <el-form-item label="搜索表达式( 支持：AND，OR，NOT，（，） )" prop="querySentence">
           <o-input v-model="form.querySentence" type="textarea" placeholder="示例: (1 AND 2) OR (3 AND 4)" />
         </el-form-item>
-        <o-title title="自定义搜索条件" sub-title="(条件的维度和关系均填写才能生效)" t="16px" b="16px">
+        <o-title title="自定义搜索条件" sub-title="条件的维度(域名)必填" t="16px" b="16px">
           <template #right>
             <el-button type="primary" icon="el-icon-plus" size="small" class="mb" @click="addNew">新增</el-button>
           </template>

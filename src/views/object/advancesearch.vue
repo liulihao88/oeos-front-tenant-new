@@ -159,12 +159,19 @@ const changeSelect = async (val, label, obj) => {
     <div class="f-bt-un w-100% m-b-16">
       <div class="f-1 f-st-ct" />
       <div class="f-1 f-ed-un">
-        <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
-          批量恢复
-        </el-button>
-        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
-          批量下载
-        </el-button>
+        <template v-if="data.length > 0">
+          <el-button
+            type="primary"
+            icon="el-icon-refresh-left"
+            :disabled="selections.length === 0"
+            @click="multyRestore"
+          >
+            批量恢复
+          </el-button>
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
+            批量下载
+          </el-button>
+        </template>
         <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
 
         <o-select
@@ -173,6 +180,7 @@ const changeSelect = async (val, label, obj) => {
           label="queryName"
           value="queryName"
           title="搜索表达式"
+          :clearable="false"
           @changeSelect="changeSelect"
         />
       </div>
