@@ -314,7 +314,7 @@ function _handleUsedData(usedSpace) {
           <div class="l-list f w-100%">
             <div v-for="(v, i) in topObj" :key="i" class="c-box list-item p-tb-16">
               <div>
-                <o-icon name="delete" size="40" />
+                <o-icon name="List" size="40" />
               </div>
               <div class="f-st-ct" style="flex-direction: column">
                 <div>{{ v.name }}</div>

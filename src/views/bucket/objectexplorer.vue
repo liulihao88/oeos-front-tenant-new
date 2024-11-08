@@ -152,7 +152,6 @@ watch(
 const selectDisabled = computed(() => {
   return selections.value.length === 0
 })
-function easySearch() {}
 
 async function getTableByBucket() {
   let storageBucketValue = proxy.getStorage('tenant-bucket-id')
@@ -248,7 +247,9 @@ const inside = (row) => {
         <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
       </UploadFile>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
-      <el-button type="primary" icon="el-icon-search" @click="easySearch">高级搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'AdvanceSearch' })">
+        高级搜索
+      </el-button>
       <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
         批量下载
       </el-button>
