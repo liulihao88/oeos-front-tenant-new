@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, h } from 'vue'
 import axios from 'axios'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElProgress } from 'element-plus'
 const { proxy } = getCurrentInstance()
 const emits = defineEmits(['success'])
 const props = defineProps({
@@ -11,30 +11,48 @@ const props = defineProps({
   },
 })
 const timer = ref(null)
+let currentNotification = {}
+
+const updateNotification = (message, fileName) => {
+  if (message.includes(100)) {
+    currentNotification[fileName]?.close()
+    currentNotification[fileName + 'time'] = ''
+    return
+  }
+  if (currentNotification[fileName] && !currentNotification[fileName + 'time']) {
+    // 如果通知已存在，则关闭它
+    currentNotification[fileName]?.close()
+  }
+
+  if (!currentNotification[fileName + 'time']) {
+    // 创建新的通知
+    currentNotification[fileName] = ElNotification({
+      dangerouslyUseHTMLString: true,
+      message: `<div>${message}</div>`,
+      duration: 0, // 设置为0，通知将不会自动关闭
+    })
+
+    currentNotification[fileName + 'time'] = 100
+    setTimeout(() => {
+      currentNotification[fileName + 'time'] = ''
+    }, 2000)
+  }
+}
+
 const onChange = (file, files) => {
   const formData = new FormData()
   formData.append('file', file.raw)
   formData.append('bucket', props.bucketName)
   formData.append('key', '/')
+
   const fileName = file.name
-  let notificationInstance = null
+
   axios
     .put(import.meta.env.VITE_PROXY_API + '/v1/admin/tenant/object/upload', formData, {
       onUploadProgress: (progressEvent) => {
-        console.log(`47 progressEvent`, progressEvent)
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        console.log(`84 percentCompleted`, percentCompleted)
-        // 可以在这里更新用户界面以显示上传进度
-        let message = `${fileName}正在上传, 进度${percentCompleted}%`
-        if (notificationInstance) {
-          notificationInstance.close()
-          notificationInstance = ''
-        } else {
-          notificationInstance = ElNotification({
-            message: message,
-            duration: 0, // 设置为0，通知将不会自动关闭
-          })
-        }
+        const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        // 更新通知中的进度信息
+        updateNotification(`${fileName} 正在上传, 进度${percentage}%`, fileName)
       },
       headers: {
         'Content-type': 'multipart/form-data',
@@ -42,26 +60,20 @@ const onChange = (file, files) => {
       },
     })
     .then((res) => {
-      if (res.data.status !== 200) {
-        let errorMsg = `${fileName}上传失败`
-        if (res.data.message) {
-          errorMsg += `, ${res.data.message}`
-        }
-        proxy.$toast(errorMsg, 'error')
-        return
-      } else {
-        proxy.$toast(`${fileName}上传成功`, 'success')
+      if (res.data.status === 200) {
+        proxy.$toast(`${fileName} 上传成功`)
         if (timer.value) {
           clearTimeout(timer.value)
         }
         timer.value = setTimeout(() => {
           emits('success')
-        }, 5000)
+        }, 3000)
+      } else {
+        proxy.$toast(`${fileName} 上传失败: ${res.data.message}`, 'e')
       }
     })
-    .finally(() => {
-      notificationInstance.close()
-      notificationInstance = ''
+    .catch(() => {
+      proxy.$toast(`${fileName} 上传失败`, 'e')
     })
 }
 
