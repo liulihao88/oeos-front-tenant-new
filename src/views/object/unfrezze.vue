@@ -158,6 +158,7 @@ const cancelUnFreeze = async () => {
           v-throttle.debounce="init"
           title="对象前缀"
           placeholder="请输入对象key的前缀"
+          :disabled="!bucketId"
           width="300"
           class="mr2"
           @clear="init"
@@ -165,6 +166,7 @@ const cancelUnFreeze = async () => {
         <o-select
           v-model="frezzeStatus"
           :options="frezzeOptions"
+          :disabled="!bucketId"
           width="200"
           :clearable="false"
           title="状态"

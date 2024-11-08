@@ -14,6 +14,7 @@ const bucketName = ref(tenantBucketDetails.value.bucketName)
 const versionStatus = ref(tenantBucketDetails.value.versionStatus)
 const retentionAutoObj = ref({})
 const dateForm = ref({})
+const originDateForm = ref({})
 const dateFormRef = ref(null)
 const isShowDate = ref(false)
 
@@ -89,6 +90,7 @@ init()
 async function getRetentionAutodeleteInit() {
   let res = await getRetentionAutodelete(bucketName.value)
   dateForm.value = res
+  originDateForm.value = res
   retentionAutoObj.value = proxy.clone(res)
 }
 getRetentionAutodeleteInit()
@@ -126,6 +128,10 @@ const dateConfirm = async () => {
   getRetentionAutodeleteInit()
   isDateShow.value = false
 }
+const editDate = () => {
+  isShowDate.value = true
+  dateForm.value = Object.assign({}, originDateForm.value)
+}
 </script>
 
 <template>
@@ -159,7 +165,7 @@ const dateConfirm = async () => {
     </o-title>
 
     <o-title title="对象过期删除">
-      <el-button type="primary" class="mlr" size="small" @click="isShowDate = true">编辑</el-button>
+      <el-button type="primary" class="mlr" size="small" @click="editDate">编辑</el-button>
       <div class="bold-400">
         过期时间:
         <span class="cl-red">{{ retentionAutoObj.expireAfterDays ?? '未设置' }}</span>
