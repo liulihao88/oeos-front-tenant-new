@@ -128,23 +128,26 @@ async function deleteRow(row) {
   await deleteEvent(row.id)
   proxy.$toast('删除成功')
 }
-const exportEvent = async () => {
+const exportEventHandle = async () => {
   let _data = {
     apps: [],
     nodes: [],
     levels: searchForm.value.levels,
     mark: searchForm.value.mark,
-
     beginDatetime: searchForm.value.beginDatetime,
     endDatetime: searchForm.value.endDatetime,
   }
   let res = await exportEvent(_data)
-  let data = res
-  const url = URL.createObjectURL(data)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = '租户事件.xls'
-  link.click()
+  if (res.status === 200) {
+    let data = res.data
+    const url = URL.createObjectURL(data)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '租户事件.xls'
+    link.click()
+  } else {
+    proxy.$toast('导出失败', 'e')
+  }
 }
 
 const parseLevelType = (level) => {
@@ -217,6 +220,7 @@ onUnmounted(() => {
           label="name"
           placeholder="请选择事件等级"
           class="m-r-16"
+          width="510"
           @change="init"
         />
         <o-select
@@ -227,10 +231,10 @@ onUnmounted(() => {
           class="m-r-16"
           @change="init"
         />
-        <o-date-range v-model="dateRangeValue" title="发生时间" width="600" @change="init" />
+        <o-date-range v-model="dateRangeValue" title="发生时间" @change="init" />
       </div>
       <div class="w-100">
-        <el-button type="primary" @click="exportEvent">导出</el-button>
+        <el-button type="primary" @click="exportEventHandle">导出</el-button>
       </div>
     </div>
     <o-table

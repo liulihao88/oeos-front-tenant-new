@@ -43,7 +43,11 @@ export function deleteEvent(id) {
 
 // 租户事件导出
 export function exportEvent(data) {
-  return request('query/export', 'put', { data: data })
+  return request('event/query/export', 'put', {
+    data: data,
+    customResponse: true,
+    responseType: 'blob',
+  })
 }
 
 /**
