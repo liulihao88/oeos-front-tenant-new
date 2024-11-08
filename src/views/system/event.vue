@@ -211,7 +211,7 @@ onUnmounted(() => {
 <template>
   <div>
     <div class="top w-100% f-bt-ct m-b-16">
-      <div class="f-1 f-st-ct">
+      <div class="f-1 f-st-ct w-100%">
         <o-select
           v-model="searchForm.levels"
           title="事件等级"

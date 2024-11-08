@@ -173,7 +173,7 @@ const selectionChange = (val, ...a) => {
 <template>
   <div>
     <div class="f-bt-un w-100% m-b-16">
-      <div class="f-3 f-st-ct">
+      <div class="f-3 f-st-ct w-100%">
         <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" />
 
         <o-input
