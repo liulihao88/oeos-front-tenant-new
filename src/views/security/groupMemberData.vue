@@ -24,6 +24,7 @@ const columns = [
   {
     label: '用户名',
     prop: 'username',
+    width: 150,
   },
   {
     label: '用户全称',
@@ -33,6 +34,7 @@ const columns = [
     label: '角色',
     prop: 'roles',
     useSlot: true,
+    width: 360,
   },
   {
     label: '状态',
@@ -49,7 +51,7 @@ const columns = [
   {
     key: 'operation',
     label: '操作',
-    width: 150,
+    width: 100,
     btns: [
       {
         content: '移除',
@@ -154,7 +156,7 @@ defineExpose({
     </o-table>
 
     <o-dialog ref="dialogRef" v-model="isShow" title="添加用户" @confirm="confirm">
-      <o-input v-model="searchValue" v-debounce.300="search" placeholder="查询" class="mb" />
+      <!-- <o-input v-model="searchValue" v-debounce.300="search" placeholder="查询" class="mb" /> -->
 
       <o-table ref="tableRef2" :columns="columns2" :data="data2" @selection-change="handleSelectionChange" />
     </o-dialog>

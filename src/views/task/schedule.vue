@@ -68,7 +68,7 @@ const deleteRow = async (row) => {
       showMsg = errorMsg
     }
     if (errorDetails) {
-      showMsg = extractChinese(errorDetails)
+      showMsg = extractChinese(errorDetails) || errorMsg
     }
     proxy.$toast(showMsg, 'e')
   }
@@ -82,7 +82,7 @@ const columns = [
   {
     label: '操作',
     width: 100,
-    key: 'operation',
+    prop: 'operation',
     btns: [{ content: '删除', handler: deleteRow }],
   },
 ]

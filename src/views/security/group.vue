@@ -129,7 +129,7 @@ const saveAll = async () => {
       <div class="f-st-ct m-tb-16">
         <o-input
           v-model.trim="searchValue"
-          v-debounce.300="searchHandler"
+          v-debounce.200="searchHandler"
           title="组名"
           placeholder="请输入组名"
           size="small"
