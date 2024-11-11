@@ -121,11 +121,12 @@ const success = ({ details, total: t }) => {
   total.value = t
   options.value = proxy.getStorage('tenant-advance-expression')
   expressionValue.value = ''
-  update(1, 10000)
+  update(1, 30)
 }
 
 const update = (num, size) => {
-  data.value = allData.value.slice((num - 1) * size, num * size)
+  const copyAllData = proxy.clone(allData.value)
+  data.value = copyAllData.slice((num - 1) * size, num * size)
 }
 
 const timeRange = ref([])
@@ -149,7 +150,7 @@ const changeSelect = async (val, label, obj) => {
     let res = await queryAdvance(obj)
     allData.value = res.details
     total.value = res.total
-    update(1, 10000)
+    update(1, 30)
   }
 }
 </script>
