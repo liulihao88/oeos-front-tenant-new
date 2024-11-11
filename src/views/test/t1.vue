@@ -1,30 +1,13 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-const data = ref([
-  {
-    name: 'andy',
-  },
-])
-const columns = [
-  {
-    label: '名字',
-    prop: 'name',
-  },
-  {
-    key: 'operation',
-    label: '操作',
-    btns: [
-      {
-        content: '编辑',
-      },
-    ],
-  },
-]
+import KeepTime from '@/views/task/components/KeepTime.vue'
+
+const time = ref('0y0m1d0h')
 </script>
 
 <template>
   <div>
-    <o-table ref="tableRef" :columns="columns" :data="data" />
+    <KeepTime :value="time" />
   </div>
 </template>

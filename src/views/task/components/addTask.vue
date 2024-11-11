@@ -15,6 +15,7 @@ const emits = defineEmits(['success'])
 const highSettingsRef = ref(null)
 const formRef = ref(null)
 const selectRef = ref(null)
+const keepTimeRef = ref(null)
 
 const { proxy } = getCurrentInstance()
 const taskOptions = [
@@ -112,6 +113,7 @@ const save = async () => {
     copyForm.properties.includeBuckets = []
   }
   copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').id
+  copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue()
   await saveTask(copyForm)
   isShow.value = false
   emits('success')
@@ -168,7 +170,7 @@ defineExpose({
         <el-divider v-if="form.action" />
         <template v-if="form.action !== UNFREEZE && form.action">
           <el-form-item label="数据保留时长" prop="">
-            <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />
+            <KeepTime ref="keepTimeRef" :value="form.properties.objectFilter.expiredTimeExpress" />
           </el-form-item>
           <el-form-item label="任务计划" prop="">
             <div class="f-st-ct">
