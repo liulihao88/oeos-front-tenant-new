@@ -9,7 +9,7 @@ import { useRenderIcon } from '@/components/ReIcon/src/hooks'
 import JSEncrypt from 'jsencrypt'
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
-import { getTenants, encrypt, login, getMenu, getFormat, getInitLogo } from '@/api/login.ts'
+import { getTenants, encrypt, login, getMenu, getFormat, getInitLogo, encryptionPassword } from '@/api/login.ts'
 import useBucketList from '@/hooks/getBucketList.ts'
 const bucketList = useBucketList()
 
@@ -89,14 +89,10 @@ const _findSubMenu = (menuItems, pathToFind, sendArr = []) => {
 
 const onLogin = async (formEl) => {
   await proxy.validForm(formEl)
-  let encRes = await encrypt(ruleForm.password)
-  const encryptor = new JSEncrypt()
-  const publickKey = encRes.communicationKey
-  encryptor.setPublicKey(publickKey)
-  const pwd = encryptor.encrypt(ruleForm.password)
+  let genPwdList = await encryptionPassword(ruleForm.password)
   const loginParams = {
     username: ruleForm.username,
-    password: pwd,
+    password: genPwdList[0],
     sysdomain: ruleForm.tenantId,
   }
   let loginRes = await login(loginParams)
@@ -107,10 +103,10 @@ const onLogin = async (formEl) => {
     id: ruleForm.tenantId,
     name: tenantName,
   })
-
-  let formatRes = await getFormat()
-  proxy.setStorage('tenant-time-rule', formatRes)
-  await bucketList.update()
+  Promise.all([getFormat(), bucketList.update()]).then((res) => {
+    let [formatRes] = res
+    proxy.setStorage('tenant-time-rule', formatRes)
+  })
   return initRouter().then((routerRes) => {
     let matchedRouteArr = _findSubMenu(proxy.getStorage('tenant-async-routes'), redirectUrl.value)
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]

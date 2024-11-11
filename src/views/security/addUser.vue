@@ -5,21 +5,16 @@ defineOptions({
 
 import { ref, getCurrentInstance, computed, onMounted, watch } from 'vue'
 import { omit } from 'lodash-es'
-import JSEncrypt from 'jsencrypt'
-
-import { encrypt } from '@/api/login.ts'
+import { encryptionPassword } from '@/api/login.ts'
 import { addUser, getBucketPermission, updateBucketPermission, putRoles } from '@/api/securityApi.ts'
 import { ROLE_OPTIONS } from '@/assets/globalData.ts'
 
 import BucketPermission from '@/views/security/bucketPermission.vue'
 
 import GetBucketList from '@/hooks/getBucketList.ts'
+
 let getBucketList = GetBucketList()
 getBucketList.getBucketList()
-
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
 
 const roleValues = ref([])
 const { proxy } = getCurrentInstance()
@@ -68,12 +63,8 @@ const save = async () => {
   await proxy.validForm(formRef)
   const sendForm = omit(form.value, ['pwd', 'confirmPwd'])
   if (form.value.pwd) {
-    let encRes = await encrypt(form.value.pwd)
-    const encryptor = new JSEncrypt()
-    const publickKey = encRes.communicationKey
-    encryptor.setPublicKey(publickKey)
-    const pwd = encryptor.encrypt(form.value.pwd)
-    sendForm.password = pwd
+    let encRes = await encryptionPassword(form.value.pwd)
+    sendForm.password = encRes[0]
   } else {
     sendForm.password = ''
   }

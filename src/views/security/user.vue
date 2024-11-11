@@ -6,9 +6,8 @@ defineOptions({
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 import { userStatistic, addUser, getUsers, deleteUser, enableUser, disableUser } from '@/api/securityApi.ts'
-import JSEncrypt from 'jsencrypt'
 
-import { encrypt } from '@/api/login.ts'
+import { encryptionPassword } from '@/api/login.ts'
 import { omit } from 'lodash-es'
 import { ROLE_OPTIONS } from '@/assets/globalData.ts'
 
@@ -183,12 +182,8 @@ const switchChange = async (row) => {
 const confirm = async () => {
   await proxy.validForm(formRef)
   const sendForm = omit(dialogForm.value, ['pwd', 'confirmPwd'])
-  let encRes = await encrypt(dialogForm.value.pwd)
-  const encryptor = new JSEncrypt()
-  const publickKey = encRes.communicationKey
-  encryptor.setPublicKey(publickKey)
-  const pwd = encryptor.encrypt(dialogForm.value.pwd)
-  sendForm.password = pwd
+  let encRes = await encryptionPassword(dialogForm.value.pwd)
+  sendForm.password = encRes[0]
   await addUser(sendForm)
   proxy.$toast('保存成功')
   isShow.value = false
