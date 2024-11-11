@@ -9,3 +9,8 @@ export function querySimple(params) {
 export function queryAdvance(data) {
   return request('object/query/advance', 'put', { data, resolve: 'data' })
 }
+
+// 获取存储类型列表
+export function getStorageClassList() {
+  return request('space/accessablestorages')
+}

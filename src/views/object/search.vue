@@ -9,7 +9,7 @@
  */
 import { ref, getCurrentInstance, watch } from 'vue'
 import { api as viewerApi } from 'v-viewer'
-import { querySimple } from '@/api/searchApi.ts'
+import { querySimple, getStorageClassList } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
 
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
@@ -26,7 +26,9 @@ const form = ref({
   pageNumber: 0,
   pageSize: 30,
   bucket: bucketName.value,
+  storageClass: '',
 })
+const storageOptions = ref([])
 const selections = ref([])
 const total = ref(0)
 
@@ -59,6 +61,10 @@ const columns = [
   {
     label: '内容Hash',
     prop: 'chechsum',
+  },
+  {
+    label: '存储类型',
+    prop: 'storageClass',
   },
   {
     label: '写入时间',
@@ -121,6 +127,13 @@ const update = (num, size) => {
   form.value.pageNumber = num - 1
   init()
 }
+
+const storageInit = async () => {
+  let res = await getStorageClassList()
+  storageOptions.value = res
+}
+
+storageInit()
 
 const changeSelect = (value, label, options) => {
   form.value.bucket = label
@@ -193,7 +206,16 @@ const selectionChange = (val, ...a) => {
           type="datetimerange"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
+          class="mr"
           @change="timeChange"
+        />
+        <o-select
+          v-model="form.storageClass"
+          :options="storageOptions"
+          :disabled="!bucketId"
+          label="name"
+          title="存储类型"
+          @change="init"
         />
       </div>
       <div class="f-1 f-ed-un">
