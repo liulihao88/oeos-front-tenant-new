@@ -22,9 +22,8 @@ const searchConfigCompRef = ref(null)
 const expressionValue = ref('')
 const options = ref([])
 options.value = proxy.getStorage('tenant-advance-expression') ?? []
-
-const bucketId = ref(proxy.getStorage('tenant-bucket-id') ?? '')
 const bucketName = ref(proxy.getStorage('tenant-bucket-name') ?? '')
+const searchObj = ref({})
 
 const form = ref({
   key: '',
@@ -35,7 +34,6 @@ const form = ref({
 const selections = ref([])
 
 const data = ref([])
-const allData = ref([])
 const pageSize = ref(30)
 const pageNumber = ref(1)
 const total = ref(0)
@@ -116,17 +114,25 @@ const editSearch = async () => {
   searchConfigCompRef.value.open()
 }
 
-const success = ({ details, total: t }) => {
-  allData.value = details
-  total.value = t
-  options.value = proxy.getStorage('tenant-advance-expression')
-  expressionValue.value = ''
-  update(1, 30)
+const init = async () => {
+  searchObj.value.pageSize = pageSize.value
+  searchObj.value.pageNumber = pageNumber.value
+  let res = await queryAdvance(searchObj.value)
+  data.value = res.details
+  total.value = res.total
 }
 
-const update = (num, size) => {
-  const copyAllData = proxy.clone(allData.value)
-  data.value = copyAllData.slice((num - 1) * size, num * size)
+const success = (sendForm) => {
+  searchObj.value = sendForm
+  options.value = proxy.getStorage('tenant-advance-expression')
+  expressionValue.value = ''
+  init()
+}
+
+const update = async (num, size) => {
+  pageSize.value = size
+  pageNumber.value = num
+  init()
 }
 
 const timeRange = ref([])
@@ -147,9 +153,7 @@ const selectionChange = (val, ...a) => {
 }
 const changeSelect = async (val, label, obj) => {
   if (proxy.notEmpty(obj)) {
-    let res = await queryAdvance(obj)
-    allData.value = res.details
-    total.value = res.total
+    searchObj.value = obj
     update(1, 30)
   }
 }

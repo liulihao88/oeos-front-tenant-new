@@ -3,7 +3,6 @@ import { ref, getCurrentInstance, nextTick } from 'vue'
 const { proxy } = getCurrentInstance()
 
 import GetBucketList from '@/hooks/getBucketList.ts'
-import { queryAdvance } from '@/api/searchApi.ts'
 
 const isShow = ref(false)
 const formRef = ref(null)
@@ -50,10 +49,9 @@ const confirm = async () => {
     }
   })
   copyForm.buckets = proxy.clone(form.value.buckets)
-  let res = await queryAdvance(copyForm)
   isShow.value = false
   handleExpression(copyForm)
-  emits('success', res)
+  emits('success', copyForm)
 }
 const selectRef = ref(null)
 const form = ref({
