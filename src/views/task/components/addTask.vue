@@ -165,7 +165,7 @@ defineExpose({
           />
         </el-form-item>
 
-        <el-divider />
+        <el-divider v-if="form.action" />
         <template v-if="form.action !== UNFREEZE && form.action">
           <el-form-item label="数据保留时长" prop="">
             <KeepTime v-model="form.properties.objectFilter.expiredTimeExpress" />

@@ -55,17 +55,17 @@ const changeInputNumber = () => {
         <span>月</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="days" :min="0" :max="31" class="mr" :precision="0" @change="changeInputNumber">
+    <el-input-number v-model="days" :min="0" :max="30" class="mr" :precision="0" @change="changeInputNumber">
       <template #prefix>
         <span>日</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="hours" :min="0" :max="24" class="m" :precision="0" @change="changeInputNumber">
+    <el-input-number v-model="hours" :min="0" :max="23" class="m" :precision="0" @change="changeInputNumber">
       <template #prefix>
         <span>时</span>
       </template>
     </el-input-number>
-    <el-input-number v-model="minutes" :min="0" :max="60" :precision="0" @change="changeInputNumber">
+    <el-input-number v-model="minutes" :min="0" :max="59" :precision="0" @change="changeInputNumber">
       <template #prefix>
         <span>分</span>
       </template>
