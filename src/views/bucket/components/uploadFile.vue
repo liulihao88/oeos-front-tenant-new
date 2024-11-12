@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, h } from 'vue'
 import axios from 'axios'
+import useBucketSettings from '@/store/modules/bucketSettings.ts'
+const bucketSettings = useBucketSettings()
 import { ElNotification, ElProgress } from 'element-plus'
 const { proxy } = getCurrentInstance()
 const emits = defineEmits(['success'])
@@ -43,7 +45,7 @@ const onChange = (file, files) => {
   const formData = new FormData()
   formData.append('file', file.raw)
   formData.append('bucket', props.bucketName)
-  formData.append('key', '/')
+  formData.append('key', bucketSettings.prefixKey || '/')
 
   const fileName = file.name
 

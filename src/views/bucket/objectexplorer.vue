@@ -190,6 +190,7 @@ const addDirConfirm = async () => {
   await addDirectory(sendData)
   isShow.value = false
   init()
+  proxy.$toast('新建目录成功')
 }
 const refresh = () => {
   init()
@@ -297,7 +298,7 @@ const inside = (row) => {
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
 
     <o-dialog ref="dialogRef" v-model="isShow" title="新建目录" @confirm="addDirConfirm">
-      <el-form ref="formRef" :model="form" :rules="rules">
+      <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
         <el-form-item label="目录" prop="name">
           <o-input v-model="form.name" v-focus />
         </el-form-item>

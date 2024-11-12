@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-import { getHistory } from '@/api/bucketReview.ts'
+import { getHistory, deleteOne, deleteBatch } from '@/api/bucketReview.ts'
 const isShow = ref(false)
 const datas = ref([])
 const props = defineProps({
@@ -10,7 +10,6 @@ const props = defineProps({
   },
 })
 const open = async (row) => {
-  // datas.value = row;
   let params = {
     key: row.name,
     bucket: props.bucketName,
@@ -18,6 +17,15 @@ const open = async (row) => {
   await getHistory(params)
   isShow.value = true
 }
+const deleteRow = async (row) => {
+  let params = {
+    bucket: props.bucketName,
+    key: row.name,
+  }
+  await deleteOne(params)
+  proxy.$toast('删除成功!')
+}
+const restoreRow = (row) => {}
 const columns = [
   {
     label: '文件名',
@@ -48,7 +56,11 @@ const columns = [
   {
     label: '操作',
     prop: 'operation',
-    btns: [{ content: '下载', handler: proxy.gDownload }],
+    btns: [
+      { content: '下载', handler: proxy.gDownload },
+      { content: '恢复', handler: restoreRow },
+      { content: '删除', handler: deleteRow },
+    ],
   },
 ]
 defineExpose({
