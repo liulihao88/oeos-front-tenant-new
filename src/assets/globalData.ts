@@ -1,6 +1,6 @@
 export const QUOTA_OPTIONS = [
-  { label: '硬容量', value: 'hard' },
-  { label: '软容量', value: 'soft' },
+  { label: '硬配额', value: 'hard' },
+  { label: '软配额', value: 'soft' },
 ]
 
 export const QUOTA_UNIT = [

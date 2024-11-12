@@ -47,7 +47,7 @@ const columns = [
     selectable: selectableFn,
   },
   {
-    label: '对象名称',
+    label: '对象键',
     useSlot: true,
     prop: 'name',
     useSlot: true,
@@ -59,8 +59,8 @@ const columns = [
     filter: proxy.formatBytes,
   },
   {
-    label: '内容Hash',
-    prop: 'chechsum',
+    label: '版本号',
+    prop: 'version',
   },
   {
     label: '存储类型',
@@ -199,6 +199,15 @@ const selectionChange = (val, ...a) => {
           :disabled="!bucketId"
           @clear="init"
         />
+        <o-select
+          v-model="form.storageClass"
+          :options="storageOptions"
+          :disabled="!bucketId"
+          label="name"
+          class="mr"
+          title="存储类型"
+          @change="init"
+        />
         <o-date-range
           v-model="timeRange"
           title="写入时间"
@@ -208,14 +217,6 @@ const selectionChange = (val, ...a) => {
           end-placeholder="结束时间"
           class="mr"
           @change="timeChange"
-        />
-        <o-select
-          v-model="form.storageClass"
-          :options="storageOptions"
-          :disabled="!bucketId"
-          label="name"
-          title="存储类型"
-          @change="init"
         />
       </div>
       <div class="f-1 f-ed-un">
@@ -249,7 +250,7 @@ const selectionChange = (val, ...a) => {
               {{ row.name }}
             </template>
           </template>
-          <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
+          <div v-else class="cl-yellow f-st-ct cp" @click="inside(row)">
             <o-icon name="folder" class="mr" />
             {{ row.name }}
           </div>

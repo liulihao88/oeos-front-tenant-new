@@ -43,7 +43,7 @@ export function deleteBucket(bucketName) {
  * 桶详情
  */
 
-// 获取总容量
+// 获取配额
 export function getBucketTotal(bucketName) {
   return request(`bucket/${bucketName}/config/quota`)
 }

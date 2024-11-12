@@ -121,11 +121,11 @@ const columns = [
   {
     label: '操作',
     prop: 'operation',
-    width: 300,
-    // maxBtns: proxy.$dev ? 6 : null,
-    maxBtns: 10,
+    width: proxy.$dev ? 300 : null,
+    maxBtns: proxy.$dev ? 10 : null,
     isShow: (row) => (row.injectTime ? true : false),
     btns: [
+      { content: '预览', handler: (row) => preview(row.bucket, row.name) },
       { content: '恢复', handler: restoreRow },
       { content: '历史', handler: historyRow },
       { content: '详情', handler: detailRow },
@@ -243,7 +243,7 @@ const inside = (row) => {
   <div>
     <div class="top f">
       <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
-      <el-button type="primary" class="mr" icon="el-icon-plus" @click="addDir">新建目录</el-button>
+      <!-- <el-button type="primary" class="mr" icon="el-icon-plus" @click="addDir">新建目录</el-button> -->
       <UploadFile :bucketName="bucketName" @success="init">
         <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
       </UploadFile>
@@ -273,9 +273,9 @@ const inside = (row) => {
     <o-table
       :columns="columns"
       :data="data"
-      class="m-t-24"
+      class="m-t-16"
       :showPage="false"
-      height="calc(100vh - 230px)"
+      height="calc(100vh - 220px)"
       @selection-change="selectionChange"
     >
       <template #name="{ scope, row }">
@@ -287,7 +287,7 @@ const inside = (row) => {
             {{ row.name }}
           </template>
         </template>
-        <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
+        <div v-else class="cl-yellow f-st-ct cp" @click="inside(row)">
           <o-icon name="folder" class="mr" />
           {{ row.name }}
         </div>

@@ -52,7 +52,7 @@ const fieldList = [
   },
 
   {
-    label: '容量',
+    label: '配额',
     prop: 'quota',
     useSlot: true,
     rules: [
@@ -149,7 +149,7 @@ defineExpose({
             </div>
           </div>
           <o-icon name="warning" size="12" class="mr" />
-          <div class="cl-45">新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB</div>
+          <div class="cl-45">新建桶配额下限为 0.5GB</div>
         </template>
       </o-form>
     </o-dialog>

@@ -135,7 +135,7 @@ const columns = [
     },
   },
   {
-    label: '总容量',
+    label: '配额',
     prop: 'capacity',
     width: 100,
     filter: (value, row) => {

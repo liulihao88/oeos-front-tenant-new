@@ -51,7 +51,7 @@ const columns = [
     selectable: selectableFn,
   },
   {
-    label: '对象名称',
+    label: '对象键',
     useSlot: true,
     prop: 'name',
   },
@@ -64,6 +64,10 @@ const columns = [
   {
     label: '对象版本号',
     prop: 'version',
+  },
+  {
+    label: '存储类型',
+    prop: 'storageClass',
   },
   {
     label: '所属桶',
@@ -211,7 +215,7 @@ const changeSelect = async (val, label, obj) => {
               {{ row.name }}
             </template>
           </template>
-          <div v-else class="cl-green f-st-ct cp" @click="inside(row)">
+          <div v-else class="cl-yellow f-st-ct cp" @click="inside(row)">
             <o-icon name="folder" class="mr" />
             {{ row.name }}
           </div>

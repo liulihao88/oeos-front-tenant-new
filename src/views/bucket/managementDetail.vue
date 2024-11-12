@@ -34,7 +34,7 @@ const validateNumber = (rule, value, callback) => {
 }
 const columns = [
   {
-    label: '总容量',
+    label: '配额',
     prop: 'total',
   },
   {
@@ -126,7 +126,7 @@ const dateConfirm = async () => {
   await proxy.validForm(dateFormRef)
   await retentionAutodelete(bucketName.value, dateForm.value)
   getRetentionAutodeleteInit()
-  isDateShow.value = false
+  isShowDate.value = false
 }
 const editDate = () => {
   isShowDate.value = true
@@ -193,16 +193,16 @@ const editDate = () => {
       <el-checkbox v-model="isKnow">我已了解更改存储桶版本控制的后果。</el-checkbox>
     </o-dialog>
 
-    <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改存储容量" @confirm="quotaConfirm">
+    <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改配额" @confirm="quotaConfirm">
       <el-form :model="quotaForm" :rules="quotaRules" label-width="auto" class="mb2">
-        <g-warning title=" 用户按需选择相应存储单位，修改存储容量" class="mb2" />
+        <g-warning title=" 用户按需选择相应存储单位，修改配额" class="mb2" />
         <el-form-item label="存储" prop="quota">
           <div class="f-st-ct">
             <el-input-number v-model="quotaForm.quota" class="mr2" />
 
             <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
           </div>
-          <o-icon name="warning" size="12" class="ml2" content="新建桶容量下限为 0.5GB 、 0.1TB 或 0.1PB" />
+          <o-icon name="warning" size="12" class="ml2" content="新建桶配额下限为 0.5GB" />
         </el-form-item>
         <el-form-item label="类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />

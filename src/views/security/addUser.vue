@@ -87,7 +87,7 @@ const save = async () => {
     <o-title title="基本信息" type="simple" />
     <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>
       <el-form-item label="名称" prop="username">
-        <o-input v-model="form.username" placeholder="3-10位字符且只支持数字、英文" />
+        <o-input v-model="form.username" :disabled="true" placeholder="3-10位字符且只支持数字、英文" />
       </el-form-item>
       <el-form-item label="用户全称" prop="fullName">
         <o-input v-model="form.fullName" placeholder="1-20位字符" />
