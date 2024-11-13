@@ -379,9 +379,9 @@ function _handleUsedData(usedSpace) {
             <o-title :title="quotaTitle" icon="plus" />
             <BucketCapacityPie :title="title" :data="capacityData" />
           </div>
-          <div class="f-1 w-100% mt3 h-100% o-a">
+          <!-- <div class="f-1 w-100% mt3 h-100% o-a">
             <o-table :data="rightTableData" class="h-100% o-a" :columns="rightTableColumns" :showPage="false" />
-          </div>
+          </div> -->
         </div>
       </el-col>
     </el-row>

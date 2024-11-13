@@ -157,26 +157,8 @@ const timeChange = (value) => {
   init()
 }
 const download = async () => {
-  if (!bucketName.value) {
-    proxy.$toast('请先选择桶名', 'e')
-  }
-  if (!data.value.length) {
-    proxy.$toast('无数据可下载！', 'e')
-  }
-  // 全部下载
-  if (selections.value.length === 0) {
-    const sendData = {
-      bucket: bucketName.value,
-      injectTimeBegin: form.value.injectTimeBegin,
-      injectTimeEnd: form.value.injectTimeEnd,
-      key: form.value.key,
-    }
-    proxy.gDownloadUrl('/v1/admin/tenant/object/download/simplequery', sendData)
-  } else {
-    // 不分下载
-    let res = await objectDownloadBatch(selections.value)
-    proxy.gDownloadAll(res)
-  }
+  let res = await objectDownloadBatch(selections.value)
+  proxy.gDownloadAll(res)
 }
 const selectionChange = (val, ...a) => {
   selections.value = val
@@ -223,8 +205,8 @@ const selectionChange = (val, ...a) => {
         <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" :disabled="data.length === 0" @click="download">
-          下载
+        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
+          批量下载
         </el-button>
         <el-button type="primary" icon="el-icon-search" :disabled="!bucketId" @click="init">查询</el-button>
       </div>

@@ -64,7 +64,11 @@ const changeInputNumber = () => {
 
 const clearValue = () => {
   easyTime.value = ''
-  emits('update:modelValue', EMPTY_VALUE)
+  years.value = 0
+  months.value = 0
+  days.value = 0
+  hours.value = 0
+  minutes.value = 0
 }
 
 const getValue = () => {

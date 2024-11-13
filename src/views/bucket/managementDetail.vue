@@ -145,7 +145,7 @@ const editDate = () => {
     <div class="f-st-ct">
       <div class="mr2">存储桶版本控制:</div>
       <el-radio-group :model-value="versionStatus" @change="radioInput">
-        <el-radio value="Disabled">{{ radioMap.Disabled }}</el-radio>
+        <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
         <el-radio value="Suspended">{{ radioMap.Suspended }}</el-radio>
         <el-radio value="Enabled">{{ radioMap.Enabled }}</el-radio>
       </el-radio-group>
@@ -213,14 +213,14 @@ const editDate = () => {
     <o-dialog ref="dialogRef" v-model="isShowDate" title="对象过期删除" @confirm="dateConfirm">
       <g-warning title=" 未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" class="mb2" />
       <el-form ref="dateFormRef" :model="dateForm" :rules="dateRules">
+        <el-form-item label="是否开启" prop="enable">
+          <el-switch v-model="dateForm.enable" />
+        </el-form-item>
         <el-form-item label="过期时间" prop="expireAfterDays">
           <!-- <o-input v-model="dateForm.expireAfterDays" /> -->
           <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="1">
             <template #suffix>天</template>
           </el-input-number>
-        </el-form-item>
-        <el-form-item label="是否开启" prop="enable">
-          <el-switch v-model="dateForm.enable" />
         </el-form-item>
       </el-form>
     </o-dialog>
