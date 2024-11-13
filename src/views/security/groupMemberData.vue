@@ -175,7 +175,14 @@ defineExpose({
     </o-table>
 
     <o-dialog ref="dialogRef" v-model="isShow" title="添加用户" @confirm="confirm">
-      <o-input v-model="searchValue" v-debounce.300="search" placeholder="查询" class="mb" @clear="search" />
+      <o-input
+        v-model="searchValue"
+        v-debounce.300="search"
+        title="搜索"
+        placeholder="查询用户名或用户全称"
+        class="mb"
+        @clear="search"
+      />
 
       <o-table
         ref="tableRef2"

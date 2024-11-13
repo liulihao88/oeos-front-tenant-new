@@ -8,6 +8,10 @@ import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
 import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 
+import useLogoSettings from '@/store/modules/logoSettings.ts'
+const storeLogoSettings = useLogoSettings()
+import globalLogoSettings from '@/config/settings.ts'
+
 import DropdownLayout from '@/layout/components/dropdownLayout.vue'
 
 import Setting from '@iconify-icons/ri/settings-3-line'
@@ -26,7 +30,13 @@ nextTick(() => {
 <template>
   <div v-loading="usePermissionStoreHook().wholeMenus.length === 0" class="horizontal-header">
     <div class="horizontal-header-left" @click="backTopMenu">
-      <img :src="getLogo()" alt="logo" />
+      <img
+        :src="
+          storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
+        "
+        width="50"
+        style="object-fit: contain"
+      />
       <span>{{ title }}</span>
     </div>
     <el-menu
