@@ -10,6 +10,7 @@ const searchValue = ref()
 const multipleSelection = ref([])
 const data = ref([])
 const data2 = ref([])
+const originData2 = ref([])
 const tableRef2 = ref(null)
 const columns2 = [
   {
@@ -19,6 +20,10 @@ const columns2 = [
     label: '用户名',
     prop: 'username',
   },
+  {
+    label: '用户全称',
+    prop: 'fullName',
+  },
 ]
 const columns = [
   {
@@ -26,6 +31,7 @@ const columns = [
     prop: 'username',
     width: 150,
   },
+
   {
     label: '用户全称',
     prop: 'fullName',
@@ -77,6 +83,7 @@ const getUsersInit = async () => {
   }
   let res = await getUsers(sendParams)
   data2.value = res
+  originData2.value = res
 }
 getUsersInit()
 
@@ -101,24 +108,36 @@ async function remove(row) {
   proxy.$toast('移除成功')
   init(groupName.value)
 }
-const addMember = async () => {
-  isShow.value = true
+const showSelectUser = async () => {
   await nextTick()
   let existRow = data2.value.filter((v) => {
     return data.value.findIndex((val) => val.username === v.username) > -1
   })
-  console.log(`56 existRow`, existRow)
   existRow.forEach((row) => {
-    console.log(`37 row`, row)
-    console.log(`51 tableRef2.value.$refs.tableRef`, tableRef2.value.$refs.tableRef)
-    console.log(
-      `25 tableRef2.value.$refs.tableRef.toggleRowSelection`,
-      tableRef2.value.$refs.tableRef.toggleRowSelection,
-    )
     tableRef2.value.$refs.tableRef.toggleRowSelection(row, true)
   })
 }
-const search = () => {}
+const addMember = async () => {
+  isShow.value = true
+  searchValue.value = ''
+  data2.value = proxy.clone(originData2.value)
+  showSelectUser()
+}
+
+const search = () => {
+  if (!searchValue.value) {
+    data2.value = proxy.clone(originData2.value)
+    showSelectUser()
+    return
+  }
+  data2.value = originData2.value.filter((v) => {
+    return (
+      v.username.toLowerCase().includes(searchValue.value.toLowerCase()) ||
+      v.fullName.toLowerCase().includes(searchValue.value.toLowerCase())
+    )
+  })
+  showSelectUser()
+}
 
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
@@ -156,9 +175,15 @@ defineExpose({
     </o-table>
 
     <o-dialog ref="dialogRef" v-model="isShow" title="添加用户" @confirm="confirm">
-      <o-input v-model="searchValue" v-debounce.300="search" placeholder="查询" class="mb" />
+      <o-input v-model="searchValue" v-debounce.300="search" placeholder="查询" class="mb" @clear="search" />
 
-      <o-table ref="tableRef2" :columns="columns2" :data="data2" @selection-change="handleSelectionChange" />
+      <o-table
+        ref="tableRef2"
+        :columns="columns2"
+        :data="data2"
+        :showPage="false"
+        @selection-change="handleSelectionChange"
+      />
     </o-dialog>
   </div>
 </template>
