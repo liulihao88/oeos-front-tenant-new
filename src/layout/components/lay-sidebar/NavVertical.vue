@@ -7,7 +7,9 @@ import { storageLocal, isAllEmpty } from '@pureadmin/utils'
 import { findRouteByPath, getParentPaths } from '@/router/utils'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import LaySidebarLogo from '../lay-sidebar/components/SidebarLogo.vue'
+// import LaySidebarLogo from '../lay-sidebar/components/SidebarLogo.vue'
+import NewSidebarLogo from '@/layout/components/lay-sidebar/newSidebarLogo.vue'
+
 import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
 import LaySidebarLeftCollapse from '../lay-sidebar/components/SidebarLeftCollapse.vue'
 import LaySidebarCenterCollapse from '../lay-sidebar/components/SidebarCenterCollapse.vue'
@@ -78,7 +80,8 @@ onBeforeUnmount(() => {
     @mouseenter.prevent="isShow = true"
     @mouseleave.prevent="isShow = false"
   >
-    <LaySidebarLogo v-if="showLogo" :collapse="isCollapse" />
+    <!-- <LaySidebarLogo v-if="showLogo" :collapse="isCollapse" /> -->
+    <NewSidebarLogo :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper" :class="[device === 'mobile' ? 'mobile' : 'pc']">
       <el-menu
         :unique-opened="false"
