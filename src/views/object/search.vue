@@ -50,7 +50,6 @@ const columns = [
     label: '对象键',
     useSlot: true,
     prop: 'name',
-    useSlot: true,
   },
   {
     label: '对象大小',
