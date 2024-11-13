@@ -6,10 +6,14 @@
  */
 import Mousetrap from 'mousetrap'
 import { ref, getCurrentInstance, nextTick, onMounted } from 'vue'
+import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
+import useNativeRefresh from '@/store/nativeRefresh.js'
+
 const { proxy } = getCurrentInstance()
 const instance = getCurrentInstance()
-import useNativeRefresh from '@/store/nativeRefresh.js'
 const useRefresh = useNativeRefresh()
+
+const { onReset } = useDataThemeChange()
 
 // addHotKey()
 // function addHotKey() {
@@ -69,5 +73,20 @@ defineExpose({
     @click="changeMode"
   >
     {{ isDev ? '开发' : '生产' }}
+  </el-button>
+  <el-button
+    v-show="isDev"
+    v-tippy="{
+      content: '清空缓存并返回登录页',
+      placement: 'left-start',
+      zIndex: 41000,
+    }"
+    class="po-f t-8 r-600"
+    size="small"
+    style="right: 55%; z-index: 99999"
+    type="danger"
+    @click="onReset"
+  >
+    清缓存
   </el-button>
 </template>

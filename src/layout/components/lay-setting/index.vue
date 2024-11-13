@@ -287,7 +287,7 @@ onUnmounted(() => removeMatchMedia)
 <template>
   <LayPanel>
     <div class="p-5">
-      <p :class="pClass">整体风格</p>
+      <!-- <p :class="pClass">整体风格</p>
       <Segmented
         resize
         class="select-none"
@@ -316,7 +316,7 @@ onUnmounted(() => removeMatchMedia)
             <IconifyIconOffline :icon="Check" />
           </el-icon>
         </li>
-      </ul>
+      </ul> -->
 
       <p :class="['mt-5', pClass]">导航模式</p>
       <ul class="pure-theme">
@@ -406,7 +406,7 @@ onUnmounted(() => removeMatchMedia)
 
       <p class="mt-5 font-medium text-sm dark:text-white">界面显示</p>
       <ul class="setting">
-        <li>
+        <!-- <li>
           <span class="dark:text-white">灰色模式</span>
           <el-switch
             v-model="settings.greyVal"
@@ -425,7 +425,7 @@ onUnmounted(() => removeMatchMedia)
             inactive-text="关"
             @change="weekChange"
           />
-        </li>
+        </li> -->
         <li>
           <span class="dark:text-white">隐藏标签页</span>
           <el-switch

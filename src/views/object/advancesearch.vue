@@ -68,6 +68,7 @@ const columns = [
   {
     label: '存储类型',
     prop: 'storageClass',
+    width: 200,
   },
   {
     label: '所属桶',

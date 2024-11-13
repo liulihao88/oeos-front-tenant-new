@@ -16,7 +16,7 @@ import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bu
 
 const { proxy } = getCurrentInstance()
 
-const bucketId = ref(proxy.getStorage('tenant-bucket-id'))
+const bucketId = ref(proxy.getStorage('tenant-easy-bucket-id'))
 const bucketName = ref()
 
 const form = ref({
@@ -59,12 +59,13 @@ const columns = [
     filter: proxy.formatBytes,
   },
   {
-    label: '版本号',
+    label: '对象版本号',
     prop: 'version',
   },
   {
     label: '存储类型',
     prop: 'storageClass',
+    width: 200,
   },
   {
     label: '写入时间',
@@ -103,7 +104,7 @@ watch(
   ([bId, bName], [bOldId, bOldName]) => {
     if (bId && bName && bOldName !== bName) {
       form.value.bucket = bName
-      proxy.setStorage('tenant-bucket-id', bId)
+      proxy.setStorage('tenant-easy-bucket-id', bId)
       init()
     }
   },
