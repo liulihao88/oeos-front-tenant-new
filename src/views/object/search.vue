@@ -174,7 +174,7 @@ const selectionChange = (val, ...a) => {
         <o-input
           v-model="form.key"
           v-debounce.500="init"
-          width="250"
+          width="240"
           placeholder="请输入对象名称"
           class="mr2"
           title="对象名称"
@@ -188,13 +188,16 @@ const selectionChange = (val, ...a) => {
           label="name"
           class="mr"
           title="存储类型"
+          width="240"
           @change="init"
         />
         <o-date-range
           v-model="timeRange"
           title="写入时间"
-          :disabled="!bucketId"
+          width="500"
+          format="YYYY-MM-DD HH:mm:ss"
           type="datetimerange"
+          :disabled="!bucketId"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
           class="mr"

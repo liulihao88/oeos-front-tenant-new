@@ -48,6 +48,16 @@ const columns = [
     label: '保留期',
     prop: 'retentionPeriod',
     width: 150,
+    filter: (val) => {
+      // 0年0月100.2天0时
+      if (val) {
+        let matchDays = /(\d+\.?\d*)天/
+        let match = val.match(matchDays)
+        console.log(`97 match`, match)
+        return match[0]
+      }
+      return '-'
+    },
   },
   {
     label: '任务内容',
