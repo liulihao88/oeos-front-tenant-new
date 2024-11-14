@@ -44,7 +44,10 @@ function onFresh() {
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
       <div class="mr">
-        {{ proxy.getStorage('tenant-sysdomain').name }}-{{ proxy.getStorage('tenant-sysdomain').id }}
+        <o-tooltip content="登录用户 - 租户名 - 租户id">
+          {{ proxy.getStorage('tenant-sysdomain').loginName }} - {{ proxy.getStorage('tenant-sysdomain').tenantName }} -
+          {{ proxy.getStorage('tenant-sysdomain').tenantId }}
+        </o-tooltip>
       </div>
       <o-tooltip content="快捷键:windows->ctrl+enter或者mac->cmd+enter">
         <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">

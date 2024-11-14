@@ -100,8 +100,9 @@ const onLogin = async (formEl) => {
   proxy.setStorage('tenant-token', token)
   const tenantName = tenantOptions.value.find((v) => v.value === ruleForm.tenantId).name
   proxy.setStorage('tenant-sysdomain', {
-    id: ruleForm.tenantId,
-    name: tenantName,
+    tenantId: ruleForm.tenantId,
+    tenantName: tenantName,
+    loginName: ruleForm.username,
   })
   Promise.all([getFormat(), bucketList.update()]).then((res) => {
     let [formatRes] = res
