@@ -8,6 +8,7 @@ const props = defineProps({
   },
 })
 const options = ref()
+const isEmpty = ref(false)
 
 const initOptions = {
   title: {
@@ -81,6 +82,9 @@ const initOptions = {
 watch(
   () => props.data,
   (val) => {
+    isEmpty.value = val.every((v) => {
+      return !v.value
+    })
     initOptions.series[0].data = val
     options.value = proxy.clone(initOptions)
   },
@@ -97,7 +101,12 @@ function formatter(params) {
 </script>
 
 <template>
-  <v-chart class="calc-height" :option="options" autoresize />
+  <template v-if="isEmpty">
+    <o-empty class="h-100%" />
+  </template>
+  <template v-else>
+    <v-chart class="calc-height" :option="options" autoresize />
+  </template>
 </template>
 
 <style lang="scss" scoped>
