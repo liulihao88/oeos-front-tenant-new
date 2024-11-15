@@ -57,7 +57,7 @@ export function exportEvent(data) {
 export function initBucket() {
   return request('config/defaultbucket')
 }
-// 获取最小空间参数
+// 获取最小空间参数, 剩余容量
 export function getLimitCeiling() {
   return request('bucket/quota/limit/ceiling')
 }

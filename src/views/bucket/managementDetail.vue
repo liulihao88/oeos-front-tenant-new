@@ -5,6 +5,7 @@ const { proxy } = getCurrentInstance()
 import { QUOTA_OPTIONS, QUOTA_UNIT } from '@/assets/globalData.ts'
 
 import { getBucketTotal, editBucketTotal, retentionAutodelete, getRetentionAutodelete } from '@/api/bucket'
+import { getLimitCeiling } from '@/api/system.ts'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -17,6 +18,7 @@ const dateForm = ref({})
 const originDateForm = ref({})
 const dateFormRef = ref(null)
 const isShowDate = ref(false)
+const limitQuota = ref(0)
 
 const data = ref([])
 const isRadioShow = ref(false)
@@ -93,7 +95,13 @@ async function getRetentionAutodeleteInit() {
   originDateForm.value = res
   retentionAutoObj.value = proxy.clone(res)
 }
+
 getRetentionAutodeleteInit()
+
+async function getLimitCeilingInit() {
+  let res = await getLimitCeiling()
+  limitQuota.value = proxy.formatBytes(res)
+}
 
 const radioInput = (value) => {
   radioCacheValue.value = value
@@ -112,6 +120,7 @@ const radioMap = {
   Enabled: '启用',
 }
 const editQuota = () => {
+  getLimitCeilingInit()
   isQuotaShow.value = true
 }
 const quotaConfirm = async () => {
@@ -202,7 +211,10 @@ const editDate = () => {
 
             <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
           </div>
-          <o-icon name="warning" size="12" class="ml2" content="新建桶配额下限为 0.5GB" />
+          <div class="f-st-ct">
+            <o-icon name="warning" size="12" class="mr" />
+            <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+          </div>
         </el-form-item>
         <el-form-item label="类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />

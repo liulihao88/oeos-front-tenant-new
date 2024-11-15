@@ -16,7 +16,7 @@ const fieldList = [
     comp: 'el-input-number',
     attrs: {
       min: 0,
-      precision: 1,
+      precision: 2,
       style: {
         width: '300px',
       },

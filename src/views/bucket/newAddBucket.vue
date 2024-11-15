@@ -2,10 +2,17 @@
 import { ref, getCurrentInstance, h } from 'vue'
 const { proxy } = getCurrentInstance()
 import { saveBucket } from '@/api/bucket.ts'
+import { getLimitCeiling } from '@/api/system.ts'
 import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
 
 import GetBucketList from '@/hooks/getBucketList.ts'
 const getBucketList = GetBucketList()
+const limitQuota = ref(0)
+
+async function getLimitCeilingInit() {
+  let res = await getLimitCeiling()
+  limitQuota.value = proxy.formatBytes(res)
+}
 
 const originModel = ref({
   bucketName: '',
@@ -20,6 +27,7 @@ const originModel = ref({
 const model = ref({})
 const isShow = ref(false)
 const formRef = ref()
+
 const emits = defineEmits(['success'])
 const validateNumber = (rule, value, callback) => {
   let getQuota = proxy.formatBytesConvert(value + model.value.quotaUnit)
@@ -128,6 +136,7 @@ function devTest() {
 function open() {
   model.value = proxy.clone(originModel)
   devTest()
+  getLimitCeilingInit()
   isShow.value = true
 }
 defineExpose({
@@ -149,7 +158,7 @@ defineExpose({
             </div>
           </div>
           <o-icon name="warning" size="12" class="mr" />
-          <div class="cl-45">新建桶配额下限为 0.5GB</div>
+          <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
         </template>
       </o-form>
     </o-dialog>

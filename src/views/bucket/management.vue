@@ -18,6 +18,7 @@ import {
   getOverview,
   deleteBucket,
 } from '@/api/bucket.ts'
+
 import BucketNumPie from '@/views/bucket/bucketNumPie.vue'
 import NewAddBucket from '@/views/bucket/newAddBucket.vue'
 import GetBucketList from '@/hooks/getBucketList.ts'
@@ -185,6 +186,7 @@ async function init(isReset = false) {
   await getSpaceHistogramApi()
 }
 init()
+
 overviewApi()
 
 const getSpaceInit = async () => {
