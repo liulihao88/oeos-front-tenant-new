@@ -50,6 +50,7 @@ const rules = {
   },
 }
 const planOptions = ref([])
+const isView = ref(false)
 
 watch(
   isLimitNumber,
@@ -64,6 +65,9 @@ watch(
 )
 
 const compTitle = computed(() => {
+  if (isView.value) {
+    return '查看桶任务'
+  }
   return isEdit.value ? '编辑桶任务' : '新建桶任务'
 })
 
@@ -78,12 +82,18 @@ const open = async (row = '') => {
   if (row) {
     let res = await taskDetails(row.id)
     form.value = res
+    if (row.enabled) {
+      isView.value = true
+    } else {
+      isView.value = false
+    }
     isEdit.value = true
     actionChange()
     isTargetBucket.value = form.value.properties.includeBuckets.length === 0 ? true : false
     isShow.value = true
   } else {
     isEdit.value = false
+    isView.value = false
     isTargetBucket.value = false
     form.value = proxy.clone(originForm)
     if (proxy.$dev) {
@@ -101,6 +111,9 @@ const open = async (row = '') => {
 }
 
 const save = async () => {
+  if (isView.value === true) {
+    return (isShow.value = false)
+  }
   await proxy.validForm(formRef)
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     if (!isTargetBucket.value && form.value.properties.includeBuckets.length === 0) {
@@ -152,7 +165,7 @@ defineExpose({
 <template>
   <div>
     <o-dialog v-model="isShow" :title="compTitle" width="60%" :enableConfirm="false">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" :disabled="isView">
         <o-title title="基本信息" />
         <el-form-item label="任务名称" prop="name">
           <o-input v-model="form.name" min="3" max="20" />
@@ -170,7 +183,7 @@ defineExpose({
         <el-divider v-if="form.action" />
         <template v-if="form.action !== UNFREEZE && form.action">
           <el-form-item label="数据保留时长" prop="">
-            <KeepTime ref="keepTimeRef" :value="form.properties.objectFilter.expiredTimeExpress" />
+            <KeepTime ref="keepTimeRef" :value="form.properties.objectFilter.expiredTimeExpress" :isView="isView" />
           </el-form-item>
           <el-form-item label="任务计划" prop="">
             <div class="f-st-ct">
@@ -266,7 +279,7 @@ defineExpose({
         </el-button>
         <el-button type="primary" @click="save">完成</el-button>
       </template>
-      <HighSettings ref="highSettingsRef" @save="highSave" />
+      <HighSettings ref="highSettingsRef" :isView="isView" @save="highSave" />
     </o-dialog>
   </div>
 </template>

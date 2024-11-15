@@ -89,12 +89,15 @@ const columns = [
         useSlot: true,
       },
       {
-        content: '编辑',
+        content: (row) => {
+          return row.enabled ? '查看' : '编辑'
+        },
         handler: editRow,
       },
       {
         content: '删除',
         handler: deleteRow,
+        reConfirm: proxy.$dev ? false : true,
       },
     ],
   },
@@ -127,6 +130,9 @@ const beforeChange = async (enabledBoolean, row) => {
 }
 
 async function deleteRow(row) {
+  if (row.enabled) {
+    return proxy.$toast('已启用的任务不允许删除', 'e')
+  }
   await delTask(row.id)
   proxy.$toast('删除成功')
   init()

@@ -3,6 +3,12 @@ import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 import { saveTask } from '@/api/taskApi.ts'
 
+const props = defineProps({
+  isView: {
+    type: Boolean,
+  },
+})
+
 const FREEZE = 'FREEZE'
 const formRef = ref(null)
 const isShow = ref(false)
@@ -62,6 +68,9 @@ const beforeChange = async () => {
 }
 
 const confirm = async () => {
+  if (props.isView === true) {
+    return (isShow.value = false)
+  }
   await proxy.validForm(formRef)
   if (form.value.singleSizeRange[0] >= form.value.singleSizeRange[1]) {
     return proxy.$toast('独立存储区间第一个值要小于第二个值', 'e')
@@ -78,7 +87,14 @@ defineExpose({
 
 <template>
   <o-dialog ref="dialogRef" v-model="isShow" title="高级配置[数据冷冻配置]" confirmText="保存" @confirm="confirm">
-    <el-form id="highSettingsForm" ref="formRef" :model="form" :rules="rules" label-width="auto">
+    <el-form
+      id="highSettingsForm"
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      label-width="auto"
+      :disabled="props.isView"
+    >
       <el-form-item label="保持原始对象" prop="">
         <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
         <o-icon

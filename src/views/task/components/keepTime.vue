@@ -7,6 +7,9 @@ const props = defineProps({
   value: {
     type: String,
   },
+  isView: {
+    type: Boolean,
+  },
 })
 
 const EMPTY_VALUE = '0y0m0d0h'
@@ -101,7 +104,7 @@ defineExpose({
 
       <o-radio v-model="easyTime" :options="timeOptions" />
 
-      <o-icon name="circle-close" class="ml link" @click="clearValue" />
+      <o-icon v-if="!isView" name="circle-close" class="ml link" @click="clearValue" />
     </div>
   </div>
 </template>
