@@ -11,6 +11,7 @@ import { ref, getCurrentInstance, watch } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import { querySimple, getStorageClassList } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
+import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
 
@@ -30,6 +31,7 @@ const form = ref({
 })
 const storageOptions = ref([])
 const selections = ref([])
+const bucketOverviewHistoryRef = ref(null)
 const total = ref(0)
 
 const data = ref([])
@@ -90,12 +92,19 @@ const columns = [
         content: '恢复',
         handler: restoreRow,
       },
+      {
+        content: '历史',
+        handler: historyRow,
+      },
     ],
   },
 ]
 
 function selectableFn(row, index) {
   return row.size && row.size > 0
+}
+async function historyRow(row) {
+  bucketOverviewHistoryRef.value.open(row)
 }
 
 watch(
@@ -242,5 +251,7 @@ const selectionChange = (val, ...a) => {
         </template>
       </o-table>
     </div>
+
+    <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
   </div>
 </template>

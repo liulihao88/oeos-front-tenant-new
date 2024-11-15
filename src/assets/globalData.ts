@@ -40,3 +40,6 @@ export const PERMISSION_OPTIONS = [
     value: 'PERMISSION_BUCKET_MANAGEMENT',
   },
 ]
+
+export const PAGE_SIZE = 30
+export const PAGE_NUMBER = 1

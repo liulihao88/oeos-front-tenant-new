@@ -12,6 +12,7 @@ import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple, queryAdvance } from '@/api/searchApi.ts'
 import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
+import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import SearchConfigComp from '@/views/object/components/searchConfigComp.vue'
 import { preview } from '@/utils/remoteFunc.ts'
 
@@ -21,16 +22,10 @@ getBucketList.getBucketList()
 const searchConfigCompRef = ref(null)
 const expressionValue = ref('')
 const options = ref([])
+const bucketOverviewHistoryRef = ref(null)
 options.value = proxy.getStorage('tenant-advance-expression') ?? []
-const bucketName = ref(proxy.getStorage('tenant-bucket-name') ?? '')
 const searchObj = ref({})
 
-const form = ref({
-  key: '',
-  injectTimeBegin: '',
-  injectTimeEnd: '',
-  bucket: bucketName.value,
-})
 const selections = ref([])
 
 const data = ref([])
@@ -107,12 +102,20 @@ const columns = [
         content: '恢复',
         handler: restoreRow,
       },
+      {
+        content: '历史',
+        handler: historyRow,
+      },
     ],
   },
 ]
 
 function selectableFn(row, index) {
   return row.size && row.size > 0
+}
+
+async function historyRow(row) {
+  bucketOverviewHistoryRef.value.open(row)
 }
 
 const editSearch = async () => {
@@ -225,5 +228,6 @@ const changeSelect = async (val, label, obj) => {
     </div>
 
     <SearchConfigComp ref="searchConfigCompRef" @success="success" />
+    <BucketOverviewHistory ref="bucketOverviewHistoryRef" />
   </div>
 </template>

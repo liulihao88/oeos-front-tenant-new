@@ -174,7 +174,6 @@ async function init(isReset = false) {
 }
 
 const selectionChange = (val, ...a) => {
-  console.log(`65 val`, val)
   selections.value = val
 }
 const addDir = async () => {
