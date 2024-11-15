@@ -139,7 +139,7 @@ const columns = [
     prop: 'capacity',
     width: 100,
     filter: (value, row) => {
-      return row.quota + row.quotaUnit
+      return row.quota.toFixed(2) + row.quotaUnit
     },
   },
   {

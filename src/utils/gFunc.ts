@@ -90,3 +90,28 @@ export function setFavIcon(icon) {
   link.href = icon
   document.getElementsByTagName('head')[0].appendChild(link)
 }
+
+/**
+ * 将数字或字符串加小数点
+ * 123 -> 123.00
+ * 123.45678 -> 123.46
+ * 123.32321KB -> 123.32KB
+ * formatFixed(123,45, 2) -> 123.45
+ * @param number
+ * @param toFixed
+ * @returns
+ */
+export function formatFixed(number, toFixed = 2) {
+  // 提取数字部分、小数点和小数部分
+  let matches = ('' + number).match(/^([\d,]+\.?\d+?)(\D+)?$/)
+  if (!matches) {
+    return number // 如果没有找到匹配，则返回原始输入
+  }
+
+  console.log(`41 matches[1]`, matches[1])
+  let numericString = Number(matches[1]).toFixed(toFixed) // 仅保留数字
+  let unit = matches[2] || '' // 单位部分，如果没有则为空字符串
+
+  // 拼接数字、小数点、小数部分和单位，并返回结果
+  return `${numericString}${unit}`
+}

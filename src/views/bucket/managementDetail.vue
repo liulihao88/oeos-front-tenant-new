@@ -79,7 +79,7 @@ const init = async () => {
   let res = await Promise.all([getBucketTotal(bucketName.value)])
   data.value = [
     {
-      total: res[0]?.quota + res[0]?.quotaUnit,
+      total: res[0]?.quota.toFixed(2) + res[0]?.quotaUnit,
       usage: proxy.formatBytes(tenantBucketDetails.value.objectSize),
       fileTotal: 10,
       createdDatetime: tenantBucketDetails.value.createdDatetime,
@@ -157,7 +157,7 @@ const editDate = () => {
       <div class="bold-400">
         当前容量:
         <span class="cl-red">
-          {{ quotaForm.quota }}
+          {{ quotaForm.quota.toFixed(2) }}
           {{ quotaForm.quotaUnit }}
           ({{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }})
         </span>
@@ -198,7 +198,7 @@ const editDate = () => {
         <g-warning title=" 用户按需选择相应存储单位，修改配额" class="mb2" />
         <el-form-item label="存储" prop="quota">
           <div class="f-st-ct">
-            <el-input-number v-model="quotaForm.quota" class="mr2" />
+            <el-input-number v-model="quotaForm.quota" class="mr2" :precision="2" />
 
             <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
           </div>
