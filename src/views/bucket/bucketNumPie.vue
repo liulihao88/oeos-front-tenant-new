@@ -92,8 +92,7 @@ watch(
 function formatter(params) {
   let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
   let { value, name } = params.data
-  let formatBytes = proxy.formatBytes(value)
-  return `${name}: ${formatBytes}\n 占比: (${params.percent}%)`
+  return `${name}: ${value}\n 占比: (${params.percent}%)`
 }
 </script>
 
