@@ -4,7 +4,14 @@ const { proxy } = getCurrentInstance()
 
 import { QUOTA_OPTIONS, QUOTA_UNIT } from '@/assets/globalData.ts'
 
-import { getBucketTotal, editBucketTotal, retentionAutodelete, getRetentionAutodelete } from '@/api/bucket'
+import {
+  getBucketTotal,
+  editBucketTotal,
+  retentionAutodelete,
+  getRetentionAutodelete,
+  setVersion,
+  getVersion,
+} from '@/api/bucket'
 import { getLimitCeiling } from '@/api/system.ts'
 
 import { useRouter, useRoute } from 'vue-router'
@@ -107,10 +114,18 @@ const radioInput = (value) => {
   radioCacheValue.value = value
   isRadioShow.value = true
 }
-const radioConfirm = () => {
+const radioConfirm = async () => {
   if (!isKnow.value) {
     return proxy.$toast('请勾选"我了解更改存储桶版本控制的后果"', 'e')
   }
+  const sendData = {
+    mfaDeleteEnabled: null,
+    status: radioCacheValue.value,
+  }
+  await setVersion(bucketName.value, sendData)
+  let res = await getVersion(bucketName.value)
+  tenantBucketDetails.value.versionStatus = res.status
+  proxy.setStorage('tenant-bucket-details', tenantBucketDetails.value)
   isRadioShow.value = false
   versionStatus.value = radioCacheValue.value
 }

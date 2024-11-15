@@ -48,6 +48,16 @@ export function getBucketTotal(bucketName) {
   return request(`bucket/${bucketName}/config/quota`)
 }
 
+// 设置多版本控制是否启用
+export function setVersion(bucketName, data) {
+  return request(`bucket/${bucketName}/config/version`, 'put', { data: data })
+}
+
+//
+export function getVersion(bucketName, data) {
+  return request(`bucket/${bucketName}/config/version`)
+}
+
 // 修改容量
 export function editBucketTotal(bucketName, data) {
   return request(`bucket/${bucketName}/config/quota`, 'put', { data })
