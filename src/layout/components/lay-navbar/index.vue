@@ -44,28 +44,29 @@ function onFresh() {
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
       <div class="mr">
-        <o-tooltip content="登录用户 - 租户名 - 租户id">
-          {{ proxy.getStorage('tenant-sysdomain').loginName }} - {{ proxy.getStorage('tenant-sysdomain').tenantName }} -
-          {{ proxy.getStorage('tenant-sysdomain').tenantId }}
-        </o-tooltip>
+        <div>
+          当前租户: {{ proxy.getStorage('tenant-sysdomain').tenantName }} [
+          {{ proxy.getStorage('tenant-sysdomain').tenantId }} ]
+        </div>
       </div>
-      <o-tooltip content="快捷键:windows->ctrl+enter或者mac->cmd+enter">
+      <o-tooltip content="刷新">
         <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
           <IconifyIconOffline :icon="RefreshRight" />
         </div>
       </o-tooltip>
 
-      <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
+      <div>
+        {{ proxy.getStorage('tenant-sysdomain').loginName }}
+      </div>
+      <!-- 全屏 -->
+      <LaySidebarFullScreen id="full-screen" />
+
+      <!-- <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
         <o-tooltip content="退出系统">
           <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
         </o-tooltip>
-      </div>
-      <!-- 菜单搜索 -->
-      <!-- <LaySearch id="header-search" /> -->
-      <!-- 全屏 -->
-      <LaySidebarFullScreen id="full-screen" />
-      <!-- 消息通知 -->
-      <!-- <LayNotice id="header-notice" /> -->
+      </div> -->
+
       <!-- 退出登录 -->
       <DropdownLayout />
       <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">

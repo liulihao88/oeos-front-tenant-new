@@ -4,12 +4,15 @@ const { proxy } = getCurrentInstance()
 const props = defineProps({
   used: {
     type: String,
-    default: '17.50GB',
+    // default: '17.50GB',
   },
   total: {
     type: String,
     required: true,
-    default: '1.0TB',
+    // default: '1.0TB',
+  },
+  type: {
+    type: String, // used
   },
 })
 const options = ref()
@@ -19,10 +22,17 @@ const usedNum = ref(0)
 const totalNum = ref(0)
 
 const getValue = computed(() => {
-  let percent = ((usedNum.value / totalNum.value) * 100).toFixed(2) + '%'
-  let num = `${props.used} / ${props.total}`
-  let text = '总分配配额 / 租户总配额'
-  return `${percent}\n\n${num}\n\n${text}`
+  if (props.type === 'used') {
+    let percent = ((usedNum.value / totalNum.value) * 100).toFixed(2) + '%'
+    let num = `${proxy.formatBytes(props.used)} / ${proxy.formatBytes(props.total)}`
+    let text = '总使用量 / 总可用量'
+    return `${percent}\n\n${num}\n\n${text}`
+  } else {
+    let percent = ((usedNum.value / totalNum.value) * 100).toFixed(2) + '%'
+    let num = `${props.used} / ${props.total}`
+    let text = '总分配配额 / 租户总配额'
+    return `${percent}\n\n${num}\n\n${text}`
+  }
 })
 
 let initOptions = {

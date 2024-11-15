@@ -5,10 +5,12 @@ import { getWarningOptions, tenantEventQuery, getInfoOverview } from '@/api/over
 import OverviewUsedPie from '@/views/overview/overviewUsedPie.vue'
 
 const details = ref({})
+const tenantDetails = ref({})
 
 const init = async () => {
   let res = await getInfoOverview()
   details.value = res
+  tenantDetails.value = res.tenant
 }
 init()
 </script>
@@ -38,7 +40,7 @@ init()
                 <div>{{ details.workmode }}</div>
               </div>
             </div>
-            <OverviewUsedPie class="pie-box" />
+            <OverviewUsedPie :used="tenantDetails.allocateQuota" :total="tenantDetails.tenantQuota" class="pie-box" />
           </div>
         </div>
       </el-col>
@@ -49,13 +51,15 @@ init()
             <div class="t-l-box-left">
               <div class="item-card">
                 <div>总对象大小</div>
-                <div v-if="details.tenant && details.tenant.totalSpace">
-                  {{ proxy.formatBytes(details.tenant.totalSpace) }}
+                <div v-if="details.object && details.object.objectSize">
+                  {{ proxy.formatBytes(details.object.objectSize) }}
                 </div>
               </div>
               <div class="item-card">
                 <div>总空闲量</div>
-                <div>{{ details.tenant?.tenantCount }}</div>
+                <div v-if="details.primarySpace && details.primarySpace.totalFreeCapacity">
+                  {{ proxy.formatBytes(details.primarySpace?.totalFreeCapacity) }}
+                </div>
               </div>
               <div class="item-card">
                 <div>对象总数量</div>
@@ -66,7 +70,12 @@ init()
                 <div>{{ details.primarySpace?.capacityUsageLevel }}</div>
               </div>
             </div>
-            <OverviewUsedPie class="pie-box" />
+            <OverviewUsedPie
+              class="pie-box"
+              type="used"
+              :used="tenantDetails.usedSpace"
+              :total="tenantDetails.totalSpace"
+            />
           </div>
         </div>
       </el-col>
