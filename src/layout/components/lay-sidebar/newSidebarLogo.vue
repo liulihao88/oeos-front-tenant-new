@@ -18,19 +18,13 @@ const { title, backTopMenu } = useNav()
 <template>
   <div>
     <div class="horizontal-header-left" @click="backTopMenu">
-      <o-tooltip :content="title" :disabled="!props.collapse">
-        <img
-          :src="
-            storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
-          "
-          :width="props.collapse ? 30 : 50"
-          style="object-fit: contain"
-        />
-      </o-tooltip>
+      <img
+        :src="globalLogoSettings.nativeLogo.tenantManagementImage"
+        :width="props.collapse ? 30 : 70"
+        style="height: 20px; object-fit: contain"
+      />
 
-      <div v-if="!collapse" class="title">
-        <o-tooltip :content="title" width="100%" />
-      </div>
+      <div v-if="!collapse" class="title">租户管理平台</div>
     </div>
   </div>
 </template>
@@ -44,6 +38,7 @@ const { title, backTopMenu } = useNav()
   height: 32px;
   padding-left: 10px;
   cursor: pointer;
+  background-color: lightblue;
   transition: all var(--pure-transition-duration) ease;
 
   img {
@@ -53,7 +48,7 @@ const { title, backTopMenu } = useNav()
   .title {
     display: inline-block;
     // flex: 1;
-    width: calc(100% - 50px);
+    width: calc(100% - 70px);
     height: 32px;
     margin: 2px 0 0 12px;
     font-size: 18px;

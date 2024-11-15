@@ -9,6 +9,8 @@ import { useElementPlus } from '@/plugins/elementPlus'
 import { injectResponsiveStorage } from '@/utils/responsive'
 import { createPinia } from 'pinia'
 const pinia = createPinia()
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+pinia.use(piniaPluginPersistedstate)
 
 import Table from '@pureadmin/table'
 // import PureDescriptions from "@pureadmin/descriptions";
