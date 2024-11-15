@@ -10,14 +10,18 @@ const props = defineProps({
     type: [String, Number],
     required: true,
   },
+  row: {
+    type: Object,
+    required: true,
+  },
 })
 function format(num) {
   return `${percentage.value}%`
 }
 const percentage = computed(() => {
   let divideNum = Number((props.used || 0) / (props.total || 0)) * 100
-  let res = Number(divideNum.toFixed(2))
-  return res
+  let percentRes = Number(divideNum.toFixed(2))
+  return percentRes
 })
 function formatColor(value) {
   if (value < 90) {
@@ -38,7 +42,16 @@ function formatColor(value) {
       text-inside
       :format="format"
       :color="formatColor"
-    />
+    >
+      <template #default="{ percentage }">
+        <div class="f-bt-ct w-260">
+          <div class="percentage-value">{{ format() }}</div>
+          <div>
+            {{ proxy.formatBytes(props.row.objectSize) }} / {{ props.row.quota.toFixed(2) + props.row.quotaUnit }}
+          </div>
+        </div>
+      </template>
+    </o-progress>
   </div>
 </template>
 

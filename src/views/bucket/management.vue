@@ -127,14 +127,6 @@ const columns = [
     },
   },
   {
-    label: '已用容量',
-    prop: 'objectSize',
-    width: 120,
-    filter: (value) => {
-      return proxy.formatBytes(value)
-    },
-  },
-  {
     label: '配额',
     prop: 'capacity',
     width: 100,
@@ -145,7 +137,7 @@ const columns = [
   {
     label: '使用容量',
     prop: 'capacity',
-    width: 200,
+    width: 300,
     useSlot: true,
   },
   {
@@ -363,7 +355,14 @@ function _handleUsedData(usedSpace) {
                 </o-tooltip>
               </template>
               <template #capacity="{ scope, row }">
-                <g-capacity-progress :total="calcQuota(row.quota, row.quotaUnit)" :used="row.objectSize" />
+                <template v-if="scope.$index !== -1">
+                  <g-capacity-progress
+                    class="w-100%"
+                    :total="calcQuota(row.quota, row.quotaUnit)"
+                    :used="row.objectSize"
+                    :row="row"
+                  />
+                </template>
               </template>
             </o-table>
           </div>
