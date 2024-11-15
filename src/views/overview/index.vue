@@ -16,7 +16,7 @@ init()
 </script>
 
 <template>
-  <div>
+  <div class="box">
     <el-row :gutter="16" class="m-b-16 h-300">
       <el-col :span="12">
         <div class="item-box">
@@ -133,6 +133,12 @@ init()
     &:hover {
       box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
     }
+  }
+}
+
+.box {
+  :deep(.el-row) {
+    min-width: 1200px;
   }
 }
 </style>

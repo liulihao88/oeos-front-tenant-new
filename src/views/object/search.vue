@@ -178,7 +178,7 @@ const selectionChange = (val, ...a) => {
   <div>
     <div class="f-bt-un w-100% m-b-16">
       <div class="f-3 f-st-ct w-100%">
-        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" />
+        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" width="220" />
 
         <o-input
           v-model="form.key"
@@ -197,13 +197,13 @@ const selectionChange = (val, ...a) => {
           label="value"
           class="mr"
           title="存储类型"
-          width="240"
+          width="320"
           @change="init"
         />
         <o-date-range
           v-model="timeRange"
           title="写入时间"
-          width="500"
+          width="480"
           format="YYYY-MM-DD HH:mm:ss"
           type="datetimerange"
           :disabled="!bucketId"
