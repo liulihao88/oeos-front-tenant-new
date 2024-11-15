@@ -2,7 +2,7 @@ const Layout = () => import('@/layout/index.vue')
 export default [
   {
     id: 'TM000',
-    path: '/overview',
+    path: '/apps/overview',
     component: Layout,
     meta: {
       icon: 'ep:home-filled',
@@ -10,7 +10,7 @@ export default [
     },
     children: [
       {
-        path: '/overview',
+        path: '/apps/overview',
         name: 'Overview',
         component: () => import('@/views/overview/index.vue'),
         dynamicComponent: 'overview/index',

@@ -1,14 +1,14 @@
 const fightingRouter = [
   {
     id: 'TM000',
-    path: '/overview',
+    path: '/apps/overview',
     meta: {
       icon: 'ep:home-filled',
       title: '租户概览111',
     },
     children: [
       {
-        path: '/overview',
+        path: '/apps/overview',
         name: 'Overview',
         meta: {
           icon: 'ep:home-filled',

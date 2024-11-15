@@ -185,7 +185,7 @@ const selectionChange = (val, ...a) => {
           v-model="form.storageClass"
           :options="storageOptions"
           :disabled="!bucketId"
-          label="name"
+          label="value"
           class="mr"
           title="存储类型"
           width="240"

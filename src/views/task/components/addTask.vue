@@ -112,7 +112,7 @@ const save = async () => {
   if (isTargetBucket.value) {
     copyForm.properties.includeBuckets = []
   }
-  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').id
+  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').tenantId
   copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue()
   await saveTask(copyForm)
   isShow.value = false

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-import KeepTime from '@/views/task/components/KeepTime.vue'
+import OverviewUsedPie from '@/views/overview/overviewUsedPie.vue'
 
-const time = ref('0y0m1d0h')
+const used = ref('17.50GB')
+const total = ref('1.0TB')
 </script>
 
 <template>
   <div>
-    <KeepTime :value="time" />
+    <OverviewUsedPie />
   </div>
 </template>

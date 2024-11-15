@@ -5,7 +5,7 @@ export default {
   path: '/',
   name: 'Home',
   component: Layout,
-  redirect: '/overview',
+  redirect: '/apps/overview',
   meta: {
     icon: 'ep:home-filled',
     title: '租户概览首页',
