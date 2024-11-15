@@ -19,7 +19,9 @@ const { title, backTopMenu } = useNav()
   <div>
     <div class="horizontal-header-left" @click="backTopMenu">
       <img
-        :src="globalLogoSettings.nativeLogo.tenantManagementImage"
+        :src="
+          storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
+        "
         :width="props.collapse ? 30 : 70"
         style="height: 20px; object-fit: contain"
       />
