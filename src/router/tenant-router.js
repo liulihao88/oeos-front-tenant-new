@@ -108,7 +108,7 @@ export default [
         name: 'Unfrezze',
         component: 'object/unfrezze',
         meta: {
-          icon: () => import('../assets/svg/day.svg'),
+          icon: 'ep:avatar',
           title: '解冻浏览',
         },
       },

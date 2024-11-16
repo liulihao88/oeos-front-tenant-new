@@ -681,3 +681,11 @@ body[layout='mix'] {
     }
   }
 }
+
+.el-menu-item.is-active .sub-menu-icon svg {
+  fill: #fff;
+}
+
+.el-menu-item .sub-menu-icon svg {
+  fill: rgb(0 0 0 / 60%);
+}
