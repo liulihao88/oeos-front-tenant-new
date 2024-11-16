@@ -178,7 +178,7 @@ const selectionChange = (val, ...a) => {
   <div>
     <div class="f-bt-un w-100% m-b-16">
       <div class="f-3 f-st-ct w-100%">
-        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" width="220" />
+        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" />
 
         <o-input
           v-model="form.key"
