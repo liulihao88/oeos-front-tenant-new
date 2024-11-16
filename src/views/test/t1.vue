@@ -8,6 +8,6 @@ console.log(`69 a`, a)
 
 <template>
   <div>
-    <div>test/t1.vue</div>
+    <o-svg name="dark" />
   </div>
 </template>

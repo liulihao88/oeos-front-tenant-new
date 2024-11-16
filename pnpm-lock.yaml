@@ -267,6 +267,9 @@ importers:
       vite-plugin-router-warn:
         specifier: ^1.0.0
         version: 1.0.0
+      vite-plugin-svg-icons:
+        specifier: ^2.0.1
+        version: 2.0.1(vite@5.2.11(@types/node@20.12.11)(sass@1.79.5)(terser@5.32.0))
       vite-svg-loader:
         specifier: ^5.1.0
         version: 5.1.0(vue@3.4.27(typescript@5.4.5))

@@ -1,6 +1,7 @@
 import type { iconType } from './types'
 import { h, defineComponent, type Component } from 'vue'
 import { IconifyIconOnline, IconifyIconOffline, FontIcon } from '../index'
+import { isImage } from '@/utils/gFunc.ts'
 
 /**
  * 支持 `iconfont`、自定义 `svg` 以及 `iconify` 中所有的图标
@@ -8,7 +9,9 @@ import { IconifyIconOnline, IconifyIconOffline, FontIcon } from '../index'
  * @param icon 必传 图标
  * @param attrs 可选 iconType 属性
  * @returns Component
+ * "/tenant/src/assets/images/notic.png"
  */
+
 export function useRenderIcon(icon: any, attrs?: iconType): Component {
   // iconfont
   const ifReg = /^IF-/
@@ -37,6 +40,18 @@ export function useRenderIcon(icon: any, attrs?: iconType): Component {
       render() {
         return h(IconifyIconOffline, {
           icon: icon,
+          ...attrs,
+        })
+      },
+    })
+  } else if (isImage(icon)) {
+    let wholeIcon = '/tenant/src/assets/images/' + icon
+    return defineComponent({
+      name: 'Image',
+      render() {
+        return h('img', {
+          src: wholeIcon,
+          width: 40,
           ...attrs,
         })
       },

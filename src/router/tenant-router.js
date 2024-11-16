@@ -1,4 +1,6 @@
 const Layout = () => import('@/layout/index.vue')
+import DarkSvg from '@/assets/svg/dark.svg'
+import DaySvg from '@/assets/svg/day.svg'
 export default [
   {
     id: 'TM000',
@@ -25,7 +27,7 @@ export default [
     path: '/bucket',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: 'notic.png',
       title: '空间管理222',
     },
     children: [
@@ -35,7 +37,7 @@ export default [
         name: 'Management',
         component: 'bucket/management',
         meta: {
-          icon: 'ep:home-filled',
+          icon: 'cc/bg.png',
           title: '桶列表',
         },
       },
@@ -76,7 +78,7 @@ export default [
     path: '/object',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: DarkSvg,
       title: '空间浏览',
     },
     children: [
@@ -86,7 +88,7 @@ export default [
         name: 'Search',
         component: 'object/search',
         meta: {
-          icon: 'ep:home-filled',
+          icon: DarkSvg,
           title: '简单搜索',
         },
       },
@@ -96,7 +98,7 @@ export default [
         name: 'AdvanceSearch',
         component: 'object/advancesearch',
         meta: {
-          icon: 'ep:home-filled',
+          icon: DaySvg,
           title: '高级搜索',
         },
       },
@@ -106,7 +108,7 @@ export default [
         name: 'Unfrezze',
         component: 'object/unfrezze',
         meta: {
-          icon: 'ep:home-filled',
+          icon: () => import('../assets/svg/day.svg'),
           title: '解冻浏览',
         },
       },

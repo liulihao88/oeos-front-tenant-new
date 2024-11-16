@@ -1,5 +1,6 @@
 import { cdn } from './cdn'
 import vue from '@vitejs/plugin-vue'
+import path from 'path'
 import { viteBuildInfo } from './info'
 import svgLoader from 'vite-svg-loader'
 import type { PluginOption } from 'vite'
@@ -12,6 +13,7 @@ import { themePreprocessorPlugin } from '@pureadmin/theme'
 import { genScssMultipleScopeVars } from '../src/layout/theme'
 import { vitePluginFakeServer } from 'vite-plugin-fake-server'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 export function getPluginsList(VITE_CDN: boolean, VITE_COMPRESSION: ViteCompression): PluginOption[] {
   const lifecycle = process.env.npm_lifecycle_event
@@ -51,5 +53,9 @@ export function getPluginsList(VITE_CDN: boolean, VITE_COMPRESSION: ViteCompress
     removeConsole({ external: ['src/assets/iconfont/iconfont.js'] }),
     // 打包分析
     lifecycle === 'report' ? visualizer({ open: true, brotliSize: true, filename: 'report.html' }) : (null as any),
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(__dirname, '../src/assets/svg')],
+      symbolId: 'icon-[dir]-[name]',
+    }),
   ]
 }
