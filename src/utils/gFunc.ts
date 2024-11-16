@@ -115,3 +115,19 @@ export function formatFixed(number, toFixed = 2) {
   // 拼接数字、小数点、小数部分和单位，并返回结果
   return `${numericString}${unit}`
 }
+
+export function formatImg(photoName, addPath = '', { basePath = 'assets/images' } = {}) {
+  console.log(`95 photoName`, photoName)
+  if (photoName.startsWith('http') || photoName.startsWith('https')) {
+    return photoName
+  }
+  if (photoName.indexOf('.') === -1) {
+    photoName = photoName + '.png'
+  }
+  const addLastSlash = addPath.endsWith('/') || !addPath ? addPath : `${addPath}/`
+  const addLastBasePathSlash = basePath.endsWith('/') || !basePath ? basePath : `${basePath}/`
+  let mergeSrc = `${addLastSlash}${photoName}`
+  const finalImg = `${addLastBasePathSlash}${mergeSrc}`
+  let res = new URL(`../${finalImg}`, import.meta.url).href
+  return res
+}
