@@ -93,10 +93,14 @@ const save = async () => {
         <o-input v-model="form.fullName" placeholder="1-20位字符" />
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
-        <o-input v-model="form.pwd" placeholder="8-40位字符组合、特殊字符可选" />
+        <o-input v-model="form.pwd" placeholder="8-40位字符组合、特殊字符可选" :type="proxy.$dev ? '' : 'password'" />
       </el-form-item>
       <el-form-item label="确认密码" prop="confirmPwd">
-        <o-input v-model="form.confirmPwd" placeholder="8-40位字符组合、特殊字符可选" />
+        <o-input
+          v-model="form.confirmPwd"
+          placeholder="8-40位字符组合、特殊字符可选"
+          :type="proxy.$dev ? '' : 'password'"
+        />
       </el-form-item>
       <el-form-item label="描述" prop="description">
         <o-input
