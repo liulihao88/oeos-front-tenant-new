@@ -197,13 +197,13 @@ const selectionChange = (val, ...a) => {
           label="value"
           class="mr"
           title="存储类型"
-          width="320"
+          width="300"
           @change="init"
         />
         <o-date-range
           v-model="timeRange"
           title="写入时间"
-          width="480"
+          width="460"
           format="YYYY-MM-DD HH:mm:ss"
           type="datetimerange"
           :disabled="!bucketId"
