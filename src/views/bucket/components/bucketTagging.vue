@@ -30,7 +30,7 @@ const columns = [
     useSlot: true,
   },
   {
-    label: '标签值',
+    label: '标签值(可选)',
     prop: 'value',
     useSlot: true,
   },
@@ -102,7 +102,7 @@ const getInnerRules = (index) => {
   }
   return [proxy.validate('必填')]
 }
-const valueRules = [proxy.validate('必填')]
+// const valueRules = [proxy.validate('必填')]
 const selectionChange = (val, ...a) => {
   selections.value = val
   selectionsIndex.value = selections.value.map((item) => form.value.data.indexOf(item))
@@ -132,14 +132,14 @@ const selectionChange = (val, ...a) => {
         <template #label="{ scope, row }">
           <template v-if="scope.$index !== -1">
             <el-form-item label="" :prop="`data.${scope.$index}.label`" :rules="getInnerRules(scope.$index)">
-              <o-input v-model="form.data[scope.$index].label" />
+              <o-input v-model="form.data[scope.$index].label" placeholder="请输入标签名" />
             </el-form-item>
           </template>
         </template>
         <template #value="{ scope, row }">
           <template v-if="scope.$index !== -1">
-            <el-form-item label="" :prop="`data.${scope.$index}.value`" :rules="valueRules">
-              <o-input v-model="form.data[scope.$index].value" />
+            <el-form-item label="" :prop="`data.${scope.$index}.value`">
+              <o-input v-model="form.data[scope.$index].value" placeholder="请输入标签值" />
             </el-form-item>
           </template>
         </template>

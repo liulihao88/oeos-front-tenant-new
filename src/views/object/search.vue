@@ -51,7 +51,7 @@ const columns = [
   {
     label: '对象键',
     useSlot: true,
-    prop: 'name',
+    prop: 'key',
   },
   {
     label: '对象大小',
@@ -235,18 +235,18 @@ const selectionChange = (val, ...a) => {
         @update="update"
         @selection-change="selectionChange"
       >
-        <template #name="{ scope, row }">
+        <template #key="{ scope, row }">
           <template v-if="row.size > 0">
             <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.key)">
-              {{ row.name }}
+              {{ row.key }}
             </div>
             <template v-else>
-              {{ row.name }}
+              {{ row.key }}
             </template>
           </template>
           <div v-else class="cl-yellow f-st-ct cp" @click="inside(row)">
             <o-icon name="folder" class="mr" />
-            {{ row.name }}
+            {{ row.key }}
           </div>
         </template>
       </o-table>
