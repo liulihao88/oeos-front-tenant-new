@@ -87,6 +87,10 @@ const nameOptions = [
   { label: '对象大小', value: 'contentLength' },
   { label: '写入时间', value: 'injectTime' },
   {
+    label: '存储类型',
+    value: 'storageID',
+  },
+  {
     label: '所在库名',
     value: 'location.lib',
   },
