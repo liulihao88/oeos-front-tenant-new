@@ -9,21 +9,40 @@ const form = ref({
   quotaType: 'hard',
 })
 const limitMax = ref(0)
+const limitQuota = ref(0)
+const validateNumber = (rule, value, callback) => {
+  let getQuota = proxy.formatBytesConvert(value + form.value.quotaUnit)
+  let minQuota = proxy.formatBytesConvert('0.5GB')
+  if (getQuota < minQuota) {
+    callback(new Error('请输入数字'))
+  } else {
+    callback()
+  }
+}
+async function getLimitCeilingInit() {
+  let res = await getLimitCeiling()
+  limitQuota.value = proxy.formatBytes(res)
+}
+getLimitCeilingInit()
 const fieldList = [
   {
-    label: '默认容量大小',
+    label: '默认配额大小',
     prop: 'quota',
-    comp: 'el-input-number',
-    attrs: {
-      min: 0,
-      precision: 2,
-      style: {
-        width: '300px',
+    useSlot: true,
+    rules: [
+      {
+        required: true,
+        trigger: ['change', 'blur'],
       },
-    },
+      {
+        validator: validateNumber,
+        trigger: ['change', 'blur'],
+        message: '桶最小为0.5GB',
+      },
+    ],
   },
   {
-    label: '存储桶容量类型',
+    label: '存储桶配额类型',
     prop: 'quotaType',
     comp: 'o-select',
     attrs: {
@@ -75,7 +94,20 @@ init()
   <div class="c-container">
     <o-title title="默认桶配置" sub-title="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" b="16" />
 
-    <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules" />
+    <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules">
+      <template #quota>
+        <div class="f-st-ed w-100%">
+          <div class="m-r-16">
+            <el-input-number v-model="form.quota" :precision="2" :min="0" />
+          </div>
+          <div>
+            <o-radio v-model="form.quotaUnit" :options="QUOTA_UNIT" showType="button" />
+          </div>
+        </div>
+        <o-icon name="warning" size="12" class="mr" />
+        <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+      </template>
+    </o-form>
 
     <div>
       <el-button type="primary" @click="save">保存</el-button>
