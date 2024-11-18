@@ -2,10 +2,15 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 import { getWarningOptions, tenantEventQuery, getInfoOverview } from '@/api/overviewApi.ts'
+import { getLevels, getEventList } from '@/api/system.ts'
+
 import OverviewUsedPie from '@/views/overview/overviewUsedPie.vue'
 
 const details = ref({})
+const eventData = ref([])
 const tenantDetails = ref({})
+const levelOptions = ref([])
+const eventTotal = ref(0)
 
 const init = async () => {
   let res = await getInfoOverview()
@@ -13,6 +18,88 @@ const init = async () => {
   tenantDetails.value = res.tenant
 }
 init()
+
+const eventForm = ref({
+  beginDatetime: '',
+  endDatetime: '',
+  levels: [],
+  mark: null,
+  pageNumber: 1,
+  pageSize: 20,
+})
+const eventInit = async () => {
+  let res = await getEventList(eventForm.value)
+  eventData.value = res.details
+  eventTotal.value = res.total
+}
+eventInit()
+
+const getLevelOptions = async () => {
+  let res = await getLevels()
+  levelOptions.value = res
+}
+getLevelOptions()
+
+const parseLevelType = (level) => {
+  const map = {
+    INFO: 'success',
+    WARN: 'warning',
+    ERROR: 'danger',
+    FATAL: 'danger',
+    DEBUG: 'primary',
+  }
+  return map[level]
+}
+
+const parseLevel = (level) => {
+  let res = levelOptions.value.find((v) => v.value === level)?.name
+  return res
+}
+
+const statusOptions = ref([
+  { label: '标记确认', value: 'Awared' },
+  { label: '确认解决', value: 'Solved' },
+  { label: '取消解决', value: 'Ignored' },
+])
+const eventColumns = [
+  {
+    label: '事件信息',
+    prop: 'message',
+  },
+  {
+    label: '事件等级',
+    prop: 'level',
+    width: 100,
+    useSlot: true,
+  },
+  {
+    label: '服务',
+    prop: 'appId',
+    width: 100,
+  },
+  {
+    label: '节点',
+    prop: 'nodeId',
+    width: 100,
+  },
+  {
+    label: '发生时间',
+    prop: 'datetime',
+    width: proxy.TIME_WIDTH,
+    filter: (val) => proxy.formatTimeByRule(val),
+  },
+  {
+    label: '状态',
+    prop: 'mark',
+    width: 120,
+    filter: (val) => {
+      return statusOptions.value.find((v) => v.value === val)?.label || '-'
+    },
+  },
+]
+const eventMore = () => {
+  proxy.jump({ name: 'Event' })
+}
 </script>
 
 <template>
@@ -82,10 +169,26 @@ init()
     </el-row>
     <el-row :gutter="16" class="bottom-height">
       <el-col :span="12" class="h-100%">
-        <div class="item-box">我是左边</div>
+        <div class="item-box">
+          <o-title title="对外服务信息" />
+        </div>
       </el-col>
-      <el-col :span="12">
-        <div class="item-box">我是右边</div>
+      <el-col :span="12" class="h-100% o-h">
+        <div class="item-box h-100%">
+          <o-title title="租户事件列表" b="8">
+            <span class="ml">(共{{ eventTotal }}条)</span>
+            <template #right>
+              <el-button type="primary" size="small" @click="eventMore">更多</el-button>
+            </template>
+          </o-title>
+          <o-table ref="tableRef" :columns="eventColumns" :data="eventData" :showPage="false">
+            <template #level="{ scope, row }">
+              <el-tag :type="parseLevelType(row.level)" effect="dark">
+                {{ parseLevel(row.level) }}
+              </el-tag>
+            </template>
+          </o-table>
+        </div>
       </el-col>
     </el-row>
   </div>
