@@ -193,6 +193,7 @@ defineExpose({
                 width="200"
                 label="name"
                 class="mr"
+                :disabled="isView"
               />
               <el-radio-group v-if="form.properties.workSchedule" v-model="form.properties.workScheduleExeOpportunity">
                 <el-radio value="IncludeExecute">计划内执行</el-radio>
@@ -219,7 +220,12 @@ defineExpose({
           <el-divider />
           <o-title title="数据空间配置: " />
           <el-form-item label="选择目标存储" prop="properties.targetStorageId">
-            <o-select v-model="form.properties.targetStorageId" :options="targetOptions" label="name" />
+            <o-select
+              v-model="form.properties.targetStorageId"
+              :options="targetOptions"
+              label="name"
+              :disabled="isView"
+            />
           </el-form-item>
           <el-form-item label="处理目标桶" prop="" required>
             <div class="f-st-ct w-100%">
@@ -234,7 +240,7 @@ defineExpose({
                 v-if="!isTargetBucket"
                 ref="bucketRef"
                 v-model="form.properties.includeBuckets"
-                :disabled="isTargetBucket"
+                :disabled="isTargetBucket || isView"
                 :clearable="true"
                 multiple
                 width="100%"
@@ -243,7 +249,7 @@ defineExpose({
                 v-if="isTargetBucket"
                 ref="bucketRef2"
                 v-model="form.properties.excludeBuckets"
-                :disabled="!isTargetBucket"
+                :disabled="!isTargetBucket || isView"
                 title="作用例外桶"
                 width="100%"
                 :clearable="true"

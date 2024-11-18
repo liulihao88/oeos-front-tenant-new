@@ -81,3 +81,23 @@ export function getRetentionAutodelete(bucketName, data) {
 export function retentionAutodelete(bucketName, data) {
   return request(`bucket/${bucketName}/config/retention/autodelete`, 'put', { data })
 }
+
+// 获取标签列表
+export function getTagging(bucket) {
+  return request(`bucket/${bucket}/config/tagging`)
+}
+
+// 保存标签列表
+export function saveTagging(bucket, data) {
+  return request(`bucket/${bucket}/config/tagging`, 'put', { data: data })
+}
+
+// 获取匿名访问列表
+export function getAnonymous(bucket) {
+  return request(`bucket/${bucket}/config/anonymous`)
+}
+
+// 保存匿名访问列表
+export function saveAnonymous(bucket, data) {
+  return request(`bucket/${bucket}/config/anonymous`, 'put', { data: data })
+}

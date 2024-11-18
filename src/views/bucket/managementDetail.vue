@@ -13,6 +13,7 @@ import {
   getVersion,
 } from '@/api/bucket'
 import { getLimitCeiling } from '@/api/system.ts'
+import BucketTagging from '@/views/bucket/components/bucketTagging.vue'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -199,6 +200,8 @@ const editDate = () => {
         <span class="cl-red">{{ retentionAutoObj.enable ? '启用' : '未启用' }}</span>
       </div>
     </o-title>
+
+    <BucketTagging :bucketName="bucketName" />
 
     <o-dialog ref="dialogRef" v-model="isRadioShow" title="存储桶版本控制" @confirm="radioConfirm">
       <o-title :title="`当前状态`">

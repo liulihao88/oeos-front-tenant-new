@@ -16,6 +16,7 @@ const form = ref({
   data: [],
 })
 const selections = ref([])
+const selectionsIndex = ref([])
 const deleteRow = (row, scope) => {
   form.value.data.splice(scope.$index, 1)
 }
@@ -47,12 +48,6 @@ const columns = [
 
 const init = async () => {
   let res = await getTagging(props.bucketName)
-  res = {
-    '11': '22',
-    '33': '44',
-    '44': '55',
-    '444': '55',
-  }
   Object.entries(res).map(([key, value]) => {
     form.value.data.push({
       label: key,
@@ -62,7 +57,10 @@ const init = async () => {
 }
 init()
 
-const deleteSelection = () => {}
+const deleteSelection = () => {
+  const copyFormData = proxy.clone(form.value.data)
+  form.value.data = copyFormData.filter((item, index) => !selectionsIndex.value.includes(index))
+}
 const add = () => {
   form.value.data.push({
     label: '',
@@ -107,19 +105,24 @@ const getInnerRules = (index) => {
 const valueRules = [proxy.validate('必填')]
 const selectionChange = (val, ...a) => {
   selections.value = val
+  selectionsIndex.value = selections.value.map((item) => form.value.data.indexOf(item))
 }
 </script>
 
 <template>
   <div>
+    <o-title title="标签" />
     <div class="mb">
-      <el-button type="primary" @click="add">添加</el-button>
-      <el-button type="primary" @click="save">保存</el-button>
-      <el-button type="primary" :disabled="selections.length === 0" @click="deleteSelection">删除选中</el-button>
+      <el-button-group size="small">
+        <el-button type="primary" @click="add">添加</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
+        <el-button type="primary" :disabled="selections.length === 0" @click="deleteSelection">删除选中</el-button>
+      </el-button-group>
     </div>
-    <el-form ref="formRef" :model="form">
+    <el-form ref="formRef" :model="form" size="small">
       <o-table
         ref="tableRef"
+        size="small"
         :columns="columns"
         :data="form.data"
         :showPage="false"
