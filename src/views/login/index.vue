@@ -99,9 +99,19 @@ const onLogin = async (formEl) => {
   let token = `${loginRes.tokenType} ${loginRes.token}`
   proxy.setStorage('tenant-token', token)
 
-  Promise.all([getFormat(), bucketList.update()]).then((res) => {
-    let [formatRes] = res
-    proxy.setStorage('tenant-time-rule', formatRes)
+  Promise.allSettled([getFormat(), bucketList.update()]).then((res) => {
+    console.log(`06 res`, res)
+    if (res[0].status === 'fulfilled') {
+      proxy.setStorage('tenant-time-rule', res[0].value)
+    } else {
+      proxy.setStorage('tenant-time-rule', {
+        date: 'YYYY-MM-DD',
+        time: 'HH:mm:ss',
+        datetime: 'YYYY-MM-DD HH:mm:ss',
+        uptime: 'DD 天 HH 时 mm 分 ss 秒',
+        speed1s: 'MB/s',
+      })
+    }
   })
   return initRouter().then((routerRes) => {
     const tenantName = tenantOptions.value.find((v) => v.value === ruleForm.tenantId).name
