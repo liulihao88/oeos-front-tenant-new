@@ -26,10 +26,20 @@ const options = computed(() => {
     { label: '对象存储类型', value: details.value.storageClass },
     { label: '对象名称', value: details.value.name },
     { label: '对象版本号', value: details.value.version },
-  ]
+  ].concat(
+    lib.value
+      ? [
+          { label: '所在库名', value: lib.value },
+          { label: '所在盘匣', value: box.value },
+          { label: '所在桶位', value: slot.value },
+        ]
+      : [],
+  )
 })
 
-const data = ref([])
+const lib = ref()
+const box = ref()
+const slot = ref()
 const columns = [
   {
     label: '存储',
@@ -46,8 +56,21 @@ const columns = [
 ]
 
 const open = (sendDetails) => {
-  console.log(`58 details`, details)
   details.value = sendDetails
+  box.value = ''
+  slot.value = ''
+  lib.value = ''
+  ;(details.value.metadatas || []).forEach((v) => {
+    if (v.name === 'location.lib' || v.name === '_location_.lib') {
+      lib.value = v.value
+    }
+    if (v.name === 'location.box' || v.name === '_location_.box') {
+      box.value = v.value
+    }
+    if (v.name === 'location.slot' || v.name === '_location_.slot') {
+      slot.value = v.value
+    }
+  })
   isShow.value = true
 }
 
