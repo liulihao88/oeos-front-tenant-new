@@ -30,6 +30,9 @@ const menuData = computed(() => {
 })
 
 const defaultOpeneds = computed(() => {
+  if (!proxy.$dev) {
+    return []
+  }
   return menuData.value.map((v) => {
     return v.path
   })
@@ -85,7 +88,7 @@ onBeforeUnmount(() => {
     <NewSidebarLogo :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper" :class="[device === 'mobile' ? 'mobile' : 'pc']">
       <el-menu
-        :unique-opened="proxy.$dev ? false : true"
+        :unique-opened="false"
         mode="vertical"
         :default-openeds="defaultOpeneds"
         popper-class="pure-scrollbar"
