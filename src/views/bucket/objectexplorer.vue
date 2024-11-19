@@ -115,7 +115,7 @@ const columns = [
       return row.injectTime ? true : false
     },
     btns: [
-      { content: '预览', handler: (row) => preview(row.bucket, row.name) },
+      { content: '预览', handler: (row) => preview(row.bucket, row.name), isShow: (row) => proxy.isImage(row.key) },
       {
         content: '恢复',
         handler: (row) => {
