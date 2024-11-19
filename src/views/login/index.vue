@@ -98,17 +98,21 @@ const onLogin = async (formEl) => {
   let loginRes = await login(loginParams)
   let token = `${loginRes.tokenType} ${loginRes.token}`
   proxy.setStorage('tenant-token', token)
-  const tenantName = tenantOptions.value.find((v) => v.value === ruleForm.tenantId).name
-  proxy.setStorage('tenant-sysdomain', {
-    tenantId: ruleForm.tenantId,
-    tenantName: tenantName,
-    loginName: ruleForm.username,
-  })
+
   Promise.all([getFormat(), bucketList.update()]).then((res) => {
     let [formatRes] = res
     proxy.setStorage('tenant-time-rule', formatRes)
   })
   return initRouter().then((routerRes) => {
+    const tenantName = tenantOptions.value.find((v) => v.value === ruleForm.tenantId).name
+    if (tenantName !== proxy.getStorage('tenant-sysdomain')?.tenantName) {
+      redirectUrl.value = ''
+    }
+    proxy.setStorage('tenant-sysdomain', {
+      tenantId: ruleForm.tenantId,
+      tenantName: tenantName,
+      loginName: ruleForm.username,
+    })
     let matchedRouteArr = _findSubMenu(proxy.getStorage('tenant-async-routes'), redirectUrl.value)
     let jumpPath = matchedRouteArr[0] || matchedRouteArr[1]
     router.push(jumpPath).then(() => {
