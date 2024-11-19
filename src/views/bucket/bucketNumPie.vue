@@ -49,6 +49,7 @@ const initOptions = {
         textStyle: {
           fontSize: 12, // 更改标题字体大小为 20px
           color: '#e4393c',
+          // color: 'yellow',
         },
         rich: {
           a: {
