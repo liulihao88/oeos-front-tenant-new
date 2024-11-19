@@ -31,7 +31,7 @@ const limitQuota = ref(0)
 const data = ref([])
 const isRadioShow = ref(false)
 const isQuotaShow = ref(false)
-const isKnow = ref(true)
+const isKnow = ref(false)
 const radioCacheValue = ref()
 const validateNumber = (rule, value, callback) => {
   let getQuota = proxy.formatBytesConvert(value + quotaForm.value.quotaUnit)
@@ -113,11 +113,12 @@ async function getLimitCeilingInit() {
 
 const radioInput = (value) => {
   radioCacheValue.value = value
+  isKnow.value = false
   isRadioShow.value = true
 }
 const radioConfirm = async () => {
   if (!isKnow.value) {
-    return proxy.$toast('请勾选"我了解更改存储桶版本控制的后果"', 'e')
+    return proxy.$toast('请勾选"我已了解更改存储桶版本控制的后果。"', 'e')
   }
   const sendData = {
     mfaDeleteEnabled: null,
