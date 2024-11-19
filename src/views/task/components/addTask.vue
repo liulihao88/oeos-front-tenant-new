@@ -18,12 +18,6 @@ const selectRef = ref(null)
 const keepTimeRef = ref(null)
 
 const { proxy } = getCurrentInstance()
-const taskOptions = [
-  { label: '标准数据冷冻', value: FREEZE },
-  { label: '零拷贝数据冷冻', value: ZERO_COPY_FREEZE },
-  { label: '数据解冻', value: UNFREEZE },
-  { label: '数据过期', value: DELETE },
-]
 const isTargetBucket = ref(false)
 const isEdit = ref(false)
 const targetOptions = ref([])
@@ -174,7 +168,7 @@ defineExpose({
           <o-select
             ref="selectRef"
             v-model="form.action"
-            :options="taskOptions"
+            :options="proxy.TASK_TYPE_OPTIONS"
             :disabled="isEdit"
             @change="actionChange"
           />

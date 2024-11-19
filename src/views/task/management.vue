@@ -20,7 +20,13 @@ const columns = [
   {
     label: '任务类型',
     prop: 'action',
-    width: 100,
+    width: 130,
+    filter: (val) => {
+      if (!val) {
+        return '-'
+      }
+      return proxy.TASK_TYPE_OPTIONS.find((item) => item.value === val).label
+    },
   },
   {
     label: '包含桶名',
@@ -47,7 +53,7 @@ const columns = [
   {
     label: '保留期',
     prop: 'retentionPeriod',
-    width: 150,
+    width: 80,
     filter: (val) => {
       // 0年0月100.2天0时
       if (val) {
