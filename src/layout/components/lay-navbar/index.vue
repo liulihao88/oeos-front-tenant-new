@@ -50,22 +50,13 @@ function onFresh() {
         </div>
       </div>
       <o-tooltip content="刷新">
-        <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="onFresh">
+        <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover" @click="onFresh">
           <IconifyIconOffline :icon="RefreshRight" />
         </div>
       </o-tooltip>
 
-      <div>
-        {{ proxy.getStorage('tenant-sysdomain').loginName }}
-      </div>
       <!-- 全屏 -->
       <LaySidebarFullScreen id="full-screen" />
-
-      <!-- <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover m-r-10" @click="logout">
-        <o-tooltip content="退出系统">
-          <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
-        </o-tooltip>
-      </div> -->
 
       <!-- 退出登录 -->
       <DropdownLayout />
