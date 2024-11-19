@@ -28,7 +28,7 @@ const columns = computed(() => {
   return [
     {
       type: 'selection',
-      isShow: frezzeStatus.value === 'unfreezing',
+      isShowColumn: frezzeStatus.value === 'unfreezing',
     },
     {
       label: '桶名称',
@@ -51,7 +51,7 @@ const columns = computed(() => {
     {
       label: '优先级',
       prop: 'priority',
-      isShow: frezzeStatus.value === 'unfreezing',
+      isShowColumn: frezzeStatus.value === 'unfreezing',
       width: 80,
     },
     {
@@ -74,7 +74,7 @@ const columns = computed(() => {
       label: '解冻保留时间',
       prop: 'expireTime',
       width: proxy.TIME_WIDTH,
-      isShow: frezzeStatus.value !== 'unfreezing',
+      isShowColumn: frezzeStatus.value !== 'unfreezing',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },
@@ -82,7 +82,7 @@ const columns = computed(() => {
     {
       key: 'operation',
       label: '操作',
-      isShow: frezzeStatus.value !== 'unfreezing',
+      isShowColumn: frezzeStatus.value !== 'unfreezing',
       btns: [
         {
           content: '下载',

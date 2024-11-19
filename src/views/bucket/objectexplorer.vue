@@ -123,7 +123,9 @@ const columns = [
     prop: 'operation',
     width: proxy.$dev ? 300 : null,
     maxBtns: proxy.$dev ? 10 : null,
-    isShow: (row) => (row.injectTime ? true : false),
+    isShow: (row) => {
+      return row.injectTime ? true : false
+    },
     btns: [
       { content: '预览', handler: (row) => preview(row.bucket, row.name) },
       { content: '恢复', handler: restoreRow },

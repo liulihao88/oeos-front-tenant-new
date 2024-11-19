@@ -70,7 +70,7 @@
     "mitt": "^3.0.1",
     "mousetrap": "^1.6.5",
     "nprogress": "^0.2.0",
-    "oeos-components": "^0.1.37",
+    "oeos-components": "^0.1.38",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^4.1.3",
