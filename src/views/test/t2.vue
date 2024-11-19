@@ -26,7 +26,7 @@ const columns = [
   {
     label: '标签名',
     prop: 'label',
-    useSlot: true,
+    isShow: false,
   },
   {
     label: '标签值',

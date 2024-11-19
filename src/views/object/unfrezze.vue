@@ -5,7 +5,7 @@ import { restoreList, adjustLevelApi, allCancelUnFreeze, cancelUnFreezeApi } fro
 const { proxy } = getCurrentInstance()
 const bucketRef = ref(null)
 
-const bucketId = ref()
+const bucketId = ref(proxy.getStorage('tenant-freeze-bucket-id'))
 const bucketName = ref()
 const isShow = ref(false)
 const levelValue = ref(0)
@@ -25,21 +25,17 @@ const levelOptions = [
 
 const data = ref([])
 const columns = computed(() => {
-  let selectionArr =
-    frezzeStatus.value === 'unfreezing'
-      ? [
-          {
-            type: 'selecttion',
-          },
-        ]
-      : []
-  return selectionArr.concat([
+  return [
+    {
+      type: 'selection',
+      isShow: frezzeStatus.value === 'unfreezing',
+    },
     {
       label: '桶名称',
       prop: 'bucket',
     },
     {
-      label: '对象key',
+      label: '对象键',
       prop: 'key',
     },
     {
@@ -55,6 +51,7 @@ const columns = computed(() => {
     {
       label: '优先级',
       prop: 'priority',
+      isShow: frezzeStatus.value === 'unfreezing',
       width: 80,
     },
     {
@@ -77,6 +74,7 @@ const columns = computed(() => {
       label: '解冻保留时间',
       prop: 'expireTime',
       width: proxy.TIME_WIDTH,
+      isShow: frezzeStatus.value !== 'unfreezing',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },
@@ -84,6 +82,7 @@ const columns = computed(() => {
     {
       key: 'operation',
       label: '操作',
+      isShow: frezzeStatus.value !== 'unfreezing',
       btns: [
         {
           content: '下载',
@@ -91,8 +90,22 @@ const columns = computed(() => {
         },
       ],
     },
-  ])
+  ]
 })
+
+watch(
+  [bucketId, bucketName],
+  ([bId, bName], [bOldId, bOldName]) => {
+    if (bId && bName && bOldName !== bName) {
+      // form.value.bucket = bName
+      proxy.setStorage('tenant-freeze-bucket-id', bId)
+      init()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 const handleSelectionChange = (val) => {
   selections.value = val
@@ -152,12 +165,12 @@ const cancelUnFreeze = async () => {
   <div>
     <div class="top">
       <div>
-        <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" @change="init" />
+        <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
         <o-input
           v-model="prefixKey"
           v-debounce.200="init"
           title="对象前缀"
-          placeholder="请输入对象key的前缀"
+          placeholder="请输入对象键的前缀"
           :disabled="!bucketId"
           width="300"
           class="mr2"

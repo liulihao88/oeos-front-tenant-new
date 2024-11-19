@@ -82,7 +82,7 @@ const rules = {
   // buckets: [proxy.validate('请选择')],
 }
 const nameOptions = [
-  { label: '对象KEY', value: 'objectKey' },
+  { label: '对象键', value: 'objectKey' },
   { label: '对象名称', value: 'objectName' },
   { label: '对象大小', value: 'contentLength' },
   { label: '写入时间', value: 'injectTime' },
