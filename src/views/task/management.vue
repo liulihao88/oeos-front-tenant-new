@@ -114,7 +114,6 @@ const add = () => {
 const init = async () => {
   let res = await getBucketTask()
   data.value = res
-  proxy.$toast('操作成功')
 }
 init()
 
