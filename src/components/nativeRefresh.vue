@@ -15,21 +15,9 @@ const useRefresh = useNativeRefresh()
 
 const { onReset } = useDataThemeChange()
 
-// addHotKey()
-// function addHotKey() {
-//   nextTick(() => {
-//     let hasBtn = document.getElementById('nativeRefreshBtn')
-//     if (!hasBtn) {
-//       return
-//     }
-//     // 通过检查event.metaKey（Mac上的Command键）或event.ctrlKey（Windows上的Ctrl键）以及event.key是否为"Enter"来判断同时按下了Command键和回车键。
-//     document.addEventListener('keydown', (event) => {
-//       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
-//         nativeRefresh()
-//       }
-//     })
-//   })
-// }
+import { useNav } from '@/layout/hooks/useNav'
+const { logout } = useNav()
+
 onMounted(() => {
   Mousetrap.bind('command+enter', function () {
     // 执行你想要的操作
@@ -58,7 +46,18 @@ defineExpose({
     id="nativeRefreshBtn"
     type="danger"
     class="po-f r-500 t-8"
-    style="right: calc(50% - 100px); z-index: 99999"
+    style="right: calc(50% - 0px); z-index: 99999"
+    size="small"
+    @click="logout"
+  >
+    退出
+  </el-button>
+  <el-button
+    v-show="isDev"
+    id="nativeRefreshBtn"
+    type="danger"
+    class="po-f r-500 t-8"
+    style="right: calc(50% - 50px); z-index: 99999"
     size="small"
     @click="nativeRefresh"
   >
@@ -67,8 +66,8 @@ defineExpose({
   <el-button
     id="nativeRefreshBtn"
     :type="isDev ? 'danger' : 'primary'"
-    class="po-f t-8"
-    style="right: 50%; z-index: 99999"
+    class="po-f t-8 r-550"
+    style="right: calc(50% - 100px); z-index: 99999"
     size="small"
     @click="changeMode"
   >
@@ -76,14 +75,9 @@ defineExpose({
   </el-button>
   <el-button
     v-show="isDev"
-    v-tippy="{
-      content: '清空缓存并返回登录页',
-      placement: 'left-start',
-      zIndex: 41000,
-    }"
     class="po-f t-8 r-600"
     size="small"
-    style="right: 55%; z-index: 99999"
+    style="right: calc(50% - 164px); z-index: 99999"
     type="danger"
     @click="onReset"
   >

@@ -9,6 +9,7 @@ import { useSettingStoreHook } from '@/store/modules/settings'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
 import { h, ref, reactive, computed, onMounted, onBeforeMount, defineComponent } from 'vue'
 import { useDark, useGlobal, deviceDetection, useResizeObserver } from '@pureadmin/utils'
+import nativeRefresh from '@/components/nativeRefresh.vue'
 
 import LayTag from './components/lay-tag/index.vue'
 import LayNavbar from './components/lay-navbar/index.vue'
@@ -142,6 +143,7 @@ const LayHeader = defineComponent({
 
 <template>
   <div ref="appWrapperRef" :class="['app-wrapper', set.classes]">
+    <nativeRefresh ref="refreshRef" />
     <div
       v-show="set.device === 'mobile' && set.sidebar.opened && layout.includes('vertical')"
       class="app-mask"

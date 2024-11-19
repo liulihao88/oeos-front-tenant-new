@@ -91,7 +91,9 @@ export function useNav() {
     const keys = Object.keys(storage)
     keys.forEach((key) => {
       if (key.startsWith(prefix)) {
-        storage.removeItem(key)
+        if (key !== 'tenant-sysdomain') {
+          storage.removeItem(key)
+        }
       }
     })
   }
