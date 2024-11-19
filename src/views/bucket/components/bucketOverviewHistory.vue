@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
-import {
-  getHistory,
-  deleteOne,
-  deleteBatch,
-  objectDownloadBatch,
-  objectRestoreBatch,
-  objectRestore,
-} from '@/api/bucketReview.ts'
+import { getHistory, deleteOne, deleteBatch, objectDownloadBatch } from '@/api/bucketReview.ts'
 const isShow = ref(false)
 const data = ref([])
+const RestoreExpirationInDaysRef = ref(null)
+import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 const props = defineProps({
   bucketName: {
     type: String,
@@ -53,24 +48,12 @@ const deleteRow = async (row) => {
   proxy.$toast('删除成功!')
   init()
 }
-const restoreRow = async (row) => {
-  let params = {
-    bucket: props.bucketName,
-    key: row.key,
-  }
-  let res = await objectRestore(params)
-  proxy.$toast(res)
-}
 const update = (num, size) => {
   pageSize.value = size
   pageNumber.value = num
   init()
 }
 
-const multyRestore = async () => {
-  await objectRestoreBatch(selections.value)
-  proxy.$toast('批量恢复成功')
-}
 const selectionChange = (val, ...a) => {
   selections.value = val
 }
@@ -119,7 +102,12 @@ const columns = [
     maxBtns: 4,
     btns: [
       { content: '下载', handler: proxy.gDownload },
-      { content: '恢复', handler: restoreRow },
+      {
+        content: '恢复',
+        handler: (row) => {
+          RestoreExpirationInDaysRef.value.open(row)
+        },
+      },
       { content: '删除', handler: deleteRow },
     ],
   },
@@ -130,26 +118,34 @@ defineExpose({
 </script>
 
 <template>
-  <o-dialog ref="dialogRef" v-model="isShow" title="历史版本" width="80%">
-    <div class="mb2 f-ed-ct">
-      <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
-        批量下载
-      </el-button>
+  <div>
+    <o-dialog ref="dialogRef" v-model="isShow" title="历史版本" width="80%">
+      <div class="mb2 f-ed-ct">
+        <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
+          批量下载
+        </el-button>
 
-      <el-button type="primary" icon="el-icon-refresh-left" :disabled="selectDisabled" @click="multyRestore">
-        批量恢复
-      </el-button>
-      <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
-        批量删除
-      </el-button>
-    </div>
-    <o-table
-      :columns="columns"
-      :data="data"
-      height="calc(100vh - 500px)"
-      :pageSize="pageSize"
-      @selection-change="selectionChange"
-      @update="update"
-    />
-  </o-dialog>
+        <el-button
+          type="primary"
+          icon="el-icon-refresh-left"
+          :disabled="selectDisabled"
+          @click="RestoreExpirationInDaysRef.open(selections)"
+        >
+          批量恢复
+        </el-button>
+        <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
+          批量删除
+        </el-button>
+      </div>
+      <o-table
+        :columns="columns"
+        :data="data"
+        height="calc(100vh - 500px)"
+        :pageSize="pageSize"
+        @selection-change="selectionChange"
+        @update="update"
+      />
+    </o-dialog>
+    <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
+  </div>
 </template>

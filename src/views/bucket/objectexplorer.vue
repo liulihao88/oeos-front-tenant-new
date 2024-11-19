@@ -6,13 +6,13 @@ import {
   getObjectList,
   deleteBatch,
   deleteOne,
-  objectRestore,
-  objectRestoreBatch,
   objectPropertyDetail,
   objectDownloadBatch,
   addDirectory,
 } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
+import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
+
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
 import FolderNav from '@/views/bucket/components/folderNav.vue'
@@ -34,6 +34,7 @@ const selectRef = ref(null)
 const bucketRef = ref(null)
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
+const RestoreExpirationInDaysRef = ref(null)
 const BucketFileDetailsCompRef = ref(null)
 const isShow = ref(false)
 const form = ref({
@@ -48,14 +49,6 @@ function selectableFn(row, index) {
   return row.injectTime
 }
 
-const restoreRow = async (row) => {
-  let params = {
-    bucket: bucketName.value,
-    key: row.key,
-  }
-  let res = await objectRestore(params)
-  proxy.$toast(res)
-}
 const detailRow = async (row) => {
   let params = {
     bucket: bucketName.value,
@@ -63,11 +56,6 @@ const detailRow = async (row) => {
   }
   let res = await objectPropertyDetail(params)
   BucketFileDetailsCompRef.value.open(res)
-}
-
-const multyRestore = async () => {
-  await objectRestoreBatch(selections.value)
-  proxy.$toast('批量恢复成功')
 }
 
 const batchDownload = async () => {
@@ -128,7 +116,12 @@ const columns = [
     },
     btns: [
       { content: '预览', handler: (row) => preview(row.bucket, row.name) },
-      { content: '恢复', handler: restoreRow },
+      {
+        content: '恢复',
+        handler: (row) => {
+          RestoreExpirationInDaysRef.value.open(row)
+        },
+      },
       { content: '历史', handler: historyRow },
       { content: '详情', handler: detailRow },
       { content: '删除', handler: deleteRow }, // reConfirm: true,
@@ -258,7 +251,12 @@ const inside = (row) => {
       <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
         批量删除
       </el-button>
-      <el-button type="primary" icon="el-icon-refresh-left" :disabled="selectDisabled" @click="multyRestore">
+      <el-button
+        type="primary"
+        icon="el-icon-refresh-left"
+        :disabled="selectDisabled"
+        @click="RestoreExpirationInDaysRef.open(selections)"
+      >
         批量恢复
       </el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
@@ -297,6 +295,8 @@ const inside = (row) => {
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
+
+    <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
 
     <o-dialog ref="dialogRef" v-model="isShow" title="新建目录" @confirm="addDirConfirm">
       <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>

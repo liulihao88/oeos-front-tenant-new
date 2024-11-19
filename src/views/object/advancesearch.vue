@@ -11,8 +11,9 @@ import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple, queryAdvance } from '@/api/searchApi.ts'
-import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
+import { objectDownloadBatch } from '@/api/bucketReview.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
+import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 import SearchConfigComp from '@/views/object/components/searchConfigComp.vue'
 import { preview } from '@/utils/remoteFunc.ts'
 
@@ -27,19 +28,13 @@ options.value = proxy.getStorage('tenant-advance-expression') ?? []
 const searchObj = ref({})
 
 const selections = ref([])
+const RestoreExpirationInDaysRef = ref(null)
 
 const data = ref([])
 const pageSize = ref(30)
 const pageNumber = ref(1)
 const total = ref(0)
 
-const restoreRow = async (row) => {
-  let params = {
-    bucket: bucketName.value,
-    key: row.key,
-  }
-  await objectRestore(params)
-}
 const columns = [
   {
     type: 'selection',
@@ -100,7 +95,9 @@ const columns = [
       },
       {
         content: '恢复',
-        handler: restoreRow,
+        handler: (row) => {
+          RestoreExpirationInDaysRef.value.open(row)
+        },
       },
       {
         content: '历史',
@@ -145,11 +142,6 @@ const update = async (num, size) => {
 
 const timeRange = ref([])
 
-const multyRestore = async () => {
-  await objectRestoreBatch(selections.value)
-  proxy.$toast('批量恢复成功')
-}
-
 const download = async () => {
   // 全部下载
 
@@ -177,7 +169,7 @@ const changeSelect = async (val, label, obj) => {
             type="primary"
             icon="el-icon-refresh-left"
             :disabled="selections.length === 0"
-            @click="multyRestore"
+            @click="RestoreExpirationInDaysRef.open(selections)"
           >
             批量恢复
           </el-button>
@@ -229,5 +221,6 @@ const changeSelect = async (val, label, obj) => {
 
     <SearchConfigComp ref="searchConfigCompRef" @success="success" />
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" />
+    <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
   </div>
 </template>

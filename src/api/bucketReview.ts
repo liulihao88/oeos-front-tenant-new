@@ -56,6 +56,6 @@ export function objectRestore(data) {
 }
 
 // 批量恢复 object/restore/batch
-export function objectRestoreBatch(data) {
-  return request('object/restore/batch', 'put', { data: data })
+export function objectRestoreBatch(expirationInDays, data) {
+  return request(`object/restore/batch?expirationInDays=${expirationInDays}`, 'put', { data: data })
 }

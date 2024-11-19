@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 1y2m4d6.13h
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
@@ -9,6 +9,14 @@ const props = defineProps({
   },
   isView: {
     type: Boolean,
+  },
+  inputAttrs: {
+    type: Object,
+    default: () => {},
+  },
+  type: {
+    type: String,
+    default: '',
   },
 })
 
@@ -23,13 +31,14 @@ const minutes = ref(0)
 
 const easyTime = ref()
 
-const timeOptions = [
-  { label: '1天', value: '0y0m1d0h' },
-  { label: '7天', value: '0y0m7d0h' },
-  { label: '30天', value: '0y0m30d0h' },
-  { label: '90天', value: '0y0m90d0h' },
-  { label: '365天', value: '0y0m365d0h' },
-]
+const timeOptions = computed(() => {
+  let one = props.type === 'restore' ? [] : [{ label: '1天', value: '0y0m1d0h' }]
+  return one.concat([
+    { label: '7天', value: '0y0m7d0h' },
+    { label: '30天', value: '0y0m30d0h' },
+    { label: '90天', value: '0y0m90d0h' },
+  ])
+})
 
 watch(
   () => props.value,
@@ -43,11 +52,11 @@ watch(
       hours.value = match[4].toString().split('.')[0]
       let smallNumber = match[4].toString().split('.')[1] ?? 0
       minutes.value = Math.round(('0.' + smallNumber) * 60)
-      let easyTimeIdx = timeOptions.findIndex((item) => {
+      let easyTimeIdx = timeOptions.value.findIndex((item) => {
         return item.value === match[0]
       })
       if (easyTimeIdx > -1) {
-        easyTime.value = timeOptions[easyTimeIdx].value
+        easyTime.value = timeOptions.value[easyTimeIdx].value
       } else {
         easyTime.value = ''
       }
@@ -92,9 +101,10 @@ defineExpose({
       <el-input-number
         v-model="days"
         class="mr"
-        style="width: 200px"
+        style="width: 180px"
         :disabled="!!easyTime"
         :precision="1"
+        v-bind="inputAttrs"
         @change="changeInputNumber"
       >
         <template #prefix>

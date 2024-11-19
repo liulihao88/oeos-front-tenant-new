@@ -12,8 +12,9 @@ import { api as viewerApi } from 'v-viewer'
 import { querySimple, getStorageClassList } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
+import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 
-import { objectDownloadBatch, objectRestoreBatch, objectRestore } from '@/api/bucketReview.ts'
+import { objectDownloadBatch } from '@/api/bucketReview.ts'
 
 const { proxy } = getCurrentInstance()
 
@@ -32,17 +33,11 @@ const form = ref({
 const storageOptions = ref([])
 const selections = ref([])
 const bucketOverviewHistoryRef = ref(null)
+const RestoreExpirationInDaysRef = ref(null)
 const total = ref(0)
 
 const data = ref([])
 
-const restoreRow = async (row) => {
-  let params = {
-    bucket: bucketName.value,
-    key: row.key,
-  }
-  await objectRestore(params)
-}
 const columns = [
   {
     type: 'selection',
@@ -90,7 +85,9 @@ const columns = [
       },
       {
         content: '恢复',
-        handler: restoreRow,
+        handler: (row) => {
+          RestoreExpirationInDaysRef.value.open(row)
+        },
       },
       {
         content: '历史',
@@ -149,11 +146,6 @@ const changeSelect = (value, label, options) => {
   init()
 }
 const timeRange = ref([])
-
-const multyRestore = async () => {
-  await objectRestoreBatch(selections.value)
-  proxy.$toast('批量恢复成功')
-}
 
 const timeChange = (value) => {
   if (proxy.notEmpty(timeRange.value?.[0] && proxy.notEmpty(timeRange.value?.[1]))) {
@@ -214,7 +206,12 @@ const selectionChange = (val, ...a) => {
         />
       </div>
       <div class="f-1 f-ed-un">
-        <el-button type="primary" icon="el-icon-refresh-left" :disabled="selections.length === 0" @click="multyRestore">
+        <el-button
+          type="primary"
+          icon="el-icon-refresh-left"
+          :disabled="selections.length === 0"
+          @click="RestoreExpirationInDaysRef.open(selections)"
+        >
           批量恢复
         </el-button>
         <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
@@ -253,5 +250,7 @@ const selectionChange = (val, ...a) => {
     </div>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
+
+    <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
   </div>
 </template>
