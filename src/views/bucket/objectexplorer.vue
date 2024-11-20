@@ -262,19 +262,12 @@ const inside = (row) => {
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>
 
-    <div class="middle m-t-16">
-      <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
-      <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
-      <el-button v-if="bucketSettings.prefixKey" type="primary" @click="toPrevFolder">返回上级目录</el-button>
-      <FolderNav class="ml2" @change="init" />
-    </div>
-
     <o-table
       :columns="columns"
       :data="data"
       class="m-t-16"
       :showPage="false"
-      height="calc(100vh - 220px)"
+      height="calc(100vh - 240px)"
       @selection-change="selectionChange"
     >
       <template #name="{ scope, row }">
@@ -292,6 +285,14 @@ const inside = (row) => {
         </div>
       </template>
     </o-table>
+
+    <div class="middle m-t-16">
+      <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
+      <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+      <!-- <el-button v-if="bucketSettings.prefixKey" type="primary" @click="toPrevFolder">返回上级目录</el-button> -->
+
+      <FolderNav class="ml2" @change="init" />
+    </div>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
@@ -316,5 +317,6 @@ const inside = (row) => {
 .middle {
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
 }
 </style>

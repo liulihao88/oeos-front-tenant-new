@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 const useBucketSettings = defineStore('bucketSettings', {
   state: () => ({
     prefixKey: '',
-    prevFolderList: [],
+    prevFolderList: [], // 上一页的列表
   }),
   getters: {
     prefixKeyArr: (state) => {
@@ -11,6 +11,9 @@ const useBucketSettings = defineStore('bucketSettings', {
       let splitArr = state.prefixKey.split('/')
       console.log(`64 splitArr`, splitArr)
       return splitArr.filter((v) => v)
+    },
+    prevFolderStr: (state) => {
+      return state.prevFolderList.join('/')
     },
   },
   actions: {
