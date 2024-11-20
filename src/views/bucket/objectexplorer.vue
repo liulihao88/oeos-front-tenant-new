@@ -109,8 +109,8 @@ const columns = [
   {
     label: '操作',
     prop: 'operation',
-    width: proxy.$dev ? 300 : null,
-    maxBtns: proxy.$dev ? 10 : null,
+    width: proxy.$dev ? 300 : 200,
+    maxBtns: proxy.$dev ? 10 : 3,
     isShow: (row) => {
       return row.injectTime ? true : false
     },
