@@ -42,6 +42,16 @@ export function putRoles(name, data) {
   return request(`security/user/${name}/roles`, 'put', { data })
 }
 
+// 查看所属组
+export function viewGroup(name) {
+  return request(`security/user/${name}/groups`)
+}
+
+// 保存所属组
+export function putGroup(name, data) {
+  return request(`security/user/${name}/groups`, 'put', { data })
+}
+
 // 获取桶操作权限
 export function getBucketPermission(name) {
   return request(`security/user/${name}/permission`)

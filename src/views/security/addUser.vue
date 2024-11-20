@@ -6,7 +6,15 @@ defineOptions({
 import { ref, getCurrentInstance, computed, onMounted, watch } from 'vue'
 import { omit } from 'lodash-es'
 import { encryptionPassword } from '@/api/login.ts'
-import { addUser, getBucketPermission, updateBucketPermission, putRoles } from '@/api/securityApi.ts'
+import {
+  addUser,
+  getBucketPermission,
+  updateBucketPermission,
+  putRoles,
+  viewGroup,
+  putGroup,
+  getGroupList,
+} from '@/api/securityApi.ts'
 import { ROLE_OPTIONS } from '@/assets/globalData.ts'
 
 import BucketPermission from '@/views/security/bucketPermission.vue'
@@ -21,6 +29,9 @@ const { proxy } = getCurrentInstance()
 
 const userDetails = ref(proxy.getStorage('tenant-user-details') || {})
 const bucketPermissionRef = ref(null)
+
+const groupValues = ref([])
+const groupOptions = ref([])
 roleValues.value = userDetails.value.roles
 const roleInfos = `
   <div>
@@ -59,6 +70,14 @@ const rules = computed(() => {
   }
 })
 
+const groupInit = async () => {
+  let res = await getGroupList()
+  groupOptions.value = res
+  let viewRes = await viewGroup(userDetails.value.username)
+  groupValues.value = viewRes
+}
+groupInit()
+
 const save = async () => {
   await proxy.validForm(formRef)
   const sendForm = omit(form.value, ['pwd', 'confirmPwd'])
@@ -68,12 +87,15 @@ const save = async () => {
   } else {
     sendForm.password = ''
   }
-
-  await addUser(sendForm)
-  proxy.$toast('保存成功')
-  await putRoles(userDetails.value.username, roleValues.value)
   let dataRes = await bucketPermissionRef.value.$getData()
-  updateBucketPermission(userDetails.value.username, dataRes)
+  await Promise.all([
+    addUser(sendForm),
+    putRoles(userDetails.value.username, roleValues.value),
+    putGroup(userDetails.value.username, groupValues.value),
+    updateBucketPermission(userDetails.value.username, dataRes),
+  ])
+
+  proxy.$toast('保存成功')
   proxy.jump('/apps/security/user')
 }
 </script>
@@ -120,6 +142,11 @@ const save = async () => {
       <o-checkbox v-model="roleValues" :options="ROLE_OPTIONS" />
       <o-icon name="warning" raw-content :content="roleInfos" class="ml2" />
     </div>
+    <o-title title="所属组" type="simple">
+      <div class="f-st-ct ml2">
+        <o-checkbox v-model="groupValues" :options="groupOptions" type="simple" />
+      </div>
+    </o-title>
 
     <BucketPermission
       ref="bucketPermissionRef"
