@@ -1,15 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance, nextTick, h, watch } from 'vue'
 const { proxy } = getCurrentInstance()
-import {
-  getBucketOptions,
-  getObjectList,
-  deleteBatch,
-  deleteOne,
-  objectPropertyDetail,
-  objectDownloadBatch,
-  addDirectory,
-} from '@/api/bucketReview'
+import { getObjectList, deleteBatch, objectDownloadBatch } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 
@@ -19,43 +11,23 @@ import FolderNav from '@/views/bucket/components/folderNav.vue'
 
 import useBucketSettings from '@/store/modules/bucketSettings.ts'
 const bucketSettings = useBucketSettings()
-import GetBucketList from '@/hooks/getBucketList.ts'
+
+const RestoreExpirationInDaysRef = ref(null)
+const bucketOverviewHistoryRef = ref(null)
+const BucketFileDetailsCompRef = ref(null)
+import { useBtns } from '@/hooks/useBtns.ts'
+const { btns } = useBtns(RestoreExpirationInDaysRef, bucketOverviewHistoryRef, BucketFileDetailsCompRef, init)
+
 import { preview } from '@/utils/remoteFunc.ts'
-import { useI18n } from 'vue-i18n'
-let getBucketList = GetBucketList()
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
 
 const bucketId = ref()
 bucketId.value = proxy.getStorage('tenant-bucket-id') ?? ''
 const bucketName = ref()
-const selectRef = ref(null)
 const bucketRef = ref(null)
 const selections = ref([])
-const bucketOverviewHistoryRef = ref(null)
-const RestoreExpirationInDaysRef = ref(null)
-const BucketFileDetailsCompRef = ref(null)
-const isShow = ref(false)
-const form = ref({
-  name: '',
-})
-const rules = {
-  name: [proxy.validate()],
-}
-const formRef = ref(null)
 
 function selectableFn(row, index) {
   return row.injectTime
-}
-
-const detailRow = async (row) => {
-  let params = {
-    bucket: bucketName.value,
-    key: row.key,
-  }
-  let res = await objectPropertyDetail(params)
-  BucketFileDetailsCompRef.value.open(res)
 }
 
 const batchDownload = async () => {
@@ -106,28 +78,7 @@ const columns = [
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),
   },
-  {
-    label: '操作',
-    prop: 'operation',
-    width: proxy.$dev ? 300 : 200,
-    maxBtns: proxy.$dev ? 10 : 3,
-    isShow: (row) => {
-      return row.injectTime ? true : false
-    },
-    btns: [
-      { content: '预览', handler: (row) => preview(row.bucket, row.name), isShow: (row) => proxy.isImage(row.key) },
-      {
-        content: '恢复',
-        handler: (row) => {
-          RestoreExpirationInDaysRef.value.open(row)
-        },
-      },
-      { content: '历史', handler: historyRow },
-      { content: '详情', handler: detailRow },
-      { content: '删除', handler: deleteRow }, // reConfirm: true,
-      { content: '下载', handler: proxy.gDownload },
-    ],
-  },
+  { ...btns.value },
 ]
 const data = ref([])
 
@@ -148,13 +99,6 @@ const selectDisabled = computed(() => {
   return selections.value.length === 0
 })
 
-async function getTableByBucket() {
-  let storageBucketValue = proxy.getStorage('tenant-bucket-id')
-  if (proxy.notEmpty(storageBucketValue)) {
-    await nextTick()
-    selectRef.value.$refs.selectRef.$emit('change', storageBucketValue)
-  }
-}
 async function init(isReset = false) {
   if (isReset) {
     bucketSettings.clear()
@@ -171,21 +115,6 @@ async function init(isReset = false) {
 const selectionChange = (val, ...a) => {
   selections.value = val
 }
-const addDir = async () => {
-  form.value = {}
-  isShow.value = true
-}
-const addDirConfirm = async () => {
-  await proxy.validForm(formRef.value)
-  let sendData = {
-    bucket: bucketName.value,
-    dir: form.value.name,
-  }
-  await addDirectory(sendData)
-  isShow.value = false
-  init()
-  proxy.$toast('新建目录成功')
-}
 const refresh = () => {
   init()
 }
@@ -194,23 +123,7 @@ const multypleDelete = async () => {
   proxy.$toast('删除成功!')
   init()
 }
-async function deleteRow(row) {
-  let params = {
-    bucket: bucketName.value,
-    key: row.name,
-  }
-  await deleteOne(params)
-  proxy.$toast('删除成功!')
-  init()
-}
-async function historyRow(row) {
-  bucketOverviewHistoryRef.value.open(row)
-}
 
-const bucketChange = (val) => {
-  proxy.setStorage('tenant-bucket-id', val)
-  init()
-}
 const prev = () => {
   bucketSettings.changePrevFolder()
   init()
@@ -220,13 +133,7 @@ const next = () => {
   bucketSettings.changePrevFolder(laskKey)
   init()
 }
-const toPrevFolder = () => {
-  let nowPrefixKeyArr = bucketSettings.prefixKeyArr
-  nowPrefixKeyArr.pop()
-  let nowPrefixkey = nowPrefixKeyArr.length > 0 ? nowPrefixKeyArr.join('/') + '/' : ''
-  bucketSettings.changePrefixKey(nowPrefixkey)
-  init()
-}
+
 const inside = (row) => {
   bucketSettings.changePrefixKey(row.key)
   init()
@@ -237,7 +144,6 @@ const inside = (row) => {
   <div>
     <div class="top f">
       <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
-      <!-- <el-button type="primary" class="mr" icon="el-icon-plus" @click="addDir">新建目录</el-button> -->
       <UploadFile :bucketName="bucketName" @success="init">
         <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
       </UploadFile>
@@ -289,7 +195,6 @@ const inside = (row) => {
     <div class="middle m-t-16">
       <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
       <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
-      <!-- <el-button v-if="bucketSettings.prefixKey" type="primary" @click="toPrevFolder">返回上级目录</el-button> -->
 
       <FolderNav class="ml2" @change="init" />
     </div>
@@ -298,14 +203,6 @@ const inside = (row) => {
     <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
 
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
-
-    <o-dialog ref="dialogRef" v-model="isShow" title="新建目录" @confirm="addDirConfirm">
-      <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
-        <el-form-item label="目录" prop="name">
-          <o-input v-model="form.name" v-focus />
-        </el-form-item>
-      </el-form>
-    </o-dialog>
   </div>
 </template>
 

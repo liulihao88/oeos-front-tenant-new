@@ -184,7 +184,7 @@ const changeSelect = async (val, label, obj) => {
           :options="options"
           label="queryName"
           value="queryName"
-          title="搜索表达式"
+          title="搜索历史"
           :clearable="false"
           @changeSelect="changeSelect"
         />
