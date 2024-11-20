@@ -363,7 +363,9 @@ function _handleUsedData(usedSpace) {
                     :total="calcQuota(row.quota, row.quotaUnit)"
                     :used="row.objectSize"
                     :row="row"
-                  />
+                  >
+                    {{ proxy.formatBytes(row.objectSize) }} / {{ row.quota.toFixed(2) + row.quotaUnit }}
+                  </g-capacity-progress>
                 </template>
               </template>
             </o-table>

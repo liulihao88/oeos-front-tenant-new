@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
+const progressBoxRef = ref(null)
 const props = defineProps({
   total: {
     type: [String, Number],
@@ -30,11 +31,21 @@ function formatColor(value) {
     return 'red'
   }
 }
+
+const progressWidth = computed(() => {
+  if (progressBoxRef.value) {
+    let width = `${progressBoxRef.value.$el.offsetWidth - 30}px`
+    return width
+  } else {
+    return '200px'
+  }
+})
 </script>
 
 <template>
   <div>
     <o-progress
+      ref="progressBoxRef"
       class="progress-box"
       :percentage="percentage"
       type="line"
@@ -44,10 +55,10 @@ function formatColor(value) {
       :color="formatColor"
     >
       <template #default="{ percentage }">
-        <div class="f-bt-ct w-260">
+        <div class="f-bt-ct" :style="{ width: progressWidth }">
           <div class="percentage-value">{{ format() }}</div>
           <div>
-            {{ proxy.formatBytes(props.row.objectSize) }} / {{ props.row.quota.toFixed(2) + props.row.quotaUnit }}
+            <slot />
           </div>
         </div>
       </template>

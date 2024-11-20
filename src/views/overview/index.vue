@@ -12,10 +12,66 @@ const tenantDetails = ref({})
 const levelOptions = ref([])
 const eventTotal = ref(0)
 
+const data1 = ref([])
+const columns1 = [
+  {
+    label: '服务ID',
+    prop: 'id',
+  },
+  {
+    label: '服务名称',
+    prop: 'name',
+  },
+  {
+    label: '服务状态',
+    prop: 'serveStatus',
+  },
+  {
+    label: '健康状态',
+    prop: 'healthLevel',
+  },
+]
+const columns2 = [
+  {
+    label: '存储池',
+    prop: 'name',
+  },
+  {
+    label: '对象总数量',
+    prop: 'objectCount',
+    width: 100,
+  },
+  {
+    label: '对象总大小',
+    prop: 'objectSize',
+    width: 100,
+    filter: (val) => proxy.formatBytes(val),
+  },
+  {
+    label: '总体空间用量',
+    useSlot: true,
+    prop: 'usedSpace',
+  },
+]
+
+// 根据id从小到大排列, 如 KS07, KS01 => KS01, KS07
+const sortById = (source) => {
+  if (!source.services) {
+    return []
+  }
+  let copySource = proxy.clone(source.services)
+  return copySource.sort((a, b) => {
+    let aIdNum = Number(a.id.replace(/\D/g, ''))
+    let bIdNum = Number(b.id.replace(/\D/g, ''))
+    return aIdNum - bIdNum
+  })
+}
+
 const init = async () => {
   let res = await getInfoOverview()
   details.value = res
   tenantDetails.value = res.tenant
+  data1.value = sortById(res)
 }
 init()
 
@@ -169,8 +225,20 @@ const eventMore = () => {
     </el-row>
     <el-row :gutter="16" class="bottom-height">
       <el-col :span="12" class="h-100%">
-        <div class="item-box">
+        <div class="item-box o-a">
           <o-title title="对外服务信息" />
+          <o-title title="租户关键服务状态" />
+          <o-table ref="tableRef" :columns="columns1" :data="data1" :showPage="false" size="small" />
+          <o-title title="存储信息" />
+          <o-table ref="tableRef" :columns="columns2" :data="details.spaces" :showPage="false" size="small">
+            <template #usedSpace="{ row, scope }">
+              <template v-if="scope.$index !== -1">
+                <g-capacity-progress class="w-100%" :total="row.totalSpace" :used="row.usedSpace" :row="row">
+                  {{ proxy.formatBytes(row.usedSpace) }} / {{ proxy.formatBytes(row.totalSpace) }}
+                </g-capacity-progress>
+              </template>
+            </template>
+          </o-table>
         </div>
       </el-col>
       <el-col :span="12" class="h-100% o-h">
