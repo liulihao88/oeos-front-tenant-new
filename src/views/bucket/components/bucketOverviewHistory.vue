@@ -14,22 +14,21 @@ const props = defineProps({
 
 const selections = ref([])
 const rowDetails = ref({})
-const pageNumber = ref(proxy.PAGE_NUMBER)
-const pageSize = ref(proxy.PAGE_SIZE)
+const prevHisList = ref([])
+const pageMarker = ref()
+const versionIdMarker = ref()
 
 const selectDisabled = computed(() => {
   return selections.value.length === 0
 })
 const init = async (isReset = false) => {
   if (isReset) {
-    pageSize.value = PAGE_SIZE
-    pageNumber.value = PAGE_NUMBER
   }
   let params = {
     key: rowDetails.value.name,
     bucket: props.bucketName || rowDetails.value.bucket,
-    pageSize: pageSize.value,
-    pageNumber: pageNumber.value,
+    pageMarker: pageMarker.value,
+    versionIdMarker: versionIdMarker.value,
   }
   let res = await getHistory(params)
   data.value = res
@@ -46,11 +45,6 @@ const deleteRow = async (row) => {
   }
   await deleteOne(params)
   proxy.$toast('删除成功!')
-  init()
-}
-const update = (num, size) => {
-  pageSize.value = size
-  pageNumber.value = num
   init()
 }
 
@@ -112,6 +106,21 @@ const columns = [
     ],
   },
 ]
+const prev = () => {
+  let popList = prevHisList.value.pop()
+  pageMarker.value = popList.key
+  versionIdMarker.value = popList.version
+  init()
+}
+const next = () => {
+  pageMarker.value = data.value.at(-1).key
+  versionIdMarker.value = data.value.at(-1).version
+  prevHisList.value.push({
+    pageMaker: pageMarker.value,
+    versionIdMarker: versionIdMarker.value,
+  })
+  init()
+}
 defineExpose({
   open,
 })
@@ -141,10 +150,15 @@ defineExpose({
         :columns="columns"
         :data="data"
         height="calc(100vh - 500px)"
-        :pageSize="pageSize"
+        class="mb2"
+        :showPage="false"
         @selection-change="selectionChange"
-        @update="update"
       />
+
+      <div class="mt2">
+        <el-button type="primary" :disabled="prevHisList.length === 0" @click="prev">上一页</el-button>
+        <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+      </div>
     </o-dialog>
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
   </div>

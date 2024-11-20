@@ -12,9 +12,6 @@ const useBucketSettings = defineStore('bucketSettings', {
       console.log(`64 splitArr`, splitArr)
       return splitArr.filter((v) => v)
     },
-    prevFolderStr: (state) => {
-      return state.prevFolderList.join('/')
-    },
   },
   actions: {
     changePrefixKey(key) {
