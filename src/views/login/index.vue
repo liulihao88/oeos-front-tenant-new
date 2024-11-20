@@ -99,8 +99,13 @@ const onLogin = async (formEl) => {
   let token = `${loginRes.tokenType} ${loginRes.token}`
   proxy.setStorage('tenant-token', token)
 
-  Promise.allSettled([getFormat(), bucketList.update({ showError: false })]).then((res) => {
-    console.log(`06 res`, res)
+  let allSettledArr = [getFormat()].concat(
+    loginRes.roles.length === 1 && loginRes.roles[0] == 'ROLE_ADMIN_MONITOR'
+      ? []
+      : [bucketList.update({ showError: false })],
+  )
+
+  Promise.allSettled(allSettledArr).then((res) => {
     if (res[0].status === 'fulfilled') {
       proxy.setStorage('tenant-time-rule', res[0].value)
     } else {
