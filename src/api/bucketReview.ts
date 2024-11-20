@@ -1,10 +1,8 @@
 import request, { requestOld } from '@/utils/request'
 
 // 获取桶列表
-export function getBucketOptions(params = {}) {
-  return request('bucket/buckets', {
-    params,
-  })
+export function getBucketOptions(config = {}) {
+  return request('bucket/buckets', config)
 }
 
 export function getObjectList(params) {

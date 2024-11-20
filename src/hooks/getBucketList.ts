@@ -21,8 +21,8 @@ const useGetBucketList = defineStore('getBucketList', {
         this._clearEmptyId()
       }
     },
-    async update() {
-      let res = await getBucketOptions()
+    async update(config = {}) {
+      let res = await getBucketOptions(config)
       this.bucketOptions = res ?? []
       this._clearEmptyId()
     },

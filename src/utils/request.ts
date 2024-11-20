@@ -66,7 +66,9 @@ instance.interceptors.response.use(
     // TODO 这里应该判断状态码，待确定
     if (response.status === 200) {
       if (response.data.status !== 200 && response.data.status !== 201) {
-        $toast(response.data.message || '请求错误', 'e')
+        if (response.config.showError) {
+          $toast(response.data.message || '请求错误', 'e')
+        }
         return Promise.reject(response.data)
       } else {
         // 返回正常数据

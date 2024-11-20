@@ -46,7 +46,7 @@ defineExpose({
     id="nativeRefreshBtn"
     type="danger"
     class="po-f r-500 t-8"
-    style="right: calc(50% - 0px); z-index: 99999"
+    style="right: calc(50% - 0px); z-index: 999"
     size="small"
     @click="logout"
   >
@@ -57,7 +57,7 @@ defineExpose({
     id="nativeRefreshBtn"
     type="danger"
     class="po-f r-500 t-8"
-    style="right: calc(50% - 50px); z-index: 99999"
+    style="right: calc(50% - 50px); z-index: 999"
     size="small"
     @click="nativeRefresh"
   >
@@ -67,7 +67,7 @@ defineExpose({
     id="nativeRefreshBtn"
     :type="isDev ? 'danger' : 'primary'"
     class="po-f t-8 r-550"
-    style="right: calc(50% - 100px); z-index: 99999"
+    style="right: calc(50% - 100px); z-index: 999"
     size="small"
     @click="changeMode"
   >
@@ -77,7 +77,7 @@ defineExpose({
     v-show="isDev"
     class="po-f t-8 r-600"
     size="small"
-    style="right: calc(50% - 164px); z-index: 99999"
+    style="right: calc(50% - 164px); z-index: 999"
     type="danger"
     @click="onReset"
   >
