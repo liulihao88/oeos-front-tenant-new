@@ -35,7 +35,9 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       return row.injectTime ? true : false
     },
     btns: [
-      { content: '预览', handler: (row) => preview(row.bucket, row.name), isShow: (row) => isImage(row.key) },
+      { content: '详情', handler: detailRow },
+      { content: '下载', handler: gDownload },
+      { content: '删除', handler: deleteRow }, // reConfirm: true,
       {
         content: '恢复',
         handler: (row) => {
@@ -43,9 +45,13 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         },
       },
       { content: '历史', handler: (row) => bucketOverviewHistoryRef.value.open(row) },
-      { content: '详情', handler: detailRow },
-      { content: '删除', handler: deleteRow }, // reConfirm: true,
-      { content: '下载', handler: gDownload },
+      {
+        content: '预览',
+        isShow: (row) => {
+          return isImage(row.key)
+        },
+        handler: (row) => preview(row.bucket, row.name),
+      },
     ],
   }
   return {

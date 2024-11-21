@@ -92,6 +92,14 @@ getPlatformConfig(app).then(async (config) => {
   app.use(router)
   await router.isReady()
   injectResponsiveStorage(app, config)
-  app.use(MotionPlugin).use(useElementPlus).use(Table).use(VueViewer, {})
+  app
+    .use(MotionPlugin)
+    .use(useElementPlus)
+    .use(Table)
+    .use(VueViewer, {
+      defaultOptions: {
+        zIndex: 3000,
+      },
+    })
   app.mount('#app')
 })

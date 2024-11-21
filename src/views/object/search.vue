@@ -14,12 +14,18 @@ import { preview } from '@/utils/remoteFunc.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 
-import { objectDownloadBatch } from '@/api/bucketReview.ts'
+import { objectDownloadBatch, deleteBatch } from '@/api/bucketReview.ts'
 
 const { proxy } = getCurrentInstance()
 
 const bucketId = ref(proxy.getStorage('tenant-easy-bucket-id'))
 const bucketName = ref()
+const BucketFileDetailsCompRef = ref(null)
+const bucketOverviewHistoryRef = ref(null)
+const RestoreExpirationInDaysRef = ref(null)
+
+import { useBtns } from '@/hooks/useBtns.ts'
+const { btns } = useBtns(RestoreExpirationInDaysRef, bucketOverviewHistoryRef, BucketFileDetailsCompRef, init)
 
 const form = ref({
   key: '',
@@ -32,8 +38,7 @@ const form = ref({
 })
 const storageOptions = ref([])
 const selections = ref([])
-const bucketOverviewHistoryRef = ref(null)
-const RestoreExpirationInDaysRef = ref(null)
+
 const total = ref(0)
 
 const data = ref([])
@@ -71,37 +76,11 @@ const columns = [
     },
     width: proxy.TIME_WIDTH,
   },
-  {
-    key: 'operation',
-    label: '操作',
-    maxBtns: 5,
-    isShow: (val) => {
-      return val.size > 0
-    },
-    btns: [
-      {
-        content: '下载',
-        handler: proxy.gDownload,
-      },
-      {
-        content: '恢复',
-        handler: (row) => {
-          RestoreExpirationInDaysRef.value.open(row)
-        },
-      },
-      {
-        content: '历史',
-        handler: historyRow,
-      },
-    ],
-  },
+  { ...btns.value },
 ]
 
 function selectableFn(row, index) {
   return row.size && row.size > 0
-}
-async function historyRow(row) {
-  bucketOverviewHistoryRef.value.open(row)
 }
 
 watch(
@@ -118,14 +97,20 @@ watch(
   },
 )
 
-const init = async () => {
+const multypleDelete = async () => {
+  await deleteBatch(selections.value)
+  proxy.$toast('删除成功!')
+  init()
+}
+
+async function init() {
   if (!bucketId.value) {
     return proxy.$toast('请先选择桶名后查询', 'e')
   }
   let res = await querySimple(form.value)
   data.value = res.details
   total.value = res.total
-  proxy.$toast('查询成功')
+  // proxy.$toast('查询成功')
 }
 
 const update = (num, size) => {
@@ -141,10 +126,6 @@ const storageInit = async () => {
 
 storageInit()
 
-const changeSelect = (value, label, options) => {
-  form.value.bucket = label
-  init()
-}
 const timeRange = ref([])
 
 const timeChange = (value) => {
@@ -169,14 +150,13 @@ const selectionChange = (val, ...a) => {
 <template>
   <div>
     <div class="f-bt-un w-100% m-b-16">
-      <div class="f-3 f-st-ct w-100%">
+      <div class="f-1 f-st-ct w-100% o-a">
         <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" />
 
         <o-input
           v-model="form.key"
           v-debounce.500="init"
-          width="240"
-          placeholder="请输入对象名称"
+          width="160"
           class="mr2"
           title="对象名称"
           :disabled="!bucketId"
@@ -195,7 +175,7 @@ const selectionChange = (val, ...a) => {
         <o-date-range
           v-model="timeRange"
           title="写入时间"
-          width="460"
+          width="440"
           format="YYYY-MM-DD HH:mm:ss"
           type="datetimerange"
           :disabled="!bucketId"
@@ -205,7 +185,10 @@ const selectionChange = (val, ...a) => {
           @change="timeChange"
         />
       </div>
-      <div class="f-1 f-ed-un">
+      <div class="w-440 f-ed-un">
+        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
+          批量下载
+        </el-button>
         <el-button
           type="primary"
           icon="el-icon-refresh-left"
@@ -214,8 +197,8 @@ const selectionChange = (val, ...a) => {
         >
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
-          批量下载
+        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">
+          批量删除
         </el-button>
         <el-button type="primary" icon="el-icon-search" :disabled="!bucketId" @click="init">查询</el-button>
       </div>
@@ -250,6 +233,8 @@ const selectionChange = (val, ...a) => {
     </div>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />
+
+    <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
 
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
   </div>

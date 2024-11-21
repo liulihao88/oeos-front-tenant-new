@@ -154,9 +154,7 @@ const inside = (row) => {
       <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
         批量下载
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
-        批量删除
-      </el-button>
+
       <el-button
         type="primary"
         icon="el-icon-refresh-left"
@@ -164,6 +162,9 @@ const inside = (row) => {
         @click="RestoreExpirationInDaysRef.open(selections)"
       >
         批量恢复
+      </el-button>
+      <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
+        批量删除
       </el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>

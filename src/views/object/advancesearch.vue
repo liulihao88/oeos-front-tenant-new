@@ -11,24 +11,28 @@ import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
 import { querySimple, queryAdvance } from '@/api/searchApi.ts'
-import { objectDownloadBatch } from '@/api/bucketReview.ts'
+import { objectDownloadBatch, deleteBatch } from '@/api/bucketReview.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 import SearchConfigComp from '@/views/object/components/searchConfigComp.vue'
 import { preview } from '@/utils/remoteFunc.ts'
+const RestoreExpirationInDaysRef = ref(null)
+const searchConfigCompRef = ref(null)
+const bucketOverviewHistoryRef = ref(null)
+const BucketFileDetailsCompRef = ref(null)
+
+import { useBtns } from '@/hooks/useBtns.ts'
+const { btns } = useBtns(RestoreExpirationInDaysRef, bucketOverviewHistoryRef, BucketFileDetailsCompRef, init)
 
 const { proxy } = getCurrentInstance()
 let getBucketList = GetBucketList()
 getBucketList.getBucketList()
-const searchConfigCompRef = ref(null)
 const expressionValue = ref('')
 const options = ref([])
-const bucketOverviewHistoryRef = ref(null)
 options.value = proxy.getStorage('tenant-advance-expression') ?? []
 const searchObj = ref({})
 
 const selections = ref([])
-const RestoreExpirationInDaysRef = ref(null)
 
 const data = ref([])
 const pageSize = ref(30)
@@ -81,45 +85,24 @@ const columns = [
       return proxy.formatTime(val)
     },
   },
-  {
-    key: 'operation',
-    label: '操作',
-    maxBtns: 5,
-    isShow: (val) => {
-      return val.size > 0
-    },
-    btns: [
-      {
-        content: '下载',
-        handler: proxy.gDownload,
-      },
-      {
-        content: '恢复',
-        handler: (row) => {
-          RestoreExpirationInDaysRef.value.open(row)
-        },
-      },
-      {
-        content: '历史',
-        handler: historyRow,
-      },
-    ],
-  },
+  { ...btns.value },
 ]
 
 function selectableFn(row, index) {
   return row.size && row.size > 0
 }
 
-async function historyRow(row) {
-  bucketOverviewHistoryRef.value.open(row)
-}
-
 const editSearch = async () => {
   searchConfigCompRef.value.open()
 }
 
-const init = async () => {
+const multypleDelete = async () => {
+  await deleteBatch(selections.value)
+  proxy.$toast('删除成功!')
+  init()
+}
+
+async function init() {
   searchObj.value.pageSize = pageSize.value
   searchObj.value.pageNumber = pageNumber.value
   let res = await queryAdvance(searchObj.value)
@@ -176,6 +159,9 @@ const changeSelect = async (val, label, obj) => {
           <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
             批量下载
           </el-button>
+          <el-button type="primary" icon="el-icon-delete" :disabled="selections.length === 0" @click="multypleDelete">
+            批量删除
+          </el-button>
         </template>
         <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
 
@@ -221,6 +207,7 @@ const changeSelect = async (val, label, obj) => {
 
     <SearchConfigComp ref="searchConfigCompRef" @success="success" />
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" />
+    <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
   </div>
 </template>
