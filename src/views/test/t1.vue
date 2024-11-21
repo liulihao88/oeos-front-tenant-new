@@ -2,12 +2,13 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 
-let a = proxy.formatFixed('123.32321KB')
-console.log(`69 a`, a)
+let a = proxy.formatToFixed('123kb')
+console.log(`72 a`, a)
+console.log(`72 typeof a`, typeof a)
 </script>
 
 <template>
   <div>
-    <o-svg name="dark" />
+    <div>test/t1.vue</div>
   </div>
 </template>

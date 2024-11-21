@@ -194,13 +194,13 @@ const eventMore = () => {
             <div class="t-l-box-left">
               <div class="item-card">
                 <div>总对象大小</div>
-                <div v-if="details.object && details.object.objectSize">
+                <div v-if="details.object">
                   {{ proxy.formatBytes(details.object.objectSize) }}
                 </div>
               </div>
               <div class="item-card">
                 <div>总空闲量</div>
-                <div v-if="details.primarySpace && details.primarySpace.totalFreeCapacity">
+                <div v-if="details.primarySpace">
                   {{ proxy.formatBytes(details.primarySpace?.totalFreeCapacity) }}
                 </div>
               </div>

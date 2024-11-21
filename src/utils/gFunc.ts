@@ -131,3 +131,35 @@ export function formatImg(photoName, addPath = '', { basePath = 'assets/images' 
   let res = new URL(`../${finalImg}`, import.meta.url).href
   return res
 }
+
+export function formatToFixed(number, fixed = 2) {
+  // 提取数字部分、小数点和小数部分
+  let matches = ('' + number).match(/^([\d,]+)(\.?)(\d+)?(\D+)?$/)
+  if (!matches) {
+    return number // 如果没有找到匹配，则返回原始输入
+  }
+
+  let numericString = matches[1].replace(/\D/g, '') // 仅保留数字
+  let decimalString = matches[3] ? `.${matches[3]}` : '' // 小数部分，如果没有则为空字符串
+  let unit = matches[4] || '' // 单位部分，如果没有则为空字符串
+  let numTofixed = parseFloat(numericString + decimalString).toFixed(fixed)
+  return `${numTofixed}${unit}`
+}
+
+export function formatThousands(number) {
+  // 提取数字部分、小数点和小数部分
+  let matches = ('' + number).match(/^([\d,]+)(\.?)(\d+)?(\D+)?$/)
+  if (!matches) {
+    return number // 如果没有找到匹配，则返回原始输入
+  }
+
+  let numericString = matches[1].replace(/\D/g, '') // 仅保留数字
+  let decimalString = matches[3] ? `.${matches[3]}` : '' // 小数部分，如果没有则为空字符串
+  let unit = matches[4] || '' // 单位部分，如果没有则为空字符串
+
+  // 添加千位分隔符
+  let numberWithSeparator = numericString.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+  // 拼接数字、小数点、小数部分和单位，并返回结果
+  return `${numberWithSeparator}${decimalString}${unit}`
+}

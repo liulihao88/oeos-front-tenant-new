@@ -29,7 +29,7 @@ const getValue = computed(() => {
     return `${percent}\n\n${num}\n\n${text}`
   } else {
     let percent = ((usedNum.value / totalNum.value) * 100).toFixed(2) + '%'
-    let num = `${props.used} / ${props.total}`
+    let num = `${props.used} / ${proxy.formatToFixed(props.total)}`
     let text = '总分配配额 / 租户总配额'
     return `${percent}\n\n${num}\n\n${text}`
   }
@@ -128,7 +128,7 @@ let initOptions = {
 watch(
   () => [props.used, props.total],
   ([usedNew, totalNew]) => {
-    if (usedNew && totalNew) {
+    if (usedNew || totalNew) {
       usedNum.value = proxy.formatBytesConvert(usedNew)
       totalNum.value = proxy.formatBytesConvert(totalNew)
       console.log(`11  totalNum.value`, totalNum.value)
