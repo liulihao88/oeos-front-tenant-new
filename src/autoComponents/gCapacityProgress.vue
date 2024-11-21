@@ -16,7 +16,7 @@ const props = defineProps({
     required: true,
   },
 })
-function format(num) {
+function format() {
   return `${percentage.value}%`
 }
 const percentage = computed(() => {
@@ -43,7 +43,7 @@ const progressWidth = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="f-st-ct">
     <o-progress
       ref="progressBoxRef"
       class="progress-box"
@@ -63,6 +63,7 @@ const progressWidth = computed(() => {
         </div>
       </template>
     </o-progress>
+    <o-icon v-if="percentage > 100" name="warning" content="已用容量远超总容量, 请扩容 " class="ml" />
   </div>
 </template>
 

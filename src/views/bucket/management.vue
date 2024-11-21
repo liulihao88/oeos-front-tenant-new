@@ -32,26 +32,6 @@ const totalCapacity = ref(0)
 const currentBucketName = ref('')
 const rightTableData = ref([])
 const addRef = ref(null)
-const rightTableColumns = [
-  {
-    label: '存储层',
-    sortable: true,
-    prop: 'name',
-  },
-  {
-    label: '对象总数量',
-    sortable: true,
-    prop: 'objectCount',
-    width: 130,
-    filter: (value) => proxy.formatThousands(value),
-  },
-  {
-    label: '对象总大小',
-    width: 130,
-    prop: 'objectSize',
-    filter: (value) => proxy.formatBytes(value),
-  },
-]
 const searchValue = ref()
 
 const topObj = ref([
@@ -257,16 +237,17 @@ async function getBucketDetailByName() {
   for (let i = 0; i < bucketLists.value.length; i++) {
     queue.push(getBucketDetail(bucketLists.value[i].bucketName))
   }
-  let detailRes = []
-  try {
-    detailRes = await Promise.all(queue)
-  } catch (error) {}
-  if (proxy.notEmpty(detailRes)) {
-    data.value = detailRes.map((v, i) => {
+  Promise.allSettled(queue).then((result) => {
+    data.value = result.map((v, i) => {
+      console.log(`67 v`, v)
       const item = bucketLists.value[i]
-      return { ...v, ...item }
+      if (v.status === 'fulfilled') {
+        return { ...v.value, ...item }
+      } else {
+        return { ...item }
+      }
     })
-  }
+  })
 }
 const data = ref([])
 const calcQuota = (num, unit) => {
@@ -382,9 +363,6 @@ function _handleUsedData(usedSpace) {
             <o-title :title="quotaTitle" icon="plus" />
             <BucketCapacityPie :title="title" :data="capacityData" />
           </div>
-          <!-- <div class="f-1 w-100% mt3 h-100% o-a">
-            <o-table :data="rightTableData" class="h-100% o-a" :columns="rightTableColumns" :showPage="false" />
-          </div> -->
         </div>
       </el-col>
     </el-row>
