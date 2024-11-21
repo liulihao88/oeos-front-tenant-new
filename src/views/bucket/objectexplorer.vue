@@ -75,7 +75,7 @@ const columns = [
   {
     label: '写入时间',
     width: proxy.TIME_WIDTH,
-    prop: 'lastModifiedTime',
+    prop: 'injectTime',
     filter: (value) => proxy.formatTime(value),
   },
   { ...btns.value },
