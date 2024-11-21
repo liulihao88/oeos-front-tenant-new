@@ -46,7 +46,7 @@ const columns = [
     useSlot: true,
   },
   {
-    label: '文件大小',
+    label: '对象大小',
     prop: 'size',
     width: 100,
     filter: (value, row) => {
