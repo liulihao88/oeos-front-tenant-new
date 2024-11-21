@@ -87,6 +87,7 @@ const rules = {
 
 const init = async () => {
   let res = await Promise.all([getBucketTotal(bucketName.value)])
+
   data.value = [
     {
       total: res[0]?.quota.toFixed(2) + res[0]?.quotaUnit,
@@ -162,47 +163,110 @@ const editDate = () => {
 
 <template>
   <div>
-    <o-title title="基本信息" l="-16" />
-    <o-title title="存储桶使用情况" />
-    <o-table ref="tableRef" :showPage="false" :columns="columns" :data="data" />
-
-    <o-title title="多版本控制" />
-
-    <div class="f-st-ct">
-      <div class="mr2">存储桶版本控制:</div>
-      <el-radio-group :model-value="versionStatus" @change="radioInput">
-        <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
-        <el-radio value="Suspended">{{ radioMap.Suspended }}</el-radio>
-        <el-radio value="Enabled">{{ radioMap.Enabled }}</el-radio>
-      </el-radio-group>
+    <o-title title="基本信息" t="0" b="8" />
+    <div class="c-box w-100% p-32">
+      <div class="mb2">
+        <span class="cl-45">桶名称:</span>
+        <span class="bold">Bucket1</span>
+        <span class="cl-45 ml3">桶ID:</span>
+        <span class="bold">1010101010</span>
+      </div>
+      <div class="f-ar-ct">
+        <div class="top-item f-1">
+          <img :src="proxy.formatImg('bucket/base1')" alt="" class="mr2" width="57" />
+          <div class="f-bt-ct f-c">
+            <span class="bold">{{ data?.[0]?.total }}</span>
+            <span class="cl-45">配额</span>
+          </div>
+        </div>
+        <div class="top-item f-1">
+          <img :src="proxy.formatImg('bucket/base2')" alt="" class="mr2" width="57" />
+          <div class="f-bt-ct f-c">
+            <span class="bold">{{ data?.[0]?.usage }}</span>
+            <span class="cl-45">已用容量</span>
+          </div>
+        </div>
+        <div class="top-item f-1">
+          <img :src="proxy.formatImg('bucket/base3')" alt="" class="mr2" width="57" />
+          <div class="f-bt-ct f-c">
+            <span class="bold">{{ data?.[0]?.fileTotal }}</span>
+            <span class="cl-45">文件总数</span>
+          </div>
+        </div>
+        <div class="top-item f-1">
+          <img :src="proxy.formatImg('bucket/base4')" alt="" class="mr2" width="57" />
+          <div class="f-bt-ct f-c">
+            <span class="bold">{{ data?.[0]?.createdDatetime }}</span>
+            <span class="cl-45">创建时间</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <o-title title="属性" l="-16" />
-    <o-title title="修改容量属性">
-      <el-button type="primary" class="mlr" size="small" @click="editQuota">编辑</el-button>
-      <div class="bold-400">
-        当前容量:
-        <span class="cl-red">
-          {{ quotaForm.quota.toFixed(2) }}
-          {{ quotaForm.quotaUnit }}
-          ({{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }})
-        </span>
-      </div>
-    </o-title>
+    <!-- <o-table ref="tableRef" :showPage="false" :columns="columns" :data="data" /> -->
 
-    <o-title title="对象过期删除">
-      <el-button type="primary" class="mlr" size="small" @click="editDate">编辑</el-button>
-      <div class="bold-400">
-        过期时间:
-        <span class="cl-red">{{ retentionAutoObj.expireAfterDays ?? '未设置' }}</span>
-      </div>
-      <div class="bold-400 ml2">
-        是否启用:
-        <span class="cl-red">{{ retentionAutoObj.enable ? '启用' : '未启用' }}</span>
-      </div>
-    </o-title>
+    <o-title title="属性设置" t="8" b="8" />
 
-    <BucketTagging :bucketName="bucketName" />
+    <el-row :gutter="8" class="row-height">
+      <el-col :span="12" class="h-100%">
+        <div class="c-box h-30%">
+          <o-title class="mr2" title="存储桶版本控制:" type="simple">
+            <el-radio-group :model-value="versionStatus" class="ml2" @change="radioInput">
+              <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
+              <el-radio value="Suspended">{{ radioMap.Suspended }}</el-radio>
+              <el-radio value="Enabled">{{ radioMap.Enabled }}</el-radio>
+            </el-radio-group>
+          </o-title>
+
+          <g-warning
+            class="mtb2"
+            title="版本控制是将某一对象的多个变体保留在同一存储桶中的一种方法，能够保留、检索以及还原该存储桶中每个对象的每个版本。通过版本控制，您可以轻松地将意外的用户操作和应用程序故障中恢复存储对象。"
+          />
+        </div>
+
+        <div class="c-box mt" style="height: calc(35% - 8px)">
+          <o-title title="修改存储容量" type="simple" />
+          <g-warning class="mt" title="用户按需选择相应循环单位, 修改存储容量" />
+
+          <div class="mtb2 f-st-ct">
+            <div class="f-1">
+              <span class="mr">存储容量:</span>
+              <span class="cl-blue">{{ quotaForm.quota.toFixed(2) }} {{ quotaForm.quotaUnit }}</span>
+            </div>
+            <div class="f-1">
+              <span class="mr">类型:</span>
+              <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }}</span>
+            </div>
+          </div>
+          <el-button type="primary" @click="editQuota">编辑</el-button>
+        </div>
+
+        <div class="c-box mt h-35%">
+          <o-title title="对象过期删除" type="simple" />
+          <g-warning class="mt" title="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
+
+          <div class="mtb2 f-st-ct">
+            <div class="f-1">
+              <span class="mr">状态:</span>
+              <span class="cl-blue">{{ retentionAutoObj.enable ? '启用' : '未启用' }}</span>
+            </div>
+            <div class="f-1">
+              <span class="mr">过期时间:</span>
+              <span class="cl-blue">{{ retentionAutoObj.expireAfterDays ?? '未设置' }}</span>
+            </div>
+          </div>
+          <el-button type="primary" @click="editDate">编辑</el-button>
+        </div>
+      </el-col>
+      <el-col :span="12" class="h-100%">
+        <div class="c-box mb h-50% o-a">
+          <BucketTagging :bucketName="bucketName" />
+        </div>
+        <div class="c-box h-50% o-a">
+          <BucketTagging :bucketName="bucketName" />
+        </div>
+      </el-col>
+    </el-row>
 
     <o-dialog ref="dialogRef" v-model="isRadioShow" title="存储桶版本控制" @confirm="radioConfirm">
       <o-title :title="`当前状态`">
@@ -210,9 +274,9 @@ const editDate = () => {
           {{ radioMap[versionStatus] }}
         </div>
       </o-title>
-      <div class="mtb">
+      <!-- <div class="mtb">
         版本控制是将某一对象的多个变体保留在同一存储桶中的一种方法，能够保留、检索以及还原该存储桶中每个对象的每个版本。通过版本控制，您可以轻松地将意外的用户操作和应用程序故障中恢复存储对象。
-      </div>
+      </div> -->
 
       <g-warning
         title=" 更改存储桶版本控制必读: <br>1、对象版本设置的现有生命周期规则仍然适用。<br>2、不会更改存储桶中的现有对象。<br> 3、若新增对象和现有对象同名，将替换现有对象。"
@@ -242,7 +306,6 @@ const editDate = () => {
     </o-dialog>
 
     <o-dialog ref="dialogRef" v-model="isShowDate" title="对象过期删除" @confirm="dateConfirm">
-      <g-warning title=" 未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" class="mb2" />
       <el-form ref="dateFormRef" :model="dateForm" :rules="dateRules">
         <el-form-item label="是否开启" prop="enable">
           <el-switch v-model="dateForm.enable" />
@@ -257,3 +320,13 @@ const editDate = () => {
     </o-dialog>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.top-item {
+  display: flex;
+}
+
+.row-height {
+  height: calc(100vh - 380px);
+}
+</style>

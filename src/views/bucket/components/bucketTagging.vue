@@ -15,11 +15,25 @@ const formRef = ref(null)
 const form = ref({
   data: [],
 })
+const baseForm = ref({
+  data: [],
+})
+const isShow = ref(false)
 const selections = ref([])
 const selectionsIndex = ref([])
 const deleteRow = (row, scope) => {
   form.value.data.splice(scope.$index, 1)
 }
+const columnsBase = [
+  {
+    label: '标签名',
+    prop: 'label',
+  },
+  {
+    label: '标签值(可选)',
+    prop: 'value',
+  },
+]
 const columns = [
   {
     type: 'selection',
@@ -48,8 +62,14 @@ const columns = [
 
 const init = async () => {
   let res = await getTagging(props.bucketName)
+  form.value.data = []
+  baseForm.value.data = []
   Object.entries(res).map(([key, value]) => {
     form.value.data.push({
+      label: key,
+      value,
+    })
+    baseForm.value.data.push({
       label: key,
       value,
     })
@@ -61,9 +81,16 @@ const deleteSelection = () => {
   const copyFormData = proxy.clone(form.value.data)
   form.value.data = copyFormData.filter((item, index) => !selectionsIndex.value.includes(index))
 }
+const open = async () => {
+  await init()
+  isShow.value = true
+}
 const add = () => {
+  if (form.value.data.length >= 50) {
+    return proxy.$toast('标签最多添加50个', 'e')
+  }
   form.value.data.push({
-    label: '',
+    label: proxy.$dev ? proxy.uuid() : '',
     value: '',
   })
 }
@@ -75,6 +102,8 @@ const save = async () => {
   }, {})
   await saveTagging(props.bucketName, sendObject)
   proxy.$toast('保存成功')
+  await init()
+  isShow.value = false
 }
 
 const getInnerRules = (index) => {
@@ -107,43 +136,63 @@ const selectionChange = (val, ...a) => {
   selections.value = val
   selectionsIndex.value = selections.value.map((item) => form.value.data.indexOf(item))
 }
+
+defineExpose({
+  open,
+})
 </script>
 
 <template>
   <div>
-    <o-title title="标签" />
-    <div class="mb">
-      <el-button-group size="small">
-        <el-button type="primary" @click="add">添加</el-button>
-        <el-button type="primary" @click="save">保存</el-button>
+    <o-title title="标签" b="8">
+      <template #right>
+        <el-button linked text @click="open">
+          更多
+          <o-icon name="arrow-right" />
+        </el-button>
+      </template>
+    </o-title>
+    <o-table
+      ref="tableRef"
+      size="small"
+      :columns="columnsBase"
+      :data="baseForm.data"
+      :showPage="false"
+      :pageSize="50"
+      @selection-change="selectionChange"
+    />
+    <o-dialog ref="dialogRef" v-model="isShow" title="标签" confirmText="保存" fullscreen @confirm="save">
+      <o-title title="标签" b="8">
+        <el-button type="primary" class="ml2" @click="add">添加</el-button>
         <el-button type="primary" :disabled="selections.length === 0" @click="deleteSelection">删除选中</el-button>
-      </el-button-group>
-    </div>
-    <el-form ref="formRef" :model="form" size="small">
-      <o-table
-        ref="tableRef"
-        size="small"
-        :columns="columns"
-        :data="form.data"
-        :showPage="false"
-        :pageSize="50"
-        @selection-change="selectionChange"
-      >
-        <template #label="{ scope, row }">
-          <template v-if="scope.$index !== -1">
-            <el-form-item label="" :prop="`data.${scope.$index}.label`" :rules="getInnerRules(scope.$index)">
-              <o-input v-model="form.data[scope.$index].label" placeholder="请输入标签名" />
-            </el-form-item>
+      </o-title>
+      <el-form ref="formRef" :model="form" size="small">
+        <o-table
+          ref="tableRef"
+          size="small"
+          :columns="columns"
+          :data="form.data"
+          :showPage="false"
+          :pageSize="50"
+          height="calc(100vh - 170px)"
+          @selection-change="selectionChange"
+        >
+          <template #label="{ scope, row }">
+            <template v-if="scope.$index !== -1">
+              <el-form-item label="" :prop="`data.${scope.$index}.label`" :rules="getInnerRules(scope.$index)">
+                <o-input v-model="form.data[scope.$index].label" placeholder="请输入标签名" />
+              </el-form-item>
+            </template>
           </template>
-        </template>
-        <template #value="{ scope, row }">
-          <template v-if="scope.$index !== -1">
-            <el-form-item label="" :prop="`data.${scope.$index}.value`">
-              <o-input v-model="form.data[scope.$index].value" placeholder="请输入标签值" />
-            </el-form-item>
+          <template #value="{ scope, row }">
+            <template v-if="scope.$index !== -1">
+              <el-form-item label="" :prop="`data.${scope.$index}.value`">
+                <o-input v-model="form.data[scope.$index].value" placeholder="请输入标签值" />
+              </el-form-item>
+            </template>
           </template>
-        </template>
-      </o-table>
-    </el-form>
+        </o-table>
+      </el-form>
+    </o-dialog>
   </div>
 </template>
