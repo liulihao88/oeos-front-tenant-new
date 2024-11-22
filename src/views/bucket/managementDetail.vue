@@ -226,7 +226,7 @@ const editDate = () => {
 
         <div class="c-box mt" style="height: calc(35% - 8px)">
           <o-title title="修改存储容量" type="simple" />
-          <g-warning class="mt" title="用户按需选择相应循环单位, 修改存储容量" />
+          <g-warning class="mt" title="用户按需选择相应循环单位, 修改配额" />
 
           <div class="mtb2 f-st-ct">
             <div class="f-1">
@@ -265,7 +265,7 @@ const editDate = () => {
           <BucketTagging :bucketName="bucketName" />
         </div>
         <div class="c-box h-50% o-a">
-          <BucketTagging :bucketName="bucketName" />
+          <BucketTagging :bucketName="bucketName" :isTag="false" />
         </div>
       </el-col>
     </el-row>
@@ -289,7 +289,6 @@ const editDate = () => {
 
     <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改配额" @confirm="quotaConfirm">
       <el-form :model="quotaForm" :rules="quotaRules" label-width="auto" class="mb2">
-        <g-warning title=" 用户按需选择相应存储单位，修改配额" class="mb2" />
         <el-form-item label="存储" prop="quota">
           <div class="f-st-ct">
             <el-input-number v-model="quotaForm.quota" class="mr2" :precision="2" />

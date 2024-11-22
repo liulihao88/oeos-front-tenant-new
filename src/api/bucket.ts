@@ -98,6 +98,15 @@ export function getAnonymous(bucket) {
 }
 
 // 保存匿名访问列表
+/**
+ *  {
+  "path": "/a",
+  "permission": "read",
+  "effect": "allow"
+}
+['read', 'write', 'all]
+ */
+
 export function saveAnonymous(bucket, data) {
   return request(`bucket/${bucket}/config/anonymous`, 'put', { data: data })
 }
