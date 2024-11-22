@@ -4,6 +4,9 @@ import { ref, getCurrentInstance, watch, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
+  modelValue: {
+    type: [Number, String],
+  },
   value: {
     type: String,
   },
@@ -16,7 +19,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: '',
+    default: '', // restore, default
   },
 })
 
@@ -28,6 +31,10 @@ const months = ref(0)
 const days = ref(0)
 const hours = ref(0)
 const minutes = ref(0)
+
+if (props.type === 'default') {
+  days.value = props.modelValue
+}
 
 const easyTime = ref()
 
@@ -43,22 +50,24 @@ const timeOptions = computed(() => {
 watch(
   () => props.value,
   (val) => {
-    const regex = /(\d+)y(\d+)m(\d+\.?\d*)d([\d]*\.[\d]+|[\d]+)h/
-    const match = val.match(regex)
-    if (match) {
-      years.value = match[1]
-      months.value = match[2]
-      days.value = match[3]
-      hours.value = match[4].toString().split('.')[0]
-      let smallNumber = match[4].toString().split('.')[1] ?? 0
-      minutes.value = Math.round(('0.' + smallNumber) * 60)
-      let easyTimeIdx = timeOptions.value.findIndex((item) => {
-        return item.value === match[0]
-      })
-      if (easyTimeIdx > -1) {
-        easyTime.value = timeOptions.value[easyTimeIdx].value
-      } else {
-        easyTime.value = ''
+    if (val) {
+      const regex = /(\d+)y(\d+)m(\d+\.?\d*)d([\d]*\.[\d]+|[\d]+)h/
+      const match = val.match(regex)
+      if (match) {
+        years.value = match[1]
+        months.value = match[2]
+        days.value = match[3]
+        hours.value = match[4].toString().split('.')[0]
+        let smallNumber = match[4].toString().split('.')[1] ?? 0
+        minutes.value = Math.round(('0.' + smallNumber) * 60)
+        let easyTimeIdx = timeOptions.value.findIndex((item) => {
+          return item.value === match[0]
+        })
+        if (easyTimeIdx > -1) {
+          easyTime.value = timeOptions.value[easyTimeIdx].value
+        } else {
+          easyTime.value = ''
+        }
       }
     }
   },
@@ -67,6 +76,18 @@ watch(
     immediate: true,
   },
 )
+
+watch(days, (val) => {
+  emits('update:modelValue', val)
+})
+watch(easyTime, (val) => {
+  if (val) {
+    const regex = /(\d+)y(\d+)m(\d+\.?\d*)d([\d]*\.[\d]+|[\d]+)h/
+    const match = val.match(regex)
+    let getDayValue = match[3]
+    emits('update:modelValue', Number(getDayValue))
+  }
+})
 
 const changeInputNumber = () => {
   const mergeHoursNumber = Number(hours.value) + Number((minutes.value / 60).toFixed(2))

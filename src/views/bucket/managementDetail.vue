@@ -14,6 +14,7 @@ import {
 } from '@/api/bucket'
 import { getLimitCeiling } from '@/api/system.ts'
 import BucketTagging from '@/views/bucket/components/bucketTagging.vue'
+import KeepTime from '@/views/task/components/keepTime.vue'
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -76,10 +77,11 @@ const quotaRules = {
 }
 
 const dateRules = computed(() => {
-  let res = {
-    expireAfterDays: dateForm.value.enable ? [proxy.validate()] : [],
-  }
-  return res
+  // let res = {
+  //   expireAfterDays: dateForm.value.enable ? [proxy.validate()] : [],
+  // }
+  // return res
+  return []
 })
 const rules = {
   name: [proxy.validate()],
@@ -103,6 +105,9 @@ async function getRetentionAutodeleteInit() {
   dateForm.value = res
   originDateForm.value = res
   retentionAutoObj.value = proxy.clone(res)
+  if (dateForm.value.expireAfterDays === undefined || dateForm.value.expireAfterDays === null) {
+    dateForm.value.expireAfterDays = 7
+  }
 }
 
 getRetentionAutodeleteInit()
@@ -312,10 +317,10 @@ const editDate = () => {
           <el-switch v-model="dateForm.enable" />
         </el-form-item>
         <el-form-item label="过期时间" prop="expireAfterDays">
-          <!-- <o-input v-model="dateForm.expireAfterDays" /> -->
-          <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="1">
+          <!-- <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="1">
             <template #suffix>天</template>
-          </el-input-number>
+          </el-input-number> -->
+          <KeepTime v-model="dateForm.expireAfterDays" type="default" />
         </el-form-item>
       </el-form>
     </o-dialog>

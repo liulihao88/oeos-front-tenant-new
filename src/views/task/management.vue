@@ -60,7 +60,7 @@ const columns = [
         let matchDays = /(\d+\.?\d*)天/
         let match = val.match(matchDays)
         console.log(`97 match`, match)
-        return match[0]
+        return match?.[0] ?? '-'
       }
       return '-'
     },
