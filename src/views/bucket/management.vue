@@ -39,12 +39,14 @@ const topObj = ref([
     title: 'objectCount',
     name: '对象总数',
     icon: 'objNum',
+    img: 'bucket/objCount.png',
     value: '0',
     storage: '0',
   },
   {
     title: 'objectSize',
     name: '对象总大小',
+    img: 'bucket/objSize.png',
     value: '0',
     storage: '0',
     icon: 'objChange',
@@ -52,6 +54,7 @@ const topObj = ref([
   {
     title: 'bucketObjs',
     name: '桶总数',
+    img: 'bucket/bucketCount.png',
     value: '0',
     storage: '0',
     icon: 'bucketsCount',
@@ -289,7 +292,7 @@ function _handleUsedData(usedSpace) {
           <div class="l-list f w-100%">
             <div v-for="(v, i) in topObj" :key="i" class="c-box list-item p-tb-16">
               <div>
-                <o-icon name="List" size="40" />
+                <img :src="proxy.formatImg(v.img)" style="height: 50px" alt="" />
               </div>
               <div class="f-st-ct" style="flex-direction: column">
                 <div>{{ v.name }}</div>
@@ -326,7 +329,7 @@ function _handleUsedData(usedSpace) {
               :pageSize="pageSize"
               :data="data"
               highlight-current-row
-              height="calc(100vh - 366px)"
+              height="calc(100vh - 396px)"
               @update="update"
               @current-change="currentChange"
             >
