@@ -37,7 +37,16 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
     btns: [
       { content: '详情', handler: detailRow },
       { content: '下载', handler: gDownload },
-      { content: '删除', handler: deleteRow }, // reConfirm: true,
+      {
+        content: '删除',
+        handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          content: '删除',
+        },
+        reConfirm: proxy.$dev ? false : true,
+      }, // reConfirm: true,
       {
         content: '恢复',
         handler: (row) => {
@@ -47,6 +56,11 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       { content: '历史', handler: (row) => bucketOverviewHistoryRef.value.open(row) },
       {
         content: '预览',
+        comp: 'o-icon',
+        attrs: {
+          name: 'view',
+          content: '预览',
+        },
         isShow: (row) => {
           return isImage(row.key)
         },

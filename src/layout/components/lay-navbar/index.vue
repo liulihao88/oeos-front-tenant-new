@@ -1,32 +1,14 @@
 <script setup lang="ts">
 import { unref, getCurrentInstance, ref } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
-import LaySearch from '../lay-search/index.vue'
 import LayNavMix from '../lay-sidebar/NavMix.vue'
-import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 import LaySidebarBreadCrumb from '../lay-sidebar/components/SidebarBreadCrumb.vue'
 import LaySidebarTopCollapse from '../lay-sidebar/components/SidebarTopCollapse.vue'
-import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 import { handleAliveRoute, getTopMenu } from '@/router/utils'
-import DropdownLayout from '@/layout/components/dropdownLayout.vue'
+import RightLayout from '@/layout/components/lay-sidebar/rightLayout.vue'
 
-import LogoutCircleRLine from '@iconify-icons/ri/logout-circle-r-line'
-import Setting from '@iconify-icons/ri/settings-3-line'
-import RefreshRight from '@iconify-icons/ep/refresh-right'
 const { proxy } = getCurrentInstance()
-const { layout, device, logout, onPanel, pureApp, username, userAvatar, avatarsStyle, toggleSideBar } = useNav()
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
-const modifyPasswordRef = ref(null)
-function onFresh() {
-  const { fullPath, query } = unref(route)
-  router.replace({
-    path: '/redirect' + fullPath,
-    query,
-  })
-  handleAliveRoute(route, 'refresh')
-}
+const { layout, device, pureApp, toggleSideBar } = useNav()
 </script>
 
 <template>
@@ -42,29 +24,7 @@ function onFresh() {
 
     <LayNavMix v-if="layout === 'mix'" />
 
-    <div v-if="layout === 'vertical'" class="vertical-header-right">
-      <div class="mr">
-        <div>
-          当前租户: {{ proxy.getStorage('tenant-sysdomain').tenantName }} [
-          {{ proxy.getStorage('tenant-sysdomain').tenantId }} ]
-        </div>
-      </div>
-      <o-tooltip content="刷新">
-        <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover" @click="onFresh">
-          <IconifyIconOffline :icon="RefreshRight" />
-        </div>
-      </o-tooltip>
-
-      <!-- 全屏 -->
-      <LaySidebarFullScreen id="full-screen" />
-
-      <!-- 退出登录 -->
-      <DropdownLayout />
-      <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
-        <IconifyIconOffline :icon="Setting" />
-      </span>
-    </div>
-    <ModifyPassword ref="modifyPasswordRef" />
+    <RightLayout v-if="layout === 'vertical'" />
   </div>
 </template>
 

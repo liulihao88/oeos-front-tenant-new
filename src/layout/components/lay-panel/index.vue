@@ -32,15 +32,23 @@ onClickOutside(target, (event: any) => {
   show.value = false
 })
 
+const onEscClose = (event) => {
+  if (event.code === 'Escape') {
+    show.value = false
+  }
+}
+
 onMounted(() => {
   emitter.on('openPanel', () => {
     show.value = true
   })
+  window.document.addEventListener('keydown', onEscClose)
 })
 
 onBeforeUnmount(() => {
   // 解绑`openPanel`公共事件，防止多次触发
   emitter.off('openPanel')
+  window.document.addEventListener('keydown', onEscClose)
 })
 </script>
 

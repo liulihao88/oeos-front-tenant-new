@@ -2,21 +2,16 @@
 import { isAllEmpty } from '@pureadmin/utils'
 import { ref, nextTick, computed } from 'vue'
 import { useNav } from '@/layout/hooks/useNav'
-import LaySearch from '../lay-search/index.vue'
-import LayNotice from '../lay-notice/index.vue'
 import { usePermissionStoreHook } from '@/store/modules/permission'
 import LaySidebarItem from '../lay-sidebar/components/SidebarItem.vue'
-import LaySidebarFullScreen from '../lay-sidebar/components/SidebarFullScreen.vue'
 
 import NewSidebarLogo from '@/layout/components/lay-sidebar/newSidebarLogo.vue'
 
-import DropdownLayout from '@/layout/components/dropdownLayout.vue'
-
-import Setting from '@iconify-icons/ri/settings-3-line'
+import RightLayout from '@/layout/components/lay-sidebar/rightLayout.vue'
 
 const menuRef = ref()
 
-const { route, title, logout, onPanel, getLogo, username, userAvatar, backTopMenu, avatarsStyle } = useNav()
+const { route } = useNav()
 
 const defaultActive = computed(() => (!isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path))
 
@@ -27,16 +22,6 @@ nextTick(() => {
 
 <template>
   <div v-loading="usePermissionStoreHook().wholeMenus.length === 0" class="horizontal-header">
-    <!-- <div class="horizontal-header-left" @click="backTopMenu">
-      <img
-        :src="
-          storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
-        "
-        width="50"
-        style="object-fit: contain"
-      />
-      <span>{{ title }}</span>
-    </div> -->
     <NewSidebarLogo />
     <el-menu
       ref="menuRef"
@@ -52,19 +37,8 @@ nextTick(() => {
         :base-path="route.path"
       />
     </el-menu>
-    <div class="horizontal-header-right">
-      <!-- 菜单搜索 -->
-      <!-- <LaySearch id="header-search" /> -->
-      <!-- 全屏 -->
-      <LaySidebarFullScreen id="full-screen" />
-      <!-- 消息通知 -->
-      <!-- <LayNotice id="header-notice" /> -->
-      <!-- 退出登录 -->
-      <DropdownLayout />
-      <span class="set-icon navbar-bg-hover" title="打开系统配置" @click="onPanel">
-        <IconifyIconOffline :icon="Setting" />
-      </span>
-    </div>
+
+    <RightLayout class="horizontal-header-right" />
   </div>
 </template>
 

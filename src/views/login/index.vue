@@ -137,9 +137,8 @@ const onLogin = async (formEl) => {
 }
 
 /** 使用公共函数，避免`removeEventListener`失效 */
-function onkeypress(code) {
-  console.log(`83 code`, code)
-  if (code.code === 'Enter') {
+function onkeypress(event) {
+  if (event.code === 'Enter') {
     onLogin(ruleFormRef.value)
   }
 }

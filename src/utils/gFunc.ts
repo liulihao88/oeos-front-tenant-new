@@ -4,8 +4,6 @@ import { router } from '@/router/index.ts'
 import { isStringNumber, isNumber } from './types.js'
 
 export function gDownload(item) {
-  console.log(`34 item`, item)
-
   if (!item.bucket) {
     $toast('不是有效数据，不支持下载!', 'w')
     return false
@@ -21,7 +19,6 @@ export function gDownload(item) {
   let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}&version=${objectVersionID}`
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  console.log(`41 _href`, _href)
   window.location.href = _href
 }
 
@@ -41,9 +38,7 @@ export function gDownloadUrl(url, params = {}) {
   const queryString = Object.keys(mergeParams)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(mergeParams[key])}`)
     .join('&')
-  console.log(`75 queryString`, queryString)
   let _href = baseUrl + url + '?' + queryString
-  console.log(`37 _href`, _href)
   window.location.href = _href
 }
 
@@ -108,7 +103,6 @@ export function formatFixed(number, toFixed = 2) {
     return number // 如果没有找到匹配，则返回原始输入
   }
 
-  console.log(`41 matches[1]`, matches[1])
   let numericString = Number(matches[1]).toFixed(toFixed) // 仅保留数字
   let unit = matches[2] || '' // 单位部分，如果没有则为空字符串
 
@@ -117,7 +111,6 @@ export function formatFixed(number, toFixed = 2) {
 }
 
 export function formatImg(photoName, addPath = '', { basePath = 'assets/images' } = {}) {
-  console.log(`95 photoName`, photoName)
   if (photoName.startsWith('http') || photoName.startsWith('https')) {
     return photoName
   }

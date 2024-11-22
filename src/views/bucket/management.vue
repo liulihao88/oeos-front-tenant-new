@@ -131,10 +131,20 @@ const columns = [
     btns: [
       {
         content: '删除',
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          content: '删除',
+        },
         reConfirm: proxy.$dev ? false : true,
         handler: deleteRow,
       },
       {
+        comp: 'o-icon',
+        attrs: {
+          name: 'view',
+          content: '桶浏览',
+        },
         content: '桶浏览',
         handler: viewRow,
       },
