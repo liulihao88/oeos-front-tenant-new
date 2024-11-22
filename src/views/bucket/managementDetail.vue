@@ -225,13 +225,13 @@ const editDate = () => {
 
           <g-warning
             class="mtb2"
-            title="版本控制是将某一对象的多个变体保留在同一存储桶中的一种方法，能够保留、检索以及还原该存储桶中每个对象的每个版本。通过版本控制，您可以轻松地将意外的用户操作和应用程序故障中恢复存储对象。"
+            content="版本控制是将某一对象的多个变体保留在同一存储桶中的一种方法，能够保留、检索以及还原该存储桶中每个对象的每个版本。通过版本控制，您可以轻松地将意外的用户操作和应用程序故障中恢复存储对象。"
           />
         </div>
 
         <div class="c-box mt" style="height: calc(35% - 8px)">
           <o-title title="修改存储容量" type="simple" />
-          <g-warning class="mt" title="用户按需选择相应循环单位, 修改配额" />
+          <g-warning class="mt" content="用户按需选择相应循环单位, 修改配额" />
 
           <div class="mtb2 f-st-ct">
             <div class="f-1">
@@ -248,7 +248,7 @@ const editDate = () => {
 
         <div class="c-box mt h-35%">
           <o-title title="对象过期删除" type="simple" />
-          <g-warning class="mt" title="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
+          <g-warning class="mt" content="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
 
           <div class="mtb2 f-st-ct">
             <div class="f-1">
@@ -286,7 +286,7 @@ const editDate = () => {
       </div> -->
 
       <g-warning
-        title=" 更改存储桶版本控制必读: <br>1、对象版本设置的现有生命周期规则仍然适用。<br>2、不会更改存储桶中的现有对象。<br> 3、若新增对象和现有对象同名，将替换现有对象。"
+        content=" 更改存储桶版本控制必读: <br>1、对象版本设置的现有生命周期规则仍然适用。<br>2、不会更改存储桶中的现有对象。<br> 3、若新增对象和现有对象同名，将替换现有对象。"
       />
 
       <el-checkbox v-model="isKnow">我已了解更改存储桶版本控制的后果。</el-checkbox>

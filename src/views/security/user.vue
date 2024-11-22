@@ -196,15 +196,15 @@ const confirm = async () => {
     <o-title title="数据统计" />
     <div class="header">
       <div v-for="(v, i) in countNameData" :key="i" class="item c-box">
+        <div class="cl-blue fs-24">{{ v.count }}</div>
         <div>{{ v.text }}</div>
-        <div>{{ v.count }}</div>
       </div>
     </div>
 
     <o-title title="用户列表" />
     <div class="f-bt-ct mb2">
       <div>
-        <o-input v-model="form.username" v-debounce.200="init" width="240" title="用户名" class="mr2" @clear="init" />
+        <o-input v-model="form.username" v-debounce.200="init" width="300" title="用户名" class="mr2" @clear="init" />
         <o-select v-model="form.role" :options="ROLE_OPTIONS" title="角色" class="mr" @change="init" />
         <o-select v-model="form.status" title="状态" :options="statusOptions" @change="init" />
       </div>
@@ -284,9 +284,12 @@ const confirm = async () => {
 
 .item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   margin: 8px;
+  font-weight: 700;
 }
 
 /* 设置 el-switch 的宽度 */

@@ -163,7 +163,8 @@ const saveAll = async () => {
           ref="bucketPermissionRef"
           :sendName="selectedRows.name"
           :src="getGroupMemberPermission"
-          tableHeight="calc(100vh - 680px)"
+          type="group"
+          tableHeight="calc(100vh - 720px)"
         />
       </div>
     </div>
@@ -182,8 +183,7 @@ const saveAll = async () => {
     position: absolute;
     z-index: 99;
     width: 280px;
-    height: 100%;
-    height: calc(100vh - 124px);
+    height: calc(100vh - 128px);
     padding: 8px;
     margin-right: 20px;
     overflow: auto;
@@ -193,7 +193,7 @@ const saveAll = async () => {
 
   .r {
     flex: 1;
-    padding: 8px;
+    padding: 16px;
     margin-left: 300px;
     background: #fff;
 

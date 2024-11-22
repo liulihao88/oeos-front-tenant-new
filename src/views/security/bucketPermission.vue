@@ -10,6 +10,10 @@ const { proxy } = getCurrentInstance()
 const toggleTable = ref(true)
 
 const props = defineProps({
+  type: {
+    type: String,
+    default: '', // group
+  },
   sendName: {
     type: String,
     required: true,
@@ -228,98 +232,100 @@ defineExpose({
 
 <template>
   <div>
-    <o-title title="桶管理权限">
+    <o-title title="桶管理权限" tb="8">
       <el-checkbox v-model="permissionBucketAdmin" class="ml" label="全部权限" true-value="PERMISSION_BUCKET_ADMIN" />
-      <o-icon
+
+      <g-warning
+        type="icon"
         class="ml"
-        name="warning"
-        content="此权限拥有当前租户所有桶的所有权限
-包括创建新桶权限以及[浏览/读取/写入/删除/管理]"
+        content="此权限拥有当前租户所有桶的所有权限 包括创建新桶权限以及[浏览/读取/写入/删除/管理]"
       />
     </o-title>
-    <o-title title="所有桶权限" type="simple">
-      <div class="ml f-st-ct">
-        <o-checkbox
-          v-model="permissionValues"
-          :options="proxy.PERMISSION_OPTIONS"
-          :disabled="!!permissionBucketAdmin"
-        />
-        <o-icon name="warning" raw-content :content="permissionInfos" class="ml2" />
-      </div>
-    </o-title>
-    <g-warning
-      title=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
-    />
-    <o-title title="单个桶权限" tb="8" type="simple">
-      <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>
-      <o-input
-        v-model.trim="searchValue"
-        v-debounce.200="changeBucketText"
-        class="ml"
-        placeholder="桶列表"
-        title=" 筛选桶"
-        width="250"
-        @clear="changeBucketText"
+    <div :class="{ 'c-box': props.type !== 'group' }">
+      <o-title title="所有桶权限" type="simple">
+        <div class="ml f-st-ct">
+          <o-checkbox
+            v-model="permissionValues"
+            :options="proxy.PERMISSION_OPTIONS"
+            :disabled="!!permissionBucketAdmin"
+          />
+          <o-icon name="warning" raw-content :content="permissionInfos" class="ml2" />
+        </div>
+      </o-title>
+      <g-warning
+        content=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
       />
-    </o-title>
-    <o-table
-      v-if="toggleTable"
-      ref="tableRef"
-      :columns="columns"
-      :data="data"
-      :pageSize="30"
-      :height="props.tableHeight"
-      class=""
-      :showPage="false"
-    >
-      <template #name="{ scope, row }">
-        {{ row.name }}
-        <el-tag v-if="row.browse" class="mr">浏览</el-tag>
-        <el-tag v-if="row.read" class="mr">读</el-tag>
-        <el-tag v-if="row.write" class="mr">写</el-tag>
-        <el-tag v-if="row.delete" class="mr">删除</el-tag>
-        <el-tag v-if="row.management" class="mr">管理</el-tag>
-      </template>
-      <template #browse="{ scope, row }">
-        <el-checkbox
-          v-model="row.browse"
-          label=""
-          :disabled="permissionValues.includes('PERMISSION_BUCKET_BROWSE') || !!permissionBucketAdmin"
-          @change="checkboxChange"
+      <o-title title="单个桶权限" tb="8" type="simple">
+        <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>
+        <o-input
+          v-model.trim="searchValue"
+          v-debounce.200="changeBucketText"
+          class="ml"
+          placeholder="桶列表"
+          title=" 筛选桶"
+          width="250"
+          @clear="changeBucketText"
         />
-      </template>
-      <template #read="{ scope, row }">
-        <el-checkbox
-          v-model="row.read"
-          label=""
-          :disabled="permissionValues.includes('PERMISSION_BUCKET_READ') || !!permissionBucketAdmin"
-          @change="checkboxChange"
-        />
-      </template>
-      <template #write="{ scope, row }">
-        <el-checkbox
-          v-model="row.write"
-          label=""
-          :disabled="permissionValues.includes('PERMISSION_BUCKET_WRITE') || !!permissionBucketAdmin"
-          @change="checkboxChange"
-        />
-      </template>
-      <template #delete="{ scope, row }">
-        <el-checkbox
-          v-model="row.delete"
-          label=""
-          :disabled="permissionValues.includes('PERMISSION_BUCKET_DELETE') || !!permissionBucketAdmin"
-          @change="checkboxChange"
-        />
-      </template>
-      <template #management="{ scope, row }">
-        <el-checkbox
-          v-model="row.management"
-          label=""
-          :disabled="permissionValues.includes('PERMISSION_BUCKET_MANAGEMENT') || !!permissionBucketAdmin"
-          @change="checkboxChange"
-        />
-      </template>
-    </o-table>
+      </o-title>
+      <o-table
+        v-if="toggleTable"
+        ref="tableRef"
+        :columns="columns"
+        :data="data"
+        :pageSize="30"
+        :height="props.tableHeight"
+        class=""
+        :showPage="false"
+      >
+        <template #name="{ scope, row }">
+          {{ row.name }}
+          <el-tag v-if="row.browse" class="mr">浏览</el-tag>
+          <el-tag v-if="row.read" class="mr">读</el-tag>
+          <el-tag v-if="row.write" class="mr">写</el-tag>
+          <el-tag v-if="row.delete" class="mr">删除</el-tag>
+          <el-tag v-if="row.management" class="mr">管理</el-tag>
+        </template>
+        <template #browse="{ scope, row }">
+          <el-checkbox
+            v-model="row.browse"
+            label=""
+            :disabled="permissionValues.includes('PERMISSION_BUCKET_BROWSE') || !!permissionBucketAdmin"
+            @change="checkboxChange"
+          />
+        </template>
+        <template #read="{ scope, row }">
+          <el-checkbox
+            v-model="row.read"
+            label=""
+            :disabled="permissionValues.includes('PERMISSION_BUCKET_READ') || !!permissionBucketAdmin"
+            @change="checkboxChange"
+          />
+        </template>
+        <template #write="{ scope, row }">
+          <el-checkbox
+            v-model="row.write"
+            label=""
+            :disabled="permissionValues.includes('PERMISSION_BUCKET_WRITE') || !!permissionBucketAdmin"
+            @change="checkboxChange"
+          />
+        </template>
+        <template #delete="{ scope, row }">
+          <el-checkbox
+            v-model="row.delete"
+            label=""
+            :disabled="permissionValues.includes('PERMISSION_BUCKET_DELETE') || !!permissionBucketAdmin"
+            @change="checkboxChange"
+          />
+        </template>
+        <template #management="{ scope, row }">
+          <el-checkbox
+            v-model="row.management"
+            label=""
+            :disabled="permissionValues.includes('PERMISSION_BUCKET_MANAGEMENT') || !!permissionBucketAdmin"
+            @change="checkboxChange"
+          />
+        </template>
+      </o-table>
+    </div>
   </div>
 </template>

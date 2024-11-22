@@ -103,56 +103,55 @@ const save = async () => {
 <template>
   <div class="">
     <o-title title="用户编辑">
-      <el-button type="primary" class="ml2" @click="save">保存</el-button>
-      <el-button class="ml2" @click="proxy.jump('/apps/security/user')">取消</el-button>
+      <el-button type="primary" class="ml2" size="small" @click="save">保存</el-button>
+      <el-button class="ml2" size="small" @click="proxy.jump('/apps/security/user')">取消</el-button>
     </o-title>
-    <o-title title="基本信息" type="simple" />
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>
-      <el-form-item label="名称" prop="username">
-        <o-input v-model="form.username" :disabled="true" placeholder="3-10位字符且只支持数字、英文" />
-      </el-form-item>
-      <el-form-item label="用户全称" prop="fullName">
-        <o-input v-model="form.fullName" placeholder="1-20位字符" />
-      </el-form-item>
-      <el-form-item label="密码" prop="pwd">
-        <o-input v-model="form.pwd" placeholder="8-40位字符组合、特殊字符可选" :type="proxy.$dev ? '' : 'password'" />
-      </el-form-item>
-      <el-form-item label="确认密码" prop="confirmPwd">
-        <o-input
-          v-model="form.confirmPwd"
-          placeholder="8-40位字符组合、特殊字符可选"
-          :type="proxy.$dev ? '' : 'password'"
-        />
-      </el-form-item>
-      <el-form-item label="描述" prop="description">
-        <o-input
-          v-model="form.description"
-          placeholder="请输入描述信息, 限制50个字符"
-          type="textarea"
-          :maxlength="50"
-        />
-      </el-form-item>
-    </el-form>
+    <div class="c-box mtb">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>
+        <el-form-item label="名称" prop="username">
+          <o-input v-model="form.username" :disabled="true" placeholder="3-10位字符且只支持数字、英文" />
+        </el-form-item>
+        <el-form-item label="用户全称" prop="fullName">
+          <o-input v-model="form.fullName" placeholder="1-20位字符" />
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <o-input v-model="form.pwd" placeholder="8-40位字符组合、特殊字符可选" :type="proxy.$dev ? '' : 'password'" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPwd">
+          <o-input
+            v-model="form.confirmPwd"
+            placeholder="8-40位字符组合、特殊字符可选"
+            :type="proxy.$dev ? '' : 'password'"
+          />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <o-input v-model="form.description" placeholder="请输入描述信息, 限制50个字符" :maxlength="50" />
+        </el-form-item>
+      </el-form>
+    </div>
 
     <o-title title="用户角色" />
-    <o-title title="所属角色" type="simple">
-      <div class="ml fw-400">修改角色权限保存后, 5分钟后生效</div>
-    </o-title>
-    <div class="f-st-ct">
-      <o-checkbox v-model="roleValues" :options="ROLE_OPTIONS" />
-      <o-icon name="warning" raw-content :content="roleInfos" class="ml2" />
-    </div>
-    <o-title title="所属组" type="simple">
-      <div class="f-st-ct ml2">
-        <o-checkbox v-model="groupValues" :options="groupOptions" type="simple" />
+    <div class="c-box">
+      <o-title title="所属角色" type="simple">
+        <!-- <div class="ml fw-400">修改角色权限保存后, 5分钟后生效</div> -->
+        <g-warning content="修改角色权限保存后, 5分钟后生效" class="w-80% ml" style="width: calc(100% - 100px)" />
+      </o-title>
+      <div class="f-st-ct">
+        <o-checkbox v-model="roleValues" :options="ROLE_OPTIONS" />
+        <o-icon name="warning" raw-content :content="roleInfos" class="ml2" />
       </div>
-    </o-title>
+      <o-title title="所属组" type="simple">
+        <div class="f-st-ct ml2">
+          <o-checkbox v-model="groupValues" :options="groupOptions" :showAll="groupOptions.length > 0" type="simple" />
+        </div>
+      </o-title>
+    </div>
 
     <BucketPermission
       ref="bucketPermissionRef"
       :sendName="userDetails.username"
       :src="getBucketPermission"
-      tableHeight="calc(100vh - 510px)"
+      tableHeight="calc(100vh - 610px)"
     />
   </div>
 </template>

@@ -2,22 +2,36 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 const props = defineProps({
-  title: {
+  content: {
     type: String,
     required: true,
+  },
+  type: {
+    type: String,
+    default: '',
   },
 })
 </script>
 
 <template>
-  <div class="warning-box" v-bind="$attrs">
-    <img src="@/assets/images/notic.png" class="w-16 h-16" />
-    <span class="warning-box__title">
-      <slot name="title">
-        <span v-html="title" />
+  <template v-if="type === 'icon'">
+    <div class="f-st-ct">
+      <o-icon name="warning" size="16" :color="'var(--45)'" v-bind="$attrs" class="mr" />
+      <slot name="content">
+        <div class="fs-14 cl-45">{{ content }}</div>
       </slot>
-    </span>
-  </div>
+    </div>
+  </template>
+  <template v-else>
+    <div class="warning-box" v-bind="$attrs">
+      <img src="@/assets/images/notic.png" class="w-16 h-16" />
+      <span class="warning-box__title">
+        <slot name="content">
+          <span v-html="content" />
+        </slot>
+      </span>
+    </div>
+  </template>
 </template>
 
 <style lang="scss" scoped>
