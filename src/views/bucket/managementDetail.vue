@@ -252,7 +252,9 @@ const editDate = () => {
             </div>
             <div class="f-1">
               <span class="mr">过期时间:</span>
-              <span class="cl-blue">{{ retentionAutoObj.expireAfterDays ?? '未设置' }}</span>
+              <span class="cl-blue">
+                {{ retentionAutoObj.expireAfterDays ? retentionAutoObj.expireAfterDays + '天' : '未设置' }}
+              </span>
             </div>
           </div>
           <el-button type="primary" @click="editDate">编辑</el-button>
