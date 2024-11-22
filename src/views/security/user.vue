@@ -196,8 +196,8 @@ const confirm = async () => {
     <o-title title="数据统计" />
     <div class="header">
       <div v-for="(v, i) in countNameData" :key="i" class="item c-box">
-        <div class="cl-blue fs-24">{{ v.count }}</div>
-        <div>{{ v.text }}</div>
+        <div class="bold fs-24">{{ v.count }}</div>
+        <div class="cl-45">{{ v.text }}</div>
       </div>
     </div>
 

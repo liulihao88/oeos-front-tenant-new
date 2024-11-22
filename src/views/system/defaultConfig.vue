@@ -93,25 +93,29 @@ init()
 <template>
   <div class="c-container">
     <o-title title="默认桶配置" sub-title="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" b="16" />
-
-    <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules">
-      <template #quota>
-        <div class="f-st-ed w-100%">
-          <div class="m-r-16">
-            <el-input-number v-model="form.quota" :precision="2" :min="0" />
+    <div class="c-box">
+      <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules">
+        <template #quota>
+          <div class="f-st-ed w-100%">
+            <div class="m-r-16">
+              <el-input-number v-model="form.quota" :precision="2" :min="0" />
+            </div>
+            <div>
+              <o-radio v-model="form.quotaUnit" :options="QUOTA_UNIT" showType="button" />
+            </div>
           </div>
-          <div>
-            <o-radio v-model="form.quotaUnit" :options="QUOTA_UNIT" showType="button" />
-          </div>
-        </div>
-        <o-icon name="warning" size="12" class="mr" />
-        <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-      </template>
-    </o-form>
+          <g-warning type="icon">
+            <template #content>
+              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+            </template>
+          </g-warning>
+        </template>
+      </o-form>
 
-    <div>
-      <el-button type="primary" @click="save">保存</el-button>
-      <el-button type="primary" @click="init(true)">重置</el-button>
+      <div>
+        <el-button type="primary" @click="save">保存</el-button>
+        <el-button type="primary" @click="init(true)">重置</el-button>
+      </div>
     </div>
   </div>
 </template>

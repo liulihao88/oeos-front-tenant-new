@@ -266,9 +266,9 @@ defineExpose({
   <div>
     <o-title :title="isTag ? '标签' : '匿名访问'" b="8">
       <template #right>
-        <el-button linked text @click="open">
+        <el-button type="primary" size="small" @click="open">
           更多
-          <o-icon name="arrow-right" />
+          <o-icon name="arrow-right" size="12" />
         </el-button>
       </template>
     </o-title>

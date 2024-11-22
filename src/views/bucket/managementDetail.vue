@@ -300,10 +300,15 @@ const editDate = () => {
 
             <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
           </div>
-          <div class="f-st-ct">
+          <!-- <div class="f-st-ct">
             <o-icon name="warning" size="12" class="mr" />
             <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-          </div>
+          </div> -->
+          <g-warning type="icon">
+            <template #content>
+              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+            </template>
+          </g-warning>
         </el-form-item>
         <el-form-item label="类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />

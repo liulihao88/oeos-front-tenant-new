@@ -305,8 +305,8 @@ function _handleUsedData(usedSpace) {
                 <img :src="proxy.formatImg(v.img)" style="height: 50px" alt="" />
               </div>
               <div class="f-st-ct" style="flex-direction: column">
-                <div>{{ v.name }}</div>
-                <div>
+                <div class="cl-45">{{ v.name }}</div>
+                <div class="bold">
                   <template v-if="v.title === 'objectSize'">
                     {{ proxy.formatThousands(proxy.formatBytes(v.value)) }}
                   </template>

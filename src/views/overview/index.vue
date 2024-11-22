@@ -246,7 +246,12 @@ const eventMore = () => {
           <o-title title="租户事件列表" b="8">
             <span class="ml">(共{{ eventTotal }}条)</span>
             <template #right>
-              <el-button type="primary" size="small" @click="eventMore">更多</el-button>
+              <el-button type="primary" size="small" @click="eventMore">
+                <div class="f-st-ct">
+                  <div>更多</div>
+                  <o-icon name="arrow-right" color="#fff" size="12" />
+                </div>
+              </el-button>
             </template>
           </o-title>
           <o-table ref="tableRef" :columns="eventColumns" :data="eventData" :showPage="false">

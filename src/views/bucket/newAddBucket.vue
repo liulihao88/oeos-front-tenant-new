@@ -157,8 +157,11 @@ defineExpose({
               <o-radio v-model="model.quotaUnit" :options="QUOTA_UNIT" showType="button" />
             </div>
           </div>
-          <o-icon name="warning" size="12" class="mr" />
-          <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+          <g-warning type="icon">
+            <template #content>
+              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
+            </template>
+          </g-warning>
         </template>
       </o-form>
     </o-dialog>
