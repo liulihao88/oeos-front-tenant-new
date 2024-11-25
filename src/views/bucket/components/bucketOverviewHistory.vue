@@ -134,12 +134,10 @@ defineExpose({
           批量下载
         </el-button>
 
-        <el-button
-          type="primary"
-          icon="el-icon-refresh-left"
-          :disabled="selectDisabled"
-          @click="RestoreExpirationInDaysRef.open(selections)"
-        >
+        <el-button type="primary" :disabled="selectDisabled" @click="RestoreExpirationInDaysRef.open(selections)">
+          <template #icon>
+            <o-svg name="restore" />
+          </template>
           批量恢复
         </el-button>
         <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">

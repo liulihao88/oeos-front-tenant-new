@@ -62,6 +62,11 @@ const columns = [
       {
         content: '移除',
         handler: remove,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          content: '移除',
+        },
       },
     ],
   },

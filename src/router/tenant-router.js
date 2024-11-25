@@ -1,6 +1,22 @@
 const Layout = () => import('@/layout/index.vue')
 import DarkSvg from '@/assets/svg/dark.svg'
 import DaySvg from '@/assets/svg/day.svg'
+import OverviewSvg from '@/assets/svg/menu/overview.svg'
+import BucketManagementSvg from '@/assets/svg/menu/bucket-management.svg'
+import BucketListSvg from '@/assets/svg/menu/bucket-list.svg'
+import easySearchSvg from '@/assets/svg/menu/easy-search.svg'
+import advanceSearchSvg from '@/assets/svg/menu/advance-search.svg'
+import unfreezeViewSvg from '@/assets/svg/menu/unfreeze-view.svg'
+import taskManagementSvg from '@/assets/svg/menu/task-management.svg'
+import bucketTaskSvg from '@/assets/svg/menu/bucket-task.svg'
+import taskPlanSvg from '@/assets/svg/menu/task-plan.svg'
+import securityPermissionSvg from '@/assets/svg/menu/security-permission.svg'
+import userManagemenetSvg from '@/assets/svg/menu/user-management.svg'
+import groupManagementSvg from '@/assets/svg/menu/group-management.svg'
+import bucketViewSvg from '@/assets/svg/menu/bucket-view.svg'
+import spaceViewSvg from '@/assets/svg/menu/space-view.svg'
+
+const isDev = process.env.NODE_ENV !== 'development'
 export default [
   {
     id: 'TM000',
@@ -16,7 +32,7 @@ export default [
         name: 'Overview',
         component: 'overview/index',
         meta: {
-          icon: 'ep:home-filled',
+          icon: OverviewSvg,
           title: '租户概览',
         },
       },
@@ -27,7 +43,7 @@ export default [
     path: '/bucket',
     component: Layout,
     meta: {
-      icon: 'notic.png',
+      icon: BucketManagementSvg,
       title: '空间管理222',
     },
     children: [
@@ -37,7 +53,7 @@ export default [
         name: 'Management',
         component: 'bucket/management',
         meta: {
-          icon: 'cc/bg.png',
+          icon: BucketListSvg,
           title: '桶列表',
         },
       },
@@ -67,7 +83,7 @@ export default [
         name: 'Objectexplorer',
         component: 'bucket/objectexplorer',
         meta: {
-          icon: 'ep:home-filled',
+          icon: bucketViewSvg,
           title: '桶浏览',
         },
       },
@@ -78,7 +94,7 @@ export default [
     path: '/object',
     component: Layout,
     meta: {
-      icon: DarkSvg,
+      icon: spaceViewSvg,
       title: '空间浏览',
     },
     children: [
@@ -88,7 +104,7 @@ export default [
         name: 'Search',
         component: 'object/search',
         meta: {
-          icon: DarkSvg,
+          icon: easySearchSvg,
           title: '简单搜索',
         },
       },
@@ -98,7 +114,7 @@ export default [
         name: 'AdvanceSearch',
         component: 'object/advancesearch',
         meta: {
-          icon: DaySvg,
+          icon: advanceSearchSvg,
           title: '高级搜索',
         },
       },
@@ -108,7 +124,7 @@ export default [
         name: 'Unfrezze',
         component: 'object/unfrezze',
         meta: {
-          icon: 'ep:avatar',
+          icon: unfreezeViewSvg,
           title: '解冻浏览',
         },
       },
@@ -119,7 +135,7 @@ export default [
     path: '/task',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: taskManagementSvg,
       title: '任务管理',
     },
     children: [
@@ -129,7 +145,7 @@ export default [
         name: 'TaskManagement',
         component: 'task/management.vue',
         meta: {
-          icon: 'ep:home-filled',
+          icon: bucketTaskSvg,
           title: '桶任务',
         },
       },
@@ -139,7 +155,7 @@ export default [
         name: 'Schedule',
         component: 'task/schedule',
         meta: {
-          icon: 'ep:home-filled',
+          icon: taskPlanSvg,
           title: '任务计划',
         },
       },
@@ -150,7 +166,7 @@ export default [
     path: '/security',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: securityPermissionSvg,
       title: '安全权限',
     },
     children: [
@@ -160,7 +176,7 @@ export default [
         name: 'User',
         component: 'security/user.vue',
         meta: {
-          icon: 'ep:home-filled',
+          icon: userManagemenetSvg,
           title: '用户管理',
         },
       },
@@ -190,7 +206,7 @@ export default [
         name: 'Group',
         component: 'security/group',
         meta: {
-          icon: 'ep:home-filled',
+          icon: groupManagementSvg,
           title: '组管理',
         },
       },
@@ -201,7 +217,7 @@ export default [
     component: Layout,
     meta: {
       icon: 'ep:home-filled',
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       title: '测试页',
       rank: 0,
     },
@@ -221,7 +237,7 @@ export default [
     path: '/test2',
     component: Layout,
     meta: {
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -252,7 +268,7 @@ export default [
 
     component: Layout,
     meta: {
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -273,7 +289,7 @@ export default [
     path: '/test4',
     component: Layout,
     meta: {
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -294,7 +310,7 @@ export default [
     path: '/test5',
     component: Layout,
     meta: {
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,
@@ -315,7 +331,7 @@ export default [
     path: '/test6',
     component: Layout,
     meta: {
-      showLink: import.meta.env.MODE === 'development',
+      showLink: isDev,
       icon: 'ep:home-filled',
       title: '测试页2顶部',
       rank: 0,

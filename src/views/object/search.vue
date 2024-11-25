@@ -191,10 +191,12 @@ const selectionChange = (val, ...a) => {
         </el-button>
         <el-button
           type="primary"
-          icon="el-icon-refresh-left"
           :disabled="selections.length === 0"
           @click="RestoreExpirationInDaysRef.open(selections)"
         >
+          <template #icon>
+            <o-svg name="restore" />
+          </template>
           批量恢复
         </el-button>
         <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">

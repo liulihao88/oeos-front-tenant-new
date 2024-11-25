@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, computed } from 'vue'
 import { getBucketTask, toggleTaskStatus, delTask } from '@/api/taskApi.ts'
 
 import AddTask from '@/views/task/components/addTask.vue'
@@ -12,102 +12,116 @@ const editRow = (row) => {
   addTaskRef.value.open(row)
 }
 
-const columns = [
-  {
-    label: '名称',
-    prop: 'name',
-  },
-  {
-    label: '任务类型',
-    prop: 'action',
-    width: 130,
-    filter: (val) => {
-      if (!val) {
-        return '-'
-      }
-      return proxy.TASK_TYPE_OPTIONS.find((item) => item.value === val).label
+const columns = computed(() => {
+  return [
+    {
+      label: '名称',
+      prop: 'name',
     },
-  },
-  {
-    label: '包含桶名',
-    prop: 'includeBucketNames',
-    filter: (val) => {
-      if (proxy.notEmpty(val)) {
-        return val.join(',')
-      } else {
-        return '所有桶'
-      }
-    },
-  },
-  {
-    label: '例外桶名',
-    prop: 'excludeBucketNames',
-    filter: (val) => {
-      if (proxy.notEmpty(val)) {
-        return val.join(',')
-      } else {
-        return '-'
-      }
-    },
-  },
-  {
-    label: '保留期',
-    prop: 'retentionPeriod',
-    width: 80,
-    filter: (val) => {
-      // 0年0月100.2天0时
-      if (val) {
-        let matchDays = /(\d+\.?\d*)天/
-        let match = val.match(matchDays)
-        console.log(`97 match`, match)
-        return match?.[0] ?? '-'
-      }
-      return '-'
-    },
-  },
-  {
-    label: '任务内容',
-    prop: 'taskContent',
-  },
-  {
-    label: '创建时间',
-    prop: 'createTime',
-    width: proxy.TIME_WIDTH,
-    filter: (val) => {
-      return proxy.formatTimeByRule(val)
-    },
-  },
-  {
-    label: '更新时间',
-    prop: 'lastModifiedTime',
-    width: proxy.TIME_WIDTH,
-    filter: (val) => {
-      return proxy.formatTimeByRule(val)
-    },
-  },
-  {
-    key: 'operation',
-    label: '操作',
-    maxBtns: 5,
-    btns: [
-      {
-        prop: 'enable',
-        useSlot: true,
+    {
+      label: '任务类型',
+      prop: 'action',
+      width: 130,
+      filter: (val) => {
+        if (!val) {
+          return '-'
+        }
+        return proxy.TASK_TYPE_OPTIONS.find((item) => item.value === val).label
       },
-      {
-        content: (row) => {
-          return row.enabled ? '查看' : '编辑'
+    },
+    {
+      label: '包含桶名',
+      prop: 'includeBucketNames',
+      filter: (val) => {
+        if (proxy.notEmpty(val)) {
+          return val.join(',')
+        } else {
+          return '所有桶'
+        }
+      },
+    },
+    {
+      label: '例外桶名',
+      prop: 'excludeBucketNames',
+      filter: (val) => {
+        if (proxy.notEmpty(val)) {
+          return val.join(',')
+        } else {
+          return '-'
+        }
+      },
+    },
+    {
+      label: '保留期',
+      prop: 'retentionPeriod',
+      width: 80,
+      filter: (val) => {
+        // 0年0月100.2天0时
+        if (val) {
+          let matchDays = /(\d+\.?\d*)天/
+          let match = val.match(matchDays)
+          console.log(`97 match`, match)
+          return match?.[0] ?? '-'
+        }
+        return '-'
+      },
+    },
+    {
+      label: '任务内容',
+      prop: 'taskContent',
+    },
+    {
+      label: '创建时间',
+      prop: 'createTime',
+      width: proxy.TIME_WIDTH,
+      filter: (val) => {
+        return proxy.formatTimeByRule(val)
+      },
+    },
+    {
+      label: '更新时间',
+      prop: 'lastModifiedTime',
+      width: proxy.TIME_WIDTH,
+      filter: (val) => {
+        return proxy.formatTimeByRule(val)
+      },
+    },
+    {
+      key: 'operation',
+      label: '操作',
+      maxBtns: 5,
+      btns: [
+        {
+          prop: 'enable',
+          useSlot: true,
         },
-        handler: editRow,
-      },
-      {
-        content: '删除',
-        handler: deleteRow,
-        reConfirm: proxy.$dev ? false : true,
-      },
-    ],
-  },
-]
+        {
+          content: (row) => {
+            return row.enabled ? '查看' : '编辑'
+          },
+          handler: editRow,
+          comp: 'o-icon',
+          attrs: {
+            type: 'svg',
+            name: 'edit',
+            content: '编辑',
+            size: 6,
+          },
+        },
+        {
+          content: '删除',
+          handler: deleteRow,
+          reConfirm: proxy.$dev ? false : true,
+          comp: 'o-icon',
+          attrs: {
+            name: 'delete',
+            content: '删除',
+          },
+        },
+      ],
+    },
+  ]
+})
 const add = () => {
   addTaskRef.value.open()
 }
@@ -117,17 +131,9 @@ const init = async () => {
 }
 init()
 
-const enableChange = async (enabledBoolean, row) => {
-  console.log(`63 enabledBoolean`, enabledBoolean)
-  if (!enabledBoolean) {
-    await proxy.confirm('确定关闭此任务嘛?')
-  }
-  await toggleTaskStatus(row.id, enabledBoolean)
-  init()
-}
 const beforeChange = async (enabledBoolean, row) => {
   let sendEnabled = !enabledBoolean
-  if (!sendEnabled) {
+  if (!sendEnabled && !proxy.$dev) {
     await proxy.confirm('确定关闭此任务嘛?')
   }
   await toggleTaskStatus(row.id, sendEnabled)

@@ -76,14 +76,25 @@ const deleteRow = async (row) => {
 
 const columns = [
   {
-    label: '任务名称',
+    label: '计划名称',
     prop: 'name',
   },
   {
     label: '操作',
     width: 100,
     prop: 'operation',
-    btns: [{ content: '删除', handler: deleteRow }],
+    btns: [
+      {
+        content: '删除',
+        handler: deleteRow,
+        comp: 'o-icon',
+        reConfirm: !proxy.$dev,
+        attrs: {
+          name: 'delete',
+          content: '删除',
+        },
+      },
+    ],
   },
 ]
 
@@ -203,7 +214,7 @@ const isTimeOverlapping = (startTime, endTime, timeRangeList) => {
 }
 const save = async () => {
   if (proxy.isEmpty(taskName.value)) {
-    return proxy.$toast('任务名称不能为空', 'e')
+    return proxy.$toast('计划名称不能为空', 'e')
   }
 
   let isTimeEmpty = true
@@ -259,7 +270,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
         <o-input
           v-model.trim="searchValue"
           v-throttle.300="searchHandler"
-          title="任务名称"
+          title="计划名称"
           placeholder="请输入"
           @clear="searchHandler"
         />
@@ -278,7 +289,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
     </div>
     <div class="r">
       <div class="r-top">
-        <o-input v-model="taskName" title="任务名称" width="300" />
+        <o-input v-model="taskName" title="计划名称" width="300" />
         <el-button v-throttle="save" size="small" type="primary" class="m-l-16">保存</el-button>
       </div>
       <div class="r-content">

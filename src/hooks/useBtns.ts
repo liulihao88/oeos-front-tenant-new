@@ -35,8 +35,21 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       return row.injectTime ? true : false
     },
     btns: [
-      { content: '详情', handler: detailRow },
-      { content: '下载', handler: gDownload },
+      {
+        content: '详情',
+        handler: detailRow,
+      },
+      {
+        content: '下载',
+        handler: gDownload,
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'download',
+          content: '下载',
+          size: 6,
+        },
+      },
       {
         content: '删除',
         handler: deleteRow,
@@ -46,14 +59,31 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
           content: '删除',
         },
         reConfirm: proxy.$dev ? false : true,
-      }, // reConfirm: true,
+      },
       {
         content: '恢复',
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'restore',
+          content: '恢复',
+          size: 6,
+        },
         handler: (row) => {
           RestoreExpirationInDaysRef.value.open(row)
         },
       },
-      { content: '历史', handler: (row) => bucketOverviewHistoryRef.value.open(row) },
+      {
+        content: '历史',
+        handler: (row) => bucketOverviewHistoryRef.value.open(row),
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'history',
+          content: '历史',
+          size: 6,
+        },
+      },
       {
         content: '预览',
         comp: 'o-icon',

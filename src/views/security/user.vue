@@ -94,10 +94,20 @@ const columns = [
       {
         content: '编辑',
         handler: editRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'edit',
+          content: '编辑',
+        },
       },
       {
         content: '删除',
         handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          content: '删除',
+        },
       },
     ],
   },

@@ -166,11 +166,11 @@ const eventMore = () => {
           <o-title title="租户信息与状态" />
           <div class="t-l-box">
             <div class="t-l-box-left">
-              <div class="item-card">
+              <div class="item-card" style="background: '#f2f6ff'">
                 <div>桶数量</div>
                 <div>{{ details.tenant?.bucketCount }}</div>
               </div>
-              <div class="item-card">
+              <div class="item-card" style="background: '#fef6e9'">
                 <div>桶任务数量</div>
                 <div>{{ details.tenant?.tenantCount }}</div>
               </div>

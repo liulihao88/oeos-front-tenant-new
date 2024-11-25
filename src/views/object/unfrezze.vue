@@ -87,6 +87,13 @@ const columns = computed(() => {
         {
           content: '下载',
           handler: proxy.gDownload,
+          comp: 'o-icon',
+          attrs: {
+            type: 'svg',
+            name: 'download',
+            content: '详情',
+            size: 16,
+          },
         },
       ],
     },

@@ -161,7 +161,7 @@ defineExpose({
     <o-dialog v-model="isShow" :title="compTitle" width="60%" :enableConfirm="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="150" :disabled="isView">
         <o-title title="基本信息" />
-        <el-form-item label="任务名称" prop="name">
+        <el-form-item label="计划名称" prop="name">
           <o-input v-model="form.name" min="3" max="20" />
         </el-form-item>
         <el-form-item label="任务类型" prop="action">
