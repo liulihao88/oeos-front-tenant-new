@@ -104,6 +104,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         isShow: (row) => {
           return isImage(row.key)
         },
+        reConfirm: true,
         handler: (row) => preview(row.bucket, row.name),
       },
     ],

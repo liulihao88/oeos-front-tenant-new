@@ -149,41 +149,44 @@ const selectionChange = (val, ...a) => {
 
 <template>
   <div>
-    <div class="f-bt-un w-100% m-b-16">
-      <div class="f-1 f-st-ct w-100% o-a">
-        <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" />
-
-        <o-input
-          v-model="form.key"
-          v-debounce.500="init"
-          width="160"
-          class="mr2"
-          title="对象名称"
-          :disabled="!bucketId"
-          @clear="init"
-        />
-        <o-select
-          v-model="form.storageClass"
-          :options="storageOptions"
-          :disabled="!bucketId"
-          label="value"
-          class="mr"
-          title="存储类型"
-          width="300"
-          @change="init"
-        />
-        <o-date-range
-          v-model="timeRange"
-          title="写入时间"
-          width="440"
-          format="YYYY-MM-DD HH:mm:ss"
-          type="datetimerange"
-          :disabled="!bucketId"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-          class="mr"
-          @change="timeChange"
-        />
+    <div class="f-bt-ct w-100% m-b-16">
+      <div class="w-100% o-a">
+        <div class="mb">
+          <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" :titleAttrs="{ width: '200px' }" width="350" />
+          <o-input
+            v-model="form.key"
+            v-debounce.500="init"
+            width="440"
+            class="mr2"
+            title="对象名称"
+            :disabled="!bucketId"
+            @clear="init"
+          />
+        </div>
+        <div>
+          <o-select
+            v-model="form.storageClass"
+            :options="storageOptions"
+            :disabled="!bucketId"
+            label="value"
+            class="mr"
+            :titleAttrs="{ width: '200px' }"
+            title="存储类型"
+            width="350"
+            @change="init"
+          />
+          <o-date-range
+            v-model="timeRange"
+            title="写入时间"
+            width="440"
+            format="YYYY-MM-DD HH:mm:ss"
+            type="datetimerange"
+            :disabled="!bucketId"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            @change="timeChange"
+          />
+        </div>
       </div>
       <div class="w-440 f-ed-un">
         <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
@@ -213,7 +216,7 @@ const selectionChange = (val, ...a) => {
         :data="data"
         :pageSize="form.pageSize"
         :total="total"
-        height="calc(100vh - 240px)"
+        height="calc(100vh - 280px)"
         @update="update"
         @selection-change="selectionChange"
       >

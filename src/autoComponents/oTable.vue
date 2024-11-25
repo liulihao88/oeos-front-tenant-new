@@ -253,42 +253,18 @@ function updatePage() {
                   <el-dropdown class="m-l-12 m-t-4" trigger="click">
                     <o-icon name="more" />
                     <template #dropdown>
-                      <el-dropdown-menu>
+                      <el-dropdown-menu :hide-on-click="false">
                         <template v-for="(val, idx) in v.hideBtns" :key="idx">
-                          <el-dropdown-item v-if="parseIsShow(val.isShow, scope.row, scope)" :hide-on-click="false">
+                          <el-dropdown-item
+                            v-if="parseIsShow(val.isShow, scope.row, scope)"
+                            :hide-on-click="false"
+                            @click="val.handler?.(scope.row, scope)"
+                          >
                             <slot v-if="val.useSlot" :name="val.prop" :row="scope.row" :scope="scope" />
-
-                            <template v-else-if="parseReConfirm(val.reConfirm, scope.row, scope)">
-                              <o-popconfirm
-                                trigger="hover"
-                                :title="val.title ?? '确定删除吗?'"
-                                class="f-st-ct"
-                                @confirm="val.handler?.(scope.row, scope)"
-                              >
-                                <component
-                                  :is="val.comp"
-                                  v-if="val.comp"
-                                  class="w-100%"
-                                  v-bind="val.attrs"
-                                  :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                                  @click.stop="val.handler?.(scope.row, scope)"
-                                />
-                                <el-button
-                                  v-else
-                                  v-bind="{ ...val }"
-                                  link
-                                  class="hide-btns-button"
-                                  :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                                >
-                                  {{ operatorBtnFn(val.content, scope.row, scope) }}
-                                </el-button>
-                              </o-popconfirm>
-                            </template>
                             <template v-else>
                               <component
                                 :is="val.comp"
                                 v-if="val.comp"
-                                class="mlr2"
                                 v-bind="val.attrs"
                                 :disabled="parseDisabled(val.disabled, scope.row, scope)"
                                 @click="val.handler?.(scope.row, scope)"
@@ -299,7 +275,6 @@ function updatePage() {
                                 link
                                 class="hide-btns-button"
                                 :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                                @click.stop="val.handler?.(scope.row, scope)"
                               >
                                 {{ operatorBtnFn(val.content, scope.row, scope) }}
                               </el-button>
@@ -409,5 +384,8 @@ function updatePage() {
 :deep(.el-dropdown-menu__item) {
   // padding: 0;
   justify-content: center;
+  min-width: 60px;
+  height: 30px;
+  line-height: 30px;
 }
 </style>
