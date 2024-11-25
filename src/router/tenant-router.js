@@ -15,15 +15,22 @@ import userManagemenetSvg from '@/assets/svg/menu/user-management.svg'
 import groupManagementSvg from '@/assets/svg/menu/group-management.svg'
 import bucketViewSvg from '@/assets/svg/menu/bucket-view.svg'
 import spaceViewSvg from '@/assets/svg/menu/space-view.svg'
+import serviceManageMentSvg from '@/assets/svg/menu/service-management.svg'
+import innerCommandSvg from '@/assets/svg/menu/inner-command.svg'
+import tenentControlSvg from '@/assets/svg/menu/tenent-control.svg'
+import tenantEventSvg from '@/assets/svg/menu/tenant-event.svg'
+import systemSettingSvg from '@/assets/svg/menu/system-setting.svg'
+import defaultConfigSvg from '@/assets/svg/menu/default-config.svg'
+import testSvg from '@/assets/svg/menu/test.svg'
 
-const isDev = process.env.NODE_ENV !== 'development'
+const isDev = process.env.NODE_ENV === 'development'
 export default [
   {
     id: 'TM000',
     path: '/apps/overview',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '租户概览',
     },
     children: [
@@ -216,7 +223,7 @@ export default [
     path: '/test',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: testSvg,
       showLink: isDev,
       title: '测试页',
       rank: 0,
@@ -238,7 +245,7 @@ export default [
     component: Layout,
     meta: {
       showLink: isDev,
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '测试页2顶部',
       rank: 0,
     },
@@ -269,7 +276,7 @@ export default [
     component: Layout,
     meta: {
       showLink: isDev,
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '测试页2顶部',
       rank: 0,
     },
@@ -290,7 +297,7 @@ export default [
     component: Layout,
     meta: {
       showLink: isDev,
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '测试页2顶部',
       rank: 0,
     },
@@ -311,7 +318,7 @@ export default [
     component: Layout,
     meta: {
       showLink: isDev,
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '测试页2顶部',
       rank: 0,
     },
@@ -332,7 +339,7 @@ export default [
     component: Layout,
     meta: {
       showLink: isDev,
-      icon: 'ep:home-filled',
+      icon: testSvg,
       title: '测试页2顶部',
       rank: 0,
     },
@@ -353,7 +360,7 @@ export default [
     path: '/feature',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: serviceManageMentSvg,
       title: '服务管理',
     },
     children: [
@@ -363,7 +370,7 @@ export default [
         name: 'InnerCommand',
         component: 'system/innerCommand',
         meta: {
-          icon: 'ep:home-filled',
+          icon: innerCommandSvg,
           title: '内置命令',
           showParent: true,
         },
@@ -375,7 +382,7 @@ export default [
     path: '/monitor',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: tenentControlSvg,
       title: '租户监控',
     },
     children: [
@@ -385,7 +392,7 @@ export default [
         name: 'Event',
         component: 'system/event',
         meta: {
-          icon: 'ep:home-filled',
+          icon: tenantEventSvg,
           title: '租户事件',
           showParent: true,
         },
@@ -397,7 +404,7 @@ export default [
     path: '/config',
     component: Layout,
     meta: {
-      icon: 'ep:home-filled',
+      icon: systemSettingSvg,
       title: '系统配置',
     },
     children: [
@@ -407,7 +414,7 @@ export default [
         name: 'DefaultConfig',
         component: 'system/defaultConfig',
         meta: {
-          icon: 'ep:home-filled',
+          icon: defaultConfigSvg,
           title: '默认配置',
           showParent: true,
         },

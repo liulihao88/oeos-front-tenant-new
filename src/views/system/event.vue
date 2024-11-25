@@ -89,19 +89,47 @@ const columns = [
       {
         content: '标记确认',
         handler: (row) => markRow(row, 'Awared'),
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          size: 6,
+          content: '标记确认',
+          name: 'tag-confirm',
+        },
       },
       {
         content: '确认解决',
         handler: (row) => markRow(row, 'Solved'),
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          size: 6,
+          content: '确认解决',
+          name: 'confirm-resolve',
+        },
       },
       {
         content: '取消解决',
         handler: (row) => markRow(row, 'Ignored'),
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          size: 6,
+          content: '取消解决',
+          name: 'cancel-resolve',
+        },
       },
       {
         content: '删除',
-        reConfirm: true,
+        // reConfirm: true,
         handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          size: 6,
+          type: 'svg',
+          content: '删除',
+          name: 'delete',
+        },
       },
     ],
   },
