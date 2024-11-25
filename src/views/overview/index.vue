@@ -144,14 +144,6 @@ const eventColumns = [
     width: proxy.TIME_WIDTH,
     filter: (val) => proxy.formatTimeByRule(val),
   },
-  {
-    label: '状态',
-    prop: 'mark',
-    width: 120,
-    filter: (val) => {
-      return statusOptions.value.find((v) => v.value === val)?.label || '-'
-    },
-  },
 ]
 const eventMore = () => {
   proxy.jump({ name: 'Event' })
@@ -241,7 +233,7 @@ const eventMore = () => {
           </o-table>
         </div>
       </el-col>
-      <el-col :span="12" class="h-100% o-h">
+      <el-col :span="12" class="h-100% o-a">
         <div class="item-box h-100%">
           <o-title title="租户事件列表" b="8">
             <span class="ml">(共{{ eventTotal }}条)</span>

@@ -38,6 +38,14 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       {
         content: '详情',
         handler: detailRow,
+        comp: 'o-icon',
+        reConfirm: true,
+        attrs: {
+          type: 'svg',
+          name: 'download',
+          content: '详情',
+          size: 6,
+        },
       },
       {
         content: '下载',
@@ -56,6 +64,8 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         comp: 'o-icon',
         attrs: {
           name: 'delete',
+          type: 'svg',
+          size: 6,
           content: '删除',
         },
         reConfirm: proxy.$dev ? false : true,

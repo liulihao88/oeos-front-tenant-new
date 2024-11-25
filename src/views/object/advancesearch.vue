@@ -147,6 +147,16 @@ const changeSelect = async (val, label, obj) => {
     <div class="f-bt-un w-100% m-b-16">
       <div class="f-1 f-st-ct" />
       <div class="f-1 f-ed-un">
+        <o-select
+          v-model="expressionValue"
+          :options="options"
+          label="queryName"
+          value="queryName"
+          title="搜索历史"
+          :clearable="false"
+          class="mr"
+          @changeSelect="changeSelect"
+        />
         <template v-if="data.length > 0">
           <el-button
             type="primary"
@@ -166,16 +176,6 @@ const changeSelect = async (val, label, obj) => {
           </el-button>
         </template>
         <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
-
-        <o-select
-          v-model="expressionValue"
-          :options="options"
-          label="queryName"
-          value="queryName"
-          title="搜索历史"
-          :clearable="false"
-          @changeSelect="changeSelect"
-        />
       </div>
     </div>
 

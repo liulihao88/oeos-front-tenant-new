@@ -205,14 +205,13 @@ function updatePage() {
                       <o-popconfirm
                         trigger="click"
                         :title="val.title ?? '确定删除吗?'"
-                        style="display: inline"
-                        class="mlr2"
+                        class="f-st-ct"
                         @confirm="val.handler?.(scope.row, scope)"
                       >
                         <component
                           :is="val.comp"
                           v-if="val.comp"
-                          class="mr2"
+                          class="mlr2"
                           v-bind="val.attrs"
                           :disabled="parseDisabled(val.disabled, scope.row, scope)"
                           @click.stop.prevent="val.handler?.(scope.row, scope)"
@@ -231,7 +230,7 @@ function updatePage() {
                     <component
                       :is="val.comp"
                       v-else-if="val.comp"
-                      class="mr2"
+                      class="mlr2"
                       v-bind="val.attrs"
                       :disabled="parseDisabled(val.disabled, scope.row, scope)"
                       @click="val.handler?.(scope.row, scope)"
@@ -263,13 +262,13 @@ function updatePage() {
                               <o-popconfirm
                                 trigger="hover"
                                 :title="val.title ?? '确定删除吗?'"
-                                style="display: inline"
+                                class="f-st-ct"
                                 @confirm="val.handler?.(scope.row, scope)"
                               >
                                 <component
                                   :is="val.comp"
                                   v-if="val.comp"
-                                  class="mlr2 w-100%"
+                                  class="w-100%"
                                   v-bind="val.attrs"
                                   :disabled="parseDisabled(val.disabled, scope.row, scope)"
                                   @click.stop="val.handler?.(scope.row, scope)"
@@ -289,7 +288,7 @@ function updatePage() {
                               <component
                                 :is="val.comp"
                                 v-if="val.comp"
-                                class="mr2"
+                                class="mlr2"
                                 v-bind="val.attrs"
                                 :disabled="parseDisabled(val.disabled, scope.row, scope)"
                                 @click="val.handler?.(scope.row, scope)"
@@ -393,8 +392,11 @@ function updatePage() {
   }
 
   :deep(.el-table-fixed-column--right .cell.el-tooltip) {
+    display: inline-flex;
     align-items: center;
+    min-height: 23px;
     line-height: 23px;
+    // justify-content: flex-start;
   }
 }
 

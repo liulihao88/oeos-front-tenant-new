@@ -274,7 +274,6 @@ defineExpose({
     </o-title>
     <o-table
       ref="tableRef"
-      size="small"
       :columns="columnsBase"
       :data="baseForm.data"
       :showPage="false"

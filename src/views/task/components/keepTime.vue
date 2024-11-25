@@ -129,7 +129,7 @@ defineExpose({
         @change="changeInputNumber"
       >
         <template #prefix>
-          <span>日</span>
+          <span>天</span>
         </template>
       </el-input-number>
 

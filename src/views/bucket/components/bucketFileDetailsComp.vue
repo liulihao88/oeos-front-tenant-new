@@ -48,6 +48,7 @@ const columns = [
   {
     label: '区域',
     prop: 'region',
+    width: 100,
   },
   {
     label: '位置',
