@@ -233,8 +233,8 @@ const eventMore = () => {
           </o-table>
         </div>
       </el-col>
-      <el-col :span="12" class="h-100% o-a">
-        <div class="item-box h-100%">
+      <el-col :span="12" class="h-100%">
+        <div class="item-box h-100% o-a">
           <o-title title="租户事件列表" b="8">
             <span class="ml">(共{{ eventTotal }}条)</span>
             <template #right>

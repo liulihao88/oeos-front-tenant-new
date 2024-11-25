@@ -148,6 +148,14 @@ const columns = [
         content: '桶浏览',
         handler: viewRow,
       },
+      {
+        comp: 'o-icon',
+        attrs: {
+          name: 'view',
+          content: '桶详情',
+        },
+        handler: handleDetail,
+      },
     ],
   },
 ]
@@ -345,7 +353,7 @@ function _handleUsedData(usedSpace) {
             >
               <template #bucketName="{ scope, row }">
                 <o-tooltip :content="row.bucketID">
-                  <div class="link" @click="handleDetail(row, scope)">
+                  <div class="link" @click="viewRow(row, scope)">
                     {{ row.bucketName }}
                   </div>
                 </o-tooltip>

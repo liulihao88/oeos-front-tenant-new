@@ -29,7 +29,7 @@ const confirm = async () => {
   if (proxy.isEmpty(form.value.matchFields)) {
     return proxy.$toast('请至少添加一个搜索条件', 'e')
   }
-  await proxy.validForm(formRef)
+  await proxy.validForm(formRef, { message: '维度(域名)必填' })
   const copyForm = proxy.clone(form)
   copyForm.matchFields = copyForm.matchFields.map((v, idx) => {
     let { name, operator, values } = v
@@ -229,7 +229,7 @@ defineExpose({
           :data="form.matchFields"
           :showPage="false"
           width="100%"
-          class="w-100%"
+          class="w-100% table-box"
         >
           <template #name="{ scope, row }">
             <template v-if="scope.$index !== -1">
@@ -290,18 +290,12 @@ defineExpose({
           </template>
           <template #values="{ scope, row }">
             <template v-if="scope.$index !== -1">
-              <!-- <el-form-item
-                :prop="`matchFields.${scope.$index}.values`"
-                :rules="getInnerRules(scope.$index, 'values')"
-                label-width="0"
-              > -->
               <template v-if="form.matchFields[scope.$index].type === 'time'">
                 <el-date-picker v-model="form.matchFields[scope.$index].values" type="datetime" style="width: 95%" />
               </template>
               <template v-else>
                 <o-input v-model="form.matchFields[scope.$index].values" width="90%" />
               </template>
-              <!-- </el-form-item> -->
             </template>
           </template>
         </o-table>
@@ -309,3 +303,9 @@ defineExpose({
     </o-dialog>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.table-box :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+</style>

@@ -187,6 +187,7 @@
 
     .el-menu-item.is-active.nest-menu > * {
       z-index: 1;
+      font-weight: bold;
       color: #fff;
     }
 
@@ -234,6 +235,7 @@
     /* 无子集的激活菜单背景 */
     .is-active.submenu-title-noDropdown.outer-most > * {
       z-index: 1;
+      font-weight: bold;
       color: #fff;
     }
 

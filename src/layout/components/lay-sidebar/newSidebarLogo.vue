@@ -37,7 +37,7 @@ const { title, backTopMenu } = useNav()
   align-items: center;
   width: 100%;
   height: 100%;
-  height: 32px;
+  height: 48px;
   padding-left: 10px;
   cursor: pointer;
   background-color: lightblue;
@@ -51,11 +51,11 @@ const { title, backTopMenu } = useNav()
     display: inline-block;
     // flex: 1;
     width: calc(100% - 70px);
-    height: 32px;
+    height: 48px;
     margin: 2px 0 0 12px;
     font-size: 18px;
     font-weight: 600;
-    line-height: 32px;
+    line-height: 48px;
     color: $subMenuActiveText;
     white-space: nowrap;
   }

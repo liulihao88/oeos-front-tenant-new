@@ -52,10 +52,7 @@ const columns = [
     label: '已用容量',
     prop: 'usage',
   },
-  {
-    label: '文件总数',
-    prop: 'fileTotal',
-  },
+
   {
     label: '创建时间',
     prop: 'createdDatetime',
@@ -94,7 +91,6 @@ const init = async () => {
     {
       total: res[0]?.quota.toFixed(2) + res[0]?.quotaUnit,
       usage: proxy.formatBytes(tenantBucketDetails.value.objectSize),
-      fileTotal: 10,
       createdDatetime: tenantBucketDetails.value.createdDatetime,
     },
   ]
@@ -169,12 +165,12 @@ const editDate = () => {
 <template>
   <div>
     <o-title title="基本信息" t="0" b="8" />
-    <div class="c-box w-100% p-32">
+    <div class="c-box w-100% p-lr-32 p-tb-16">
       <div class="mb2">
         <span class="cl-45">桶名称:</span>
-        <span class="bold">Bucket1</span>
+        <span class="bold">{{ bucketName }}</span>
         <span class="cl-45 ml3">桶ID:</span>
-        <span class="bold">1010101010</span>
+        <span class="bold">{{ tenantBucketDetails.bucketID }}</span>
       </div>
       <div class="f-ar-ct">
         <div class="top-item f-1">
@@ -194,7 +190,7 @@ const editDate = () => {
         <div class="top-item f-1">
           <img :src="proxy.formatImg('bucket/base3')" alt="" class="mr2" width="57" />
           <div class="f-bt-ct f-c">
-            <span class="bold">{{ data?.[0]?.fileTotal }}</span>
+            <span class="bold">{{ proxy.formatThousands(tenantBucketDetails.objectCount) }}</span>
             <span class="cl-45">文件总数</span>
           </div>
         </div>
@@ -214,7 +210,7 @@ const editDate = () => {
 
     <el-row :gutter="8" class="row-height">
       <el-col :span="12" class="h-100%">
-        <div class="c-box h-30%">
+        <div class="c-box h-33%">
           <o-title class="mr2" title="存储桶版本控制:" type="simple">
             <el-radio-group :model-value="versionStatus" class="ml2" @change="radioInput">
               <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
@@ -229,7 +225,7 @@ const editDate = () => {
           />
         </div>
 
-        <div class="c-box mt" style="height: calc(35% - 8px)">
+        <div class="c-box mt h-33%">
           <o-title title="修改存储容量" type="simple" />
           <g-warning class="mt" content="用户按需选择相应循环单位, 修改配额" />
 
@@ -246,7 +242,7 @@ const editDate = () => {
           <el-button type="primary" @click="editQuota">编辑</el-button>
         </div>
 
-        <div class="c-box mt h-35%">
+        <div class="c-box mt h-33%">
           <o-title title="对象过期删除" type="simple" />
           <g-warning class="mt" content="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
 
@@ -286,6 +282,7 @@ const editDate = () => {
       </div> -->
 
       <g-warning
+        class="mtb2"
         content=" 更改存储桶版本控制必读: <br>1、对象版本设置的现有生命周期规则仍然适用。<br>2、不会更改存储桶中的现有对象。<br> 3、若新增对象和现有对象同名，将替换现有对象。"
       />
 
@@ -338,6 +335,6 @@ const editDate = () => {
 }
 
 .row-height {
-  height: calc(100vh - 380px);
+  height: calc(100vh - 348px);
 }
 </style>
