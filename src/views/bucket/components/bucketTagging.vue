@@ -208,11 +208,11 @@ const getInnerRules = (index) => {
 }
 
 const pathValidator = (rule, value, callback) => {
-  let regex = /^\/([a-zA-Z0-9_\-.]*\/)*[a-zA-Z0-9_\-.]*$/
+  let regex = /^\/([a-zA-Z0-9_\-.]*(\/|$))*[a-zA-Z0-9_\-.*]*$/
   if (regex.test(value)) {
     callback()
   } else {
-    callback(new Error("格式为: '/路径' 或者 '/文件'"))
+    callback(new Error("格式为: '/路径' 或者 '/文件', 如/a/*, /a/*.txt"))
   }
 }
 

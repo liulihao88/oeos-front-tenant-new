@@ -142,21 +142,20 @@ const columns = [
       {
         comp: 'o-icon',
         attrs: {
-          name: 'view',
-          content: '桶浏览',
-        },
-        content: '桶浏览',
-        handler: viewRow,
-      },
-      {
-        comp: 'o-icon',
-        attrs: {
           type: 'svg',
           name: 'detail',
           size: 5,
           content: '桶详情',
         },
         handler: handleDetail,
+      },
+      {
+        comp: 'o-icon',
+        attrs: {
+          name: 'dArrowRight',
+          content: '跳转桶浏览',
+        },
+        handler: viewRow,
       },
     ],
   },
