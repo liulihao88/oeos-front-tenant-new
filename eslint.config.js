@@ -166,6 +166,7 @@ export default defineFlatConfig([
           math: 'always',
         },
       ],
+      'no-empty-source': 0,
       'no-empty-source': 'off',
     },
   },

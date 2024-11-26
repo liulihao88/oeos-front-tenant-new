@@ -5,6 +5,7 @@ import { getWarningOptions, tenantEventQuery, getInfoOverview } from '@/api/over
 import { getLevels, getEventList } from '@/api/system.ts'
 
 import OverviewUsedPie from '@/views/overview/overviewUsedPie.vue'
+import OutServiceComp from '@/views/overview/outServiceComp.vue'
 
 const details = ref({})
 const eventData = ref([])
@@ -218,7 +219,7 @@ const eventMore = () => {
     <el-row :gutter="16" class="bottom-height">
       <el-col :span="12" class="h-100%">
         <div class="item-box o-a">
-          <o-title title="对外服务信息" />
+          <OutServiceComp :servicePoint="details.servicePoint" />
           <o-title title="租户关键服务状态" />
           <o-table ref="tableRef" :columns="columns1" :data="data1" :showPage="false" size="small" />
           <o-title title="存储信息" />
