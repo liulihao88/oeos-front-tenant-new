@@ -91,8 +91,8 @@ const columns = computed(() => {
           attrs: {
             type: 'svg',
             name: 'download',
-            content: '详情',
-            size: 16,
+            content: '下载',
+            size: 6,
           },
         },
       ],

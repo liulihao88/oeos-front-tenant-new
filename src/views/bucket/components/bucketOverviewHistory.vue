@@ -25,7 +25,7 @@ const init = async (isReset = false) => {
   if (isReset) {
   }
   let params = {
-    key: rowDetails.value.name,
+    key: rowDetails.value.key,
     bucket: props.bucketName || rowDetails.value.bucket,
     pageMarker: pageMarker.value,
     versionIdMarker: versionIdMarker.value,

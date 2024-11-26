@@ -201,10 +201,13 @@ const saveReq = async () => {
 const isTimeValid = (startTime, endTime) => {
   return new Date(`2023-01-01T${startTime}`).getTime() < new Date(`2023-01-01T${endTime}`).getTime()
 }
-const isTimeOverlapping = (startTime, endTime, timeRangeList) => {
-  return timeRangeList.some((range) => {
-    if (range.startTime === startTime && range.endTime === endTime) {
+const isTimeOverlapping = (startTime, endTime, timeRangeList, idx) => {
+  return timeRangeList.some((range, index) => {
+    if (range.startTime === startTime && range.endTime === endTime && idx === index) {
       return false
+    }
+    if (range.startTime === startTime && range.endTime === endTime && idx !== index) {
+      return true
     }
     return !(
       new Date(`2023-01-01T${endTime}`).getTime() <= new Date(`2023-01-01T${range.startTime}`).getTime() ||
@@ -236,7 +239,7 @@ const save = async () => {
     v.dates.forEach((val, idx) => {
       let startTime = val.parseTimes[0]
       let endTime = val.parseTimes[1]
-      if (isTimeOverlapping(startTime, endTime, timeRangeList)) {
+      if (isTimeOverlapping(startTime, endTime, timeRangeList, idx)) {
         proxy.$toast(v.label + '第' + (idx + 1) + '个时间段与其他时间段不能重叠', 'e')
         throw new Error()
       }
@@ -298,7 +301,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
             <span>
               {{ v.label }}
             </span>
-            <o-tooltip content="清空一列">
+            <o-tooltip content="清空当前列">
               <el-button size="small" class="ml2" @click="deleteTime(v, i)">
                 <o-icon name="delete" />
               </el-button>

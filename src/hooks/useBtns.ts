@@ -71,13 +71,13 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       },
       {
         content: '恢复',
-        comp: 'o-icon',
-        attrs: {
-          type: 'svg',
-          name: 'restore',
-          content: '恢复',
-          size: 6,
-        },
+        // comp: 'o-icon',
+        // attrs: {
+        //   type: 'svg',
+        //   name: 'restore',
+        //   content: '恢复',
+        //   size: 6,
+        // },
         handler: (row) => {
           RestoreExpirationInDaysRef.value.open(row)
         },
@@ -85,25 +85,19 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
       {
         content: '历史',
         handler: (row) => bucketOverviewHistoryRef.value.open(row),
-        comp: 'o-icon',
-        attrs: {
-          type: 'svg',
-          name: 'history',
-          content: '历史',
-          size: 6,
-        },
+        // comp: 'o-icon',
+        // attrs: {
+        //   type: 'svg',
+        //   name: 'history',
+        //   content: '历史',
+        //   size: 6,
+        // },
       },
       {
         content: '预览',
-        comp: 'o-icon',
-        attrs: {
-          name: 'view',
-          content: '预览',
-        },
         isShow: (row) => {
           return isImage(row.key)
         },
-        reConfirm: true,
         handler: (row) => preview(row.bucket, row.name),
       },
     ],
