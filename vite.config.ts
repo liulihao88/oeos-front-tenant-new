@@ -4,8 +4,6 @@ import { type UserConfigExport, type ConfigEnv, loadEnv } from 'vite'
 import setting from './src/config/settings.ts'
 
 import { root, alias, wrapperEnv, pathResolve, __APP_INFO__ } from './build/utils'
-// const target = 'https://10.0.11.33:8008/'
-// const target = 'https://10.0.11.102:8008/'
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
   const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } = wrapperEnv(loadEnv(mode, root))

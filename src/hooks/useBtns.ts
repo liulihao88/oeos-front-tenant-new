@@ -67,7 +67,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
           size: 6,
           content: '删除',
         },
-        reConfirm: proxy.$dev ? false : true,
+        reConfirm: !proxy.$dev,
       },
       {
         content: '恢复',

@@ -135,7 +135,7 @@ defineExpose({
 
       <o-radio v-model="easyTime" :options="timeOptions" />
 
-      <o-icon v-if="!isView" name="circle-close" class="ml link" @click="clearValue" />
+      <o-svg v-if="!isView" name="eraser" size="16" class="ml2 link" @click="clearValue" />
     </div>
   </div>
 </template>

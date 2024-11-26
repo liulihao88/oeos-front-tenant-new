@@ -298,12 +298,16 @@ const deleteTime = (v, i, val = '', idx = '') => {
             <span>
               {{ v.label }}
             </span>
-            <el-button size="small" class="ml2" @click="deleteTime(v, i)">
-              <o-icon name="delete" />
-            </el-button>
-            <el-button type="primary" size="small" class="ml2" @click="addTime(v, i)">
-              <o-icon name="plus" />
-            </el-button>
+            <o-tooltip content="清空一列">
+              <el-button size="small" class="ml2" @click="deleteTime(v, i)">
+                <o-icon name="delete" />
+              </el-button>
+            </o-tooltip>
+            <o-tooltip content="添加">
+              <el-button type="primary" size="small" class="ml2" @click="addTime(v, i)">
+                <o-icon name="plus" />
+              </el-button>
+            </o-tooltip>
           </div>
 
           <template v-if="!isDelete">
@@ -315,7 +319,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
                 value-format="HH:mm"
                 style="width: 140px"
               />
-              <o-icon class="cp ml fs-12" name="circle-close" @click="deleteTime(v, i, val, idx)" />
+              <o-svg name="eraser" size="16" class="cp ml fs-12" @click="deleteTime(v, i, val, idx)" />
             </div>
           </template>
         </div>

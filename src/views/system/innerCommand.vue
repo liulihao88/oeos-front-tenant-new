@@ -61,6 +61,8 @@ const columns = computed(() => {
         },
         {
           content: '终止',
+          reConfirm: !proxy.$dev,
+          title: '确认终止此任务吗？',
           disabled: (row) => {
             return row.status !== 'Running'
           },

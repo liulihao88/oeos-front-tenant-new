@@ -114,11 +114,13 @@ const columns = computed(() => {
           content: '删除',
           handler: deleteRow,
           disabled: (row) => row.enabled,
-          reConfirm: proxy.$dev ? false : true,
+          reConfirm: !proxy.$dev,
           comp: 'o-icon',
           attrs: {
             name: 'delete',
+            type: 'svg',
             content: '删除',
+            size: 6,
           },
         },
       ],
@@ -172,10 +174,10 @@ async function deleteRow(row) {
       </template>
       <template #viewEdit="{ scope, row }">
         <template v-if="row.enabled">
-          <o-icon name="view" size="16" content="查看" />
+          <o-icon name="view" size="16" content="查看" class="mlr2" @click="editRow(row)" />
         </template>
         <template v-else>
-          <o-icon name="edit" size="16" content="查看" />
+          <o-icon name="edit" size="16" content="编辑" class="mlr2" @click="editRow(row)" />
         </template>
       </template>
     </o-table>

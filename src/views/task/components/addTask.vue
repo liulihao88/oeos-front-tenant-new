@@ -127,7 +127,7 @@ const save = async () => {
 }
 
 const highSettings = () => {
-  if (form.value.id) {
+  if (form.value.id || form.value.properties) {
     highSettingsRef.value.open(form.value.properties)
   } else {
     highSettingsRef.value.open()
@@ -141,6 +141,7 @@ const highSave = (highForm) => {
       ...highForm,
     },
   }
+  console.log(`02 form.value`, form.value)
 }
 
 const initSchedule = async () => {
