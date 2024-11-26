@@ -84,7 +84,6 @@ const columns = [
     key: 'operation',
     label: '操作',
     maxBtns: 10,
-    width: 300,
     btns: [
       {
         content: '标记确认',
@@ -121,9 +120,9 @@ const columns = [
       },
       {
         content: '删除',
-        // reConfirm: true,
         handler: deleteRow,
         comp: 'o-icon',
+        reConfirm: true,
         attrs: {
           size: 6,
           type: 'svg',

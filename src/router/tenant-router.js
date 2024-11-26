@@ -1,8 +1,8 @@
 const Layout = () => import('@/layout/index.vue')
 import DarkSvg from '@/assets/svg/dark.svg'
 import DaySvg from '@/assets/svg/day.svg'
-import OverviewSvg from '@/assets/svg/menu/overview.svg'
-import BucketManagementSvg from '@/assets/svg/menu/bucket-management.svg'
+import tenantViewSvg from '@/assets/svg/menu/tenant-view.svg'
+import spaceManagementSvg from '@/assets/svg/menu/space-management.svg'
 import BucketListSvg from '@/assets/svg/menu/bucket-list.svg'
 import easySearchSvg from '@/assets/svg/menu/easy-search.svg'
 import advanceSearchSvg from '@/assets/svg/menu/advance-search.svg'
@@ -39,7 +39,7 @@ export default [
         name: 'Overview',
         component: 'overview/index',
         meta: {
-          icon: OverviewSvg,
+          icon: tenantViewSvg,
           title: '租户概览',
         },
       },
@@ -50,7 +50,7 @@ export default [
     path: '/bucket',
     component: Layout,
     meta: {
-      icon: BucketManagementSvg,
+      icon: spaceManagementSvg,
       title: '空间管理222',
     },
     children: [

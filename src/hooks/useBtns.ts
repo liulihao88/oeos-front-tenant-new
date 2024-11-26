@@ -42,7 +42,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         reConfirm: true,
         attrs: {
           type: 'svg',
-          name: 'download',
+          name: 'detail',
           content: '详情',
           size: 6,
         },

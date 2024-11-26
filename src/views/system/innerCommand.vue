@@ -50,12 +50,26 @@ const columns = computed(() => {
           disabled: (row) => {
             return row.status === 'Running'
           },
+          comp: 'o-icon',
+          attrs: {
+            type: 'svg',
+            name: 'run',
+            content: '运行',
+            size: 6,
+          },
           handler: runningRow,
         },
         {
           content: '终止',
           disabled: (row) => {
             return row.status !== 'Running'
+          },
+          comp: 'o-icon',
+          attrs: {
+            type: 'svg',
+            name: 'stop',
+            content: '终止',
+            size: 6,
           },
           handler: stopRunningRow,
         },
