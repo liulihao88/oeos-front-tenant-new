@@ -13,6 +13,7 @@ import { querySimple, getStorageClassList } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
+import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
 
 import { objectDownloadBatch, deleteBatch } from '@/api/bucketReview.ts'
 

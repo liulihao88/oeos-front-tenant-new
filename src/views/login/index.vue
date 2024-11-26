@@ -47,9 +47,9 @@ dataThemeChange(overallStyle.value)
 const { title } = useNav()
 
 const ruleForm = reactive({
-  username: 'admin',
+  username: proxy.$dev ? 'admin' : '',
   tenantId: '',
-  password: 'adminadmin',
+  password: proxy.$dev ? 'adminadmin' : '',
 })
 async function init() {
   let optionsRes = await getTenants()
@@ -187,6 +187,7 @@ onBeforeUnmount(() => {
                   clearable
                   show-password
                   placeholder="密码"
+                  autocomplete="new-password"
                   :prefix-icon="useRenderIcon(Lock)"
                 />
               </el-form-item>
