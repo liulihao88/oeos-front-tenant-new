@@ -96,6 +96,8 @@ const columns = computed(() => {
           useSlot: true,
         },
         {
+          prop: 'viewEdit',
+          useSlot: true,
           content: (row) => {
             return row.enabled ? '查看' : '编辑'
           },
@@ -111,6 +113,7 @@ const columns = computed(() => {
         {
           content: '删除',
           handler: deleteRow,
+          disabled: (row) => row.enabled,
           reConfirm: proxy.$dev ? false : true,
           comp: 'o-icon',
           attrs: {
@@ -156,7 +159,7 @@ async function deleteRow(row) {
       <el-button type="primary" icon="el-icon-plus" @click="add">添加</el-button>
     </div>
 
-    <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false">
+    <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false" height="calc(100vh - 180px)">
       <template #enable="{ scope, row }">
         <el-switch
           v-model="row.enabled"
@@ -166,6 +169,14 @@ async function deleteRow(row) {
           active-text="启用"
           inactive-text="未启用"
         />
+      </template>
+      <template #viewEdit="{ scope, row }">
+        <template v-if="row.enabled">
+          <o-icon name="view" size="16" content="查看" />
+        </template>
+        <template v-else>
+          <o-icon name="edit" size="16" content="查看" />
+        </template>
       </template>
     </o-table>
     <AddTask ref="addTaskRef" @success="init" />

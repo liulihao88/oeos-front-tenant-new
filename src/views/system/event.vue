@@ -20,6 +20,7 @@ import { getEventList, getLevels, markHandle, deleteEvent, exportEvent } from '@
 }
  */
 
+const dateRangeValue = ref([])
 const searchForm = ref({
   beginDatetime: '',
   endDatetime: '',
@@ -31,7 +32,6 @@ const searchForm = ref({
 const timer = ref(null)
 const total = ref(0)
 const levelOptions = ref([])
-const dateRangeValue = ref([])
 const statusOptions = ref([
   { label: '标记确认', value: 'Awared' },
   { label: '确认解决', value: 'Solved' },
@@ -133,6 +133,16 @@ const columns = [
     ],
   },
 ]
+const dateChange = (value) => {
+  if (!value) {
+    searchForm.value.beginDatetime = ''
+    searchForm.value.endDatetime = ''
+  } else {
+    searchForm.value.beginDatetime = value[0]
+    searchForm.value.endDatetime = value[1]
+  }
+  init()
+}
 const init = async () => {
   const copyForm = proxy.clone(searchForm.value)
   if (!copyForm.mark) {
@@ -258,7 +268,13 @@ onUnmounted(() => {
           class="m-r-16"
           @change="init"
         />
-        <o-date-range v-model="dateRangeValue" title="发生时间" @change="init" />
+        <o-date-range
+          v-model="dateRangeValue"
+          title="发生时间"
+          value-format="YYYY-MM-DD"
+          @change="dateChange"
+          @clear="dateChange"
+        />
       </div>
       <div class="w-100">
         <el-button type="primary" @click="exportEventHandle">导出</el-button>
@@ -267,7 +283,7 @@ onUnmounted(() => {
     <o-table
       ref="tableRef"
       :columns="columns"
-      height="calc(100vh - 240px)"
+      height="calc(100vh - 250px)"
       :data="data"
       :total="total"
       :pageSize="searchForm.pageSize"

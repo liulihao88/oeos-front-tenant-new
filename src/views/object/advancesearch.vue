@@ -186,7 +186,7 @@ const changeSelect = async (val, label, obj) => {
         :data="data"
         :total="total"
         :pageSize="pageSize"
-        height="calc(100vh - 240px)"
+        height="calc(100vh - 244px)"
         @update="update"
         @selection-change="selectionChange"
       >

@@ -94,7 +94,7 @@ init()
   <div class="c-container">
     <o-title title="默认桶配置" b="16" />
     <div class="c-box">
-      <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="m-b-8" />
+      <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="mb2" />
       <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules">
         <template #quota>
           <div class="f-st-ed w-100%">

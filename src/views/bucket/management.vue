@@ -411,7 +411,7 @@ function _handleUsedData(usedSpace) {
   }
 
   .bucket-table {
-    height: calc(100% - 104px);
+    height: calc(100% - 110px);
   }
 
   .right-box {

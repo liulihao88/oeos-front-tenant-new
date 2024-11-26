@@ -345,6 +345,7 @@ function updatePage() {
     height: 64px;
     padding: 0 24px;
     font-size: 12px;
+    background: #fff;
     border: 1px solid #ebedf0;
     border-top-style: none;
   }

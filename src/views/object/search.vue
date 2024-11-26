@@ -216,7 +216,7 @@ const selectionChange = (val, ...a) => {
         :data="data"
         :pageSize="form.pageSize"
         :total="total"
-        height="calc(100vh - 280px)"
+        height="calc(100vh - 286px)"
         @update="update"
         @selection-change="selectionChange"
       >

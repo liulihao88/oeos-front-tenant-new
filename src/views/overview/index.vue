@@ -163,21 +163,21 @@ const eventMore = () => {
           </o-title>
           <div class="t-l-box">
             <div class="t-l-box-left">
-              <div class="item-card" style="background: '#f2f6ff'">
+              <div class="item-card card1" style="background: '#f2f6ff'">
                 <div>桶数量</div>
-                <div>{{ details.tenant?.bucketCount }}</div>
+                <div class="item-card-value">{{ details.tenant?.bucketCount }}</div>
               </div>
-              <div class="item-card" style="background: '#fef6e9'">
+              <div class="item-card card2" style="background: '#fef6e9'">
                 <div>桶任务数量</div>
-                <div>{{ details.tenant?.tenantCount }}</div>
+                <div class="item-card-value">{{ details.tenant?.tenantCount }}</div>
               </div>
-              <div class="item-card">
+              <div class="item-card card3">
                 <div>健康模式</div>
-                <div>{{ details.health?.healthLevel }}</div>
+                <div class="item-card-value">{{ details.health?.healthLevel }}</div>
               </div>
-              <div class="item-card">
+              <div class="item-card card1">
                 <div>工作模式</div>
-                <div>{{ details.workmode }}</div>
+                <div class="item-card-value">{{ details.workmode }}</div>
               </div>
             </div>
             <OverviewUsedPie :used="tenantDetails.allocateQuota" :total="tenantDetails.tenantQuota" class="pie-box" />
@@ -193,25 +193,25 @@ const eventMore = () => {
           </o-title>
           <div class="t-l-box">
             <div class="t-l-box-left">
-              <div class="item-card">
+              <div class="item-card card1">
                 <div>总对象大小</div>
-                <div v-if="details.object">
+                <div v-if="details.object" class="item-card-value">
                   {{ proxy.formatBytes(details.object.objectSize) }}
                 </div>
               </div>
-              <div class="item-card">
+              <div class="item-card card2">
                 <div>总空闲量</div>
-                <div v-if="details.primarySpace">
+                <div v-if="details.primarySpace" class="item-card-value">
                   {{ proxy.formatBytes(details.primarySpace?.totalFreeCapacity) }}
                 </div>
               </div>
-              <div class="item-card">
+              <div class="item-card card3">
                 <div>对象总数量</div>
-                <div>{{ details.object?.objectCount }}</div>
+                <div class="item-card-value">{{ details.object?.objectCount }}</div>
               </div>
-              <div class="item-card">
+              <div class="item-card card1">
                 <div>空间剩余度</div>
-                <div>{{ details.primarySpace?.capacityUsageLevel }}</div>
+                <div class="item-card-value">{{ details.primarySpace?.capacityUsageLevel }}</div>
               </div>
             </div>
             <OverviewUsedPie
@@ -280,6 +280,10 @@ const eventMore = () => {
   height: 100%;
   padding: 8px;
   background-color: #fff;
+
+  &:hover {
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+  }
 }
 
 .t-l-box {
@@ -306,12 +310,15 @@ const eventMore = () => {
     padding: 8px;
     margin: 8px;
     text-align: center;
-    background: var(--green);
     border: 1px solid #eee;
-    border-radius: 1px;
+    border-radius: 5px;
 
     &:hover {
       box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+    }
+
+    .item-card-value {
+      font-weight: 600;
     }
   }
 }
@@ -320,5 +327,20 @@ const eventMore = () => {
   :deep(.el-row) {
     min-width: 1200px;
   }
+}
+
+.card1 {
+  color: #3366e8;
+  background: #f2f6ff;
+}
+
+.card2 {
+  color: #e7bb40;
+  background: #fef6e9;
+}
+
+.card3 {
+  color: #86ab80;
+  background: #f3faf3;
 }
 </style>

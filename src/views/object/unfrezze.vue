@@ -209,6 +209,7 @@ const cancelUnFreeze = async () => {
       :data="data"
       class="mt2"
       :showFooter="false"
+      height="calc(100vh - 250px)"
       @selection-change="handleSelectionChange"
     />
 
