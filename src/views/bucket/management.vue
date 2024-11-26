@@ -151,7 +151,9 @@ const columns = [
       {
         comp: 'o-icon',
         attrs: {
-          name: 'view',
+          type: 'svg',
+          name: 'detail',
+          size: 5,
           content: '桶详情',
         },
         handler: handleDetail,

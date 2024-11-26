@@ -39,12 +39,11 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         content: '详情',
         handler: detailRow,
         comp: 'o-icon',
-        reConfirm: true,
         attrs: {
           type: 'svg',
           name: 'detail',
           content: '详情',
-          size: 6,
+          size: 5,
         },
       },
       {

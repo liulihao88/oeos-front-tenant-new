@@ -22,7 +22,7 @@ const options = computed(() => {
     },
     { label: '对象内容md5值', value: details.value.checksum },
     { label: '对象分片数量', value: details.value.partCount },
-    { label: '对象大小', value: details.value.size },
+    { label: '对象大小', value: proxy.formatBytes(details.value.size) },
     { label: '对象存储类型', value: details.value.storageClass },
     { label: '对象名称', value: details.value.name },
     { label: '对象版本号', value: details.value.version },
@@ -82,7 +82,7 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog ref="dialogRef" v-model="isShow" title="文件详情" width="80%">
+    <o-dialog ref="dialogRef" v-model="isShow" title="对象详情" width="80%">
       <o-description :column="2" :options="options" label-width="140" />
 
       <o-title title="存储位置" tb="20" />

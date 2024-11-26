@@ -37,7 +37,6 @@ const initOptions = {
   series: [
     {
       type: 'pie',
-      radius: '50%',
       startAngle: 180,
       endAngle: 360,
       label: {
