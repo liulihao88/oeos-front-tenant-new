@@ -7,6 +7,12 @@ export function getTenants() {
   })
 }
 
+// 获取版本号
+
+export function getVersion() {
+  return request('common/version', { type: 'common' })
+}
+
 export function login(data) {
   return request('auth/signin', 'put', { type: 'common', data: data })
 }

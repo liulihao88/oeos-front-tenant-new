@@ -4,17 +4,15 @@ import { useRouter, useRoute } from 'vue-router'
 import { useNav } from '@/layout/hooks/useNav'
 import { useLayout } from '@/layout/hooks/useLayout'
 import { initRouter, getTopMenu } from '@/router/utils'
-import { bg, avatar, illustration } from './utils/static'
 import { useRenderIcon } from '@/components/ReIcon/src/hooks'
-import JSEncrypt from 'jsencrypt'
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
+import LeftSide from '@/views/login/leftSide.vue'
+
 import { getTenants, encrypt, login, getMenu, getFormat, getInitLogo, encryptionPassword } from '@/api/login.ts'
 import useBucketList from '@/hooks/getBucketList.ts'
 const bucketList = useBucketList()
 
-import dayIcon from '@/assets/svg/day.svg?component'
-import darkIcon from '@/assets/svg/dark.svg?component'
 import globalLogoSettings from '@/config/settings.ts'
 import Lock from '@iconify-icons/ri/lock-fill'
 import User from '@iconify-icons/ri/user-3-fill'
@@ -156,41 +154,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="select-none">
-    <img :src="bg" class="wave" />
-    <div class="flex-c absolute right-5 top-3">
-      <!-- 主题 -->
-      <el-switch
-        v-model="dataTheme"
-        inline-prompt
-        :active-icon="dayIcon"
-        :inactive-icon="darkIcon"
-        @change="dataThemeChange"
-      />
-    </div>
+  <div class="login-box">
+    <LeftSide />
     <div class="login-container">
-      <div class="img">
-        <component :is="toRaw(illustration)" />
-      </div>
-
       <div class="login-box">
         <div class="login-form">
-          <!-- <avatar class="avatar" /> -->
-          <img
-            :src="
-              storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
-            "
-            width="100"
-          />
-          <Motion>
-            <h2 class="outline-none">
-              {{
-                storeLogoSettings.nativeLogo?.tenantManagementTitle ||
-                globalLogoSettings.nativeLogo.tenantManagementTitle
-              }}
-            </h2>
+          <Motion :delay="100">
+            <h4 class="sign-el">Sign in</h4>
           </Motion>
-
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" size="large">
             <Motion :delay="100">
               <el-form-item prop="tenantId">
@@ -239,12 +210,83 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-@import url('@/style/login.css');
-</style>
-
 <style lang="scss" scoped>
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
+}
+
+.login-box {
+  display: flex;
+
+  @media screen and (width <= 1180px) {
+    .login-container {
+      grid-gap: 9rem;
+    }
+
+    .login-form {
+      width: 290px;
+    }
+
+    .login-form h2 {
+      margin: 8px 0;
+      font-size: 2.4rem;
+    }
+
+    .img img {
+      width: 360px;
+    }
+
+    .avatar {
+      width: 280px;
+      height: 80px;
+    }
+  }
+
+  @media screen and (width <= 968px) {
+    .wave {
+      display: none;
+    }
+
+    .img {
+      display: none;
+    }
+
+    .login-container {
+      grid-template-columns: 1fr;
+    }
+
+    .login-box {
+      justify-content: center;
+    }
+  }
+
+  .login-container {
+    display: grid;
+    flex: 2;
+    grid-gap: 18rem;
+    max-width: 100%;
+    height: 100vh;
+    padding: 0 2rem;
+  }
+
+  .login-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .login-form {
+    width: 360px;
+  }
+
+  .sign-el {
+    margin-bottom: 24px;
+    font-size: 3.2rem;
+    font-weight: 400 !important;
+    color: #194bb9;
+    text-align: left;
+  }
 }
 </style>
