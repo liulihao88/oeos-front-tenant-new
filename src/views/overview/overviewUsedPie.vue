@@ -131,7 +131,6 @@ watch(
     if (usedNew || totalNew) {
       usedNum.value = proxy.formatBytesConvert(usedNew)
       totalNum.value = proxy.formatBytesConvert(totalNew)
-      console.log(`11  totalNum.value`, totalNum.value)
       initOptions.series[0].data = [usedNum.value, totalNum.value - usedNum.value]
       options.value = proxy.clone(initOptions)
     }

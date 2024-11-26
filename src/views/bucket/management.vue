@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, computed, nextTick } from 'vue'
+import { ref, getCurrentInstance, computed, nextTick, onMounted } from 'vue'
 defineOptions({
   name: 'Management',
 })
@@ -63,9 +63,6 @@ const topObj = ref([
 
 const capacityData = ref([])
 
-function refresh() {
-  console.log('refresh')
-}
 function add() {
   addRef.value.open()
 }
@@ -87,9 +84,7 @@ const handleDetail = (row, scope, e) => {
   })
   proxy.setStorage('tenant-bucket-details', row)
 }
-function handleUpdate() {
-  console.log('handleUpdate')
-}
+
 const total = ref(0)
 const currentRow = ref({})
 const pageSize = ref(PAGE_SIZE)
@@ -187,7 +182,6 @@ async function init(isReset = false) {
   await getBucketUsed()
   await getSpaceHistogramApi()
 }
-init()
 
 overviewApi()
 
@@ -233,7 +227,6 @@ async function overviewApi() {
 async function getBucketHistogram(bucketName = 'space') {
   let histogramRes = await getHistogram(bucketName)
   let obj = histogramRes.inCount
-  console.log(`48 obj`, obj)
   objectNumData.value = Object.entries(obj).map(([name, value]) => {
     return { value: value === 0 ? null : value, name: name }
   })
@@ -261,7 +254,6 @@ async function getBucketDetailByName() {
   }
   Promise.allSettled(queue).then((result) => {
     data.value = result.map((v, i) => {
-      console.log(`67 v`, v)
       const item = bucketLists.value[i]
       if (v.status === 'fulfilled') {
         return { ...v.value, ...item }
@@ -277,7 +269,6 @@ const calcQuota = (num, unit) => {
 }
 
 function currentChange(nowRow, oldCurrentRow) {
-  console.log(`86 nowRow, oldCurrentRow`, nowRow, oldCurrentRow)
   if (proxy.isEmpty(nowRow)) {
     return
   }
@@ -301,6 +292,12 @@ function _handleUsedData(usedSpace) {
     },
   ]
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    init()
+  }, 100)
+})
 </script>
 
 <template>

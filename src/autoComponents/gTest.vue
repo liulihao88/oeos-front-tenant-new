@@ -24,7 +24,6 @@ total.value = data.value.reduce((pre, cur) => {
   return pre + cur.value
 }, 0)
 function formatter(params) {
-  console.log(`01 params`, params)
   let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
   let { value, name } = params.data
   let percent = ((value / total.value) * 100).toFixed(2)

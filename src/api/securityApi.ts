@@ -98,7 +98,6 @@ export function addGroupMember(name, data) {
 
 // 移除组用户
 export function removeMember(name, memberList) {
-  console.log(`56 memberList`, memberList)
   return request(`security/group/${name}/member/remove`, 'put', { data: memberList })
 }
 

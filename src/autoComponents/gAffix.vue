@@ -4,8 +4,6 @@ const { proxy } = getCurrentInstance()
 
 const offsetNum = computed(() => {
   let getOffsetNum = Number(`${window.innerHeight - 100}`)
-  console.log(`78 window.innerHeight`, window.innerHeight)
-  console.log(`27 getOffsetNum`, getOffsetNum)
   return getOffsetNum
 })
 </script>

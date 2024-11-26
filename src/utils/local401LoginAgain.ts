@@ -6,13 +6,12 @@ import router from '@/router/index.ts'
 import { encryptionPassword } from '@/api/login.ts'
 
 export async function devLogin() {
-  // Vue.prototype.$toast('token过期', 'error')
   if (import.meta.env.DEV) {
     let genPasRes = await encryptionPassword('adminadmin')
     let data = {
       username: 'admin',
       password: genPasRes[0],
-      sysdomain: getStorage('tenant-sysdomain').id,
+      sysdomain: getStorage('tenant-sysdomain').tenantId,
     }
     let res = await request('/auth/signin', 'put', {
       type: 'common',

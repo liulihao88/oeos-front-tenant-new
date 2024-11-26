@@ -67,7 +67,6 @@ instance.interceptors.request.use(
         }
       }
     }
-    console.log(`02 config`, config)
     return config
   },
   function (error) {
@@ -77,7 +76,6 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   (response) => {
-    console.log(`response`, response)
     if (response.config.customResponse) {
       return Promise.resolve(response)
     }
@@ -107,7 +105,6 @@ function _errorText(errorMsg) {}
 export { instance }
 export default function request(config) {
   let mergeRes = Object.assign({}, defaultConfig, config)
-  console.log(`11 mergeRes`, mergeRes)
 
   return instance(Object.assign({}, defaultConfig, config))
 }

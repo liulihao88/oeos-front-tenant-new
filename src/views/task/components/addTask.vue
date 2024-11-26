@@ -125,9 +125,7 @@ const save = async () => {
   isShow.value = false
   emits('success')
 }
-const prev = () => {
-  console.log("  {label: '数据冷冻', value: 1},")
-}
+
 const highSettings = () => {
   if (form.value.id) {
     highSettingsRef.value.open(form.value.properties)

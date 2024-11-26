@@ -96,7 +96,6 @@ const handleRemoveUser = async () => {
   // 获取差集
   const dataUsername = data.value.map((v) => v.username)
   let difference = dataUsername.filter((v) => !usernameSelection.value.includes(v))
-  console.log(`38 difference`, difference)
   if (proxy.notEmpty(difference)) {
     await remove(difference)
   }
@@ -108,7 +107,6 @@ async function remove(row) {
   } else {
     removeData = [row.username]
   }
-  console.log(`73 removeData`, removeData)
   await removeMember(groupName.value, removeData)
   proxy.$toast('移除成功')
   init(groupName.value)

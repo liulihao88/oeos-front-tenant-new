@@ -167,10 +167,10 @@ const editDate = () => {
     <o-title title="基本信息" t="0" b="8" />
     <div class="c-box w-100% p-lr-32 p-tb-16">
       <div class="mb2">
-        <span class="cl-45">桶名称:</span>
-        <span class="bold">{{ bucketName }}</span>
-        <span class="cl-45 ml3">桶ID:</span>
-        <span class="bold">{{ tenantBucketDetails.bucketID }}</span>
+        <span class="cl-45">存储桶名称:</span>
+        <span class="bold ml">{{ bucketName }}</span>
+        <span class="cl-45 ml6">存储桶ID:</span>
+        <span class="bold ml">{{ tenantBucketDetails.bucketID }}</span>
       </div>
       <div class="f-ar-ct">
         <div class="top-item f-1">
@@ -229,24 +229,29 @@ const editDate = () => {
         </div>
 
         <div class="c-box mt h-33%">
-          <o-title title="修改存储容量" type="simple">
+          <o-title title="存储桶配额" type="simple">
             <template #icon>
               <g-img :src="proxy.formatImg('bucket/quota')" class="mr" />
             </template>
           </o-title>
-          <g-warning class="mt" content="用户按需选择相应循环单位, 修改配额" />
+          <g-warning
+            class="mt"
+            content="用户可按需更改存储桶配额类型以及配额大小，但存储桶配额不可小于存储桶已使用容量。"
+          />
 
           <div class="mtb2 f-st-ct">
             <div class="f-1">
-              <span class="mr">存储容量:</span>
+              <span class="mr">当前存储桶配额:</span>
               <span class="cl-blue">{{ quotaForm.quota.toFixed(2) }} {{ quotaForm.quotaUnit }}</span>
             </div>
             <div class="f-1">
-              <span class="mr">类型:</span>
+              <span class="mr">配额类型:</span>
               <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }}</span>
             </div>
           </div>
-          <el-button type="primary" @click="editQuota">编辑</el-button>
+          <div class="f-ed-ct">
+            <el-button type="primary" class="f-ed-ct tr" @click="editQuota">编辑</el-button>
+          </div>
         </div>
 
         <div class="c-box mt h-33%">
@@ -255,21 +260,26 @@ const editDate = () => {
               <g-img :src="proxy.formatImg('bucket/delete')" class="mr" />
             </template>
           </o-title>
-          <g-warning class="mt" content="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
+          <g-warning
+            class="mt"
+            content="对象定时删除策略允许用户管理存储桶中对象的生命周期，可以在特定时间后自动删除存储桶内对象。"
+          />
 
           <div class="mtb2 f-st-ct">
             <div class="f-1">
-              <span class="mr">状态:</span>
+              <span class="mr">当前状态:</span>
               <span class="cl-blue">{{ retentionAutoObj.enable ? '启用' : '未启用' }}</span>
             </div>
             <div class="f-1">
-              <span class="mr">过期时间:</span>
+              <span class="mr">对象保留时长:</span>
               <span class="cl-blue">
                 {{ retentionAutoObj.expireAfterDays ? retentionAutoObj.expireAfterDays + '天' : '未设置' }}
               </span>
             </div>
           </div>
-          <el-button type="primary" @click="editDate">编辑</el-button>
+          <div class="f-ed-ct">
+            <el-button type="primary" @click="editDate">编辑</el-button>
+          </div>
         </div>
       </el-col>
       <el-col :span="12" class="h-100%">
@@ -300,26 +310,29 @@ const editDate = () => {
       <el-checkbox v-model="isKnow">我已了解更改存储桶版本控制的后果。</el-checkbox>
     </o-dialog>
 
-    <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改配额" @confirm="quotaConfirm">
+    <o-dialog ref="dialogRef" v-model="isQuotaShow" title="修改配额" width="800" @confirm="quotaConfirm">
       <el-form :model="quotaForm" :rules="quotaRules" label-width="auto" class="mb2">
-        <el-form-item label="存储" prop="quota">
-          <div class="f-st-ct">
-            <el-input-number v-model="quotaForm.quota" class="mr2" :precision="2" />
-
-            <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
+        <el-form-item label="存储桶配额" prop="quota">
+          <div class="w-100%">
+            <div class="f-st-ct">
+              <el-input-number v-model="quotaForm.quota" class="mr2" :precision="2" />
+              <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
+            </div>
+            <div class="mt2 w-100%">
+              <g-warning
+                :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`"
+                style="align-items: center"
+              />
+            </div>
           </div>
-          <!-- <div class="f-st-ct">
-            <o-icon name="warning" size="12" class="mr" />
-            <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-          </div> -->
-          <g-warning type="icon">
-            <template #content>
-              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-            </template>
-          </g-warning>
         </el-form-item>
-        <el-form-item label="类型" prop="">
+
+        <el-form-item label="配额类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+          <g-warning
+            type="icon"
+            content="软配额：用户可以使用超过配额限制的空间大小，并且不会限制存储桶内对象操作。 <br>硬配额：用户可以使用的空间大小不可超过配额限制，超过配额限制后会禁止继续写入数据。"
+          />
         </el-form-item>
       </el-form>
     </o-dialog>

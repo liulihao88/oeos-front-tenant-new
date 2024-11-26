@@ -79,6 +79,7 @@ const fieldList = [
     label: '类型',
     prop: 'quotaType',
     comp: 'o-select',
+    useSlot: true,
     attrs: {
       clearable: false,
       options: QUOTA_OPTIONS,
@@ -146,7 +147,7 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog v-model="isShow" title="新增桶" confirmText="保存" @confirm="confirm">
+    <o-dialog v-model="isShow" title="新增桶" confirmText="保存" width="800" @confirm="confirm">
       <o-form ref="formRef" :model="model" :fieldList="fieldList">
         <template #quota>
           <div class="f-st-ct w-100%">
@@ -157,11 +158,17 @@ defineExpose({
               <o-radio v-model="model.quotaUnit" :options="QUOTA_UNIT" showType="button" />
             </div>
           </div>
-          <g-warning type="icon">
-            <template #content>
-              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-            </template>
-          </g-warning>
+          <div class="mt2 w-100%">
+            <g-warning
+              width="100%"
+              :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`"
+              style="align-items: center"
+            />
+          </div>
+        </template>
+        <template #quotaType>
+          <o-select v-model="model.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+          <g-dif-warning type="quota" />
         </template>
       </o-form>
     </o-dialog>

@@ -62,6 +62,11 @@ const columns = computed(() => {
           {
             content: '删除',
             handler: deleteRow,
+            comp: 'o-icon',
+            attrs: {
+              name: 'delete',
+              content: '删除',
+            },
           },
         ],
       },
@@ -79,6 +84,7 @@ const columns = computed(() => {
       {
         label: '权限',
         prop: 'permission',
+        width: 200,
         useSlot: true,
       },
       {
@@ -88,6 +94,11 @@ const columns = computed(() => {
           {
             content: '删除',
             handler: deleteRow,
+            comp: 'o-icon',
+            attrs: {
+              name: 'delete',
+              content: '删除',
+            },
           },
         ],
       },
@@ -269,7 +280,7 @@ defineExpose({
         <g-img class="mr" :src="isTag ? 'bucket/tag' : 'bucket/secret'" />
       </template>
       <template #right>
-        <el-button type="primary" size="small" @click="open">
+        <el-button type="primary" @click="open">
           更多
           <o-icon name="arrow-right" size="12" />
         </el-button>
@@ -295,10 +306,9 @@ defineExpose({
         <el-button type="primary" class="ml2" @click="add">添加</el-button>
         <el-button type="primary" :disabled="selections.length === 0" @click="deleteSelection">删除选中</el-button>
       </o-title>
-      <el-form ref="formRef" :model="form" size="small">
+      <el-form ref="formRef" :model="form">
         <o-table
           ref="tableRef"
-          size="small"
           :columns="columns"
           :data="form.data"
           :showPage="false"

@@ -9,7 +9,6 @@ const useBucketSettings = defineStore('bucketSettings', {
     prefixKeyArr: (state) => {
       if (!state.prefixKey) return []
       let splitArr = state.prefixKey.split('/')
-      console.log(`64 splitArr`, splitArr)
       return splitArr.filter((v) => v)
     },
   },

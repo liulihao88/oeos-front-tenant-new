@@ -51,9 +51,6 @@ const columns = [
     label: '事件等级',
     prop: 'level',
     width: 100,
-    filter: (val) => {
-      console.log(`44 val`, val)
-    },
     useSlot: true,
   },
   {

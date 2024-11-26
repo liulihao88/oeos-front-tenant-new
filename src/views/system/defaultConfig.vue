@@ -45,6 +45,7 @@ const fieldList = [
     label: '存储桶配额类型',
     prop: 'quotaType',
     comp: 'o-select',
+    useSlot: true,
     attrs: {
       width: 300,
       clearable: false,
@@ -67,7 +68,7 @@ const save = async () => {
     return false
   }
   let num = proxy.formatBytes(form.value.quota + form.value.quotaUnit)
-  console.log(`37 num`, num)
+
   if (num > limitMax.value) {
     proxy.$toast('默认空间不能大于' + proxy.formatBytes(limitMax.value), 'w')
     return false
@@ -105,11 +106,14 @@ init()
               <o-radio v-model="form.quotaUnit" :options="QUOTA_UNIT" showType="button" />
             </div>
           </div>
-          <g-warning type="icon">
-            <template #content>
-              <div class="cl-45">新建桶配额下限为 0.5GB, 剩余可用容量为 {{ limitQuota }}</div>
-            </template>
-          </g-warning>
+          <div class="mt2">
+            <g-warning :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" style="align-items: center" />
+          </div>
+        </template>
+
+        <template #quotaType>
+          <o-select v-model="form.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+          <g-dif-warning type="quota" />
         </template>
       </o-form>
 

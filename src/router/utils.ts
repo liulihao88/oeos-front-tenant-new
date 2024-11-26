@@ -182,7 +182,6 @@ function initRouter() {
       getAsyncRoutes().then((remoteData) => {
         // remoteData = remoteData.slice(4)
         let data = mergeMenus(TenantRouter, remoteData)
-        console.log(`38 data`, data)
         setStorage('tenant-async-routes', data)
         handleAsyncRoutes(clone(data))
         resolve(router)
@@ -218,7 +217,6 @@ function mergeMenus(baseMenus, remoteMenus) {
     }
   })
 
-  console.log(`59 mergedMenus`, mergedMenus)
   return mergedMenus
 }
 

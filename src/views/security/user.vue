@@ -179,7 +179,6 @@ const newAddUser = () => {
   isShow.value = true
 }
 const switchChange = async (row) => {
-  console.log(`92 row`, row)
   if (row.status === 'on') {
     await disableUser(row.username)
   } else if (row.status === 'off') {
