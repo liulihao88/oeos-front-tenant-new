@@ -156,7 +156,11 @@ const eventMore = () => {
     <el-row :gutter="16" class="m-b-16 h-300">
       <el-col :span="12">
         <div class="item-box">
-          <o-title title="租户信息与状态" />
+          <o-title title="租户信息与状态" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('overview/overview-tenant')" class="mr" />
+            </template>
+          </o-title>
           <div class="t-l-box">
             <div class="t-l-box-left">
               <div class="item-card" style="background: '#f2f6ff'">
@@ -182,7 +186,11 @@ const eventMore = () => {
       </el-col>
       <el-col :span="12">
         <div class="item-box">
-          <o-title title="租户信息与状态" />
+          <o-title title="租户信息与状态" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('overview/overview-space')" class="mr" />
+            </template>
+          </o-title>
           <div class="t-l-box">
             <div class="t-l-box-left">
               <div class="item-card">
@@ -221,9 +229,9 @@ const eventMore = () => {
         <div class="item-box o-a">
           <OutServiceComp :servicePoint="details.servicePoint" />
           <o-title title="租户关键服务状态" />
-          <o-table ref="tableRef" :columns="columns1" :data="data1" :showPage="false" size="small" />
+          <o-table ref="tableRef" :columns="columns1" :data="data1" :showPage="false" />
           <o-title title="存储信息" />
-          <o-table ref="tableRef" :columns="columns2" :data="details.spaces" :showPage="false" size="small">
+          <o-table ref="tableRef" :columns="columns2" :data="details.spaces" :showPage="false">
             <template #usedSpace="{ row, scope }">
               <template v-if="scope.$index !== -1">
                 <g-capacity-progress class="w-100%" :total="row.totalSpace" :used="row.usedSpace" :row="row">
@@ -236,10 +244,13 @@ const eventMore = () => {
       </el-col>
       <el-col :span="12" class="h-100%">
         <div class="item-box h-100% o-a">
-          <o-title title="租户事件列表" b="8">
+          <o-title title="租户事件列表" b="8" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('overview/overview-event')" class="mr" />
+            </template>
             <span class="ml">(共{{ eventTotal }}条)</span>
             <template #right>
-              <el-button type="primary" size="small" @click="eventMore">
+              <el-button type="primary" @click="eventMore">
                 <div class="f-st-ct">
                   <div>更多</div>
                   <o-icon name="arrow-right" color="#fff" size="12" />

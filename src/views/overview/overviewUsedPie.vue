@@ -146,9 +146,3 @@ watch(
 <template>
   <v-chart class="calc-height" :option="options" autoresize />
 </template>
-
-<style lang="scss" scoped>
-.calc-height {
-  height: calc(100% - 30px);
-}
-</style>

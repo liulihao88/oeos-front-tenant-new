@@ -264,7 +264,10 @@ defineExpose({
 
 <template>
   <div>
-    <o-title :title="isTag ? '标签' : '匿名访问'" b="8">
+    <o-title :title="isTag ? '标签' : '匿名访问'" b="8" type="simple">
+      <template #icon>
+        <g-img class="mr" :src="isTag ? 'bucket/tag' : 'bucket/secret'" />
+      </template>
       <template #right>
         <el-button type="primary" size="small" @click="open">
           更多

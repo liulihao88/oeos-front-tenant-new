@@ -38,7 +38,11 @@ const itemList = computed(() => {
 
 <template>
   <div class="box">
-    <o-title title="对外服务信息" />
+    <o-title title="对外服务信息" type="simple">
+      <template #icon>
+        <g-img :src="proxy.formatImg('overview/overview-service')" class="mr" />
+      </template>
+    </o-title>
     <div class="top">
       <div v-for="(v, i) in itemList" :key="i" class="top-item">
         <g-img :src="v.img" class="mr2" width="43" />

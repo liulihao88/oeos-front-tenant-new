@@ -212,6 +212,9 @@ const editDate = () => {
       <el-col :span="12" class="h-100%">
         <div class="c-box h-33%">
           <o-title class="mr2" title="存储桶版本控制:" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('bucket/control')" class="mr" />
+            </template>
             <el-radio-group :model-value="versionStatus" class="ml2" @change="radioInput">
               <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
               <el-radio value="Suspended">{{ radioMap.Suspended }}</el-radio>
@@ -226,7 +229,11 @@ const editDate = () => {
         </div>
 
         <div class="c-box mt h-33%">
-          <o-title title="修改存储容量" type="simple" />
+          <o-title title="修改存储容量" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('bucket/quota')" class="mr" />
+            </template>
+          </o-title>
           <g-warning class="mt" content="用户按需选择相应循环单位, 修改配额" />
 
           <div class="mtb2 f-st-ct">
@@ -243,7 +250,11 @@ const editDate = () => {
         </div>
 
         <div class="c-box mt h-33%">
-          <o-title title="对象过期删除" type="simple" />
+          <o-title title="对象过期删除" type="simple">
+            <template #icon>
+              <g-img :src="proxy.formatImg('bucket/delete')" class="mr" />
+            </template>
+          </o-title>
           <g-warning class="mt" content="未启用时，表示关闭自动删除功能；启用时，表示开启自动删除功能。" />
 
           <div class="mtb2 f-st-ct">
