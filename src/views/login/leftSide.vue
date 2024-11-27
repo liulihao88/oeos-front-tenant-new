@@ -20,14 +20,14 @@ init()
 
 <template>
   <div class="box">
-    <Motion :delay="100">
+    <!-- <Motion :delay="100">
       <img
         :src="
           storeLogoSettings.nativeLogo?.tenantManagementImage || globalLogoSettings.nativeLogo.tenantManagementImage
         "
         class="login-logo-box"
       />
-    </Motion>
+    </Motion> -->
     <Motion :delay="100">
       <div class="font-box">
         <h2 class="text">
