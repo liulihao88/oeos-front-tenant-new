@@ -150,15 +150,21 @@ const selectionChange = (val, ...a) => {
 
 <template>
   <div>
-    <div class="f-bt-ct w-100% m-b-16">
+    <div class="f-bt-ct w-100%">
       <div class="w-100% o-a">
-        <div class="mb">
-          <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" :titleAttrs="{ width: 80 }" width="350" />
+        <div class="">
+          <g-bucket2
+            v-model="bucketId"
+            v-model:bucketName="bucketName"
+            :titleAttrs="{ width: 80 }"
+            width="440"
+            class="mb2"
+          />
           <o-input
             v-model="form.key"
             v-debounce.500="init"
             width="440"
-            class="mr2"
+            class="mr2 mb"
             title="对象名称"
             :titleAttrs="{ width: 80 }"
             :disabled="!bucketId"
@@ -171,16 +177,17 @@ const selectionChange = (val, ...a) => {
             :options="storageOptions"
             :disabled="!bucketId"
             label="value"
-            class="mr"
+            class="mr mb2"
             :titleAttrs="{ width: 80 }"
             title="存储类型"
-            width="350"
+            width="440"
             @change="init"
           />
           <o-date-range
             v-model="timeRange"
             title="写入时间"
             width="440"
+            class="mb2"
             format="YYYY-MM-DD HH:mm:ss"
             :titleAttrs="{ width: 80 }"
             type="datetimerange"
