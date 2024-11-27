@@ -153,13 +153,14 @@ const selectionChange = (val, ...a) => {
     <div class="f-bt-ct w-100% m-b-16">
       <div class="w-100% o-a">
         <div class="mb">
-          <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" :titleAttrs="{ width: '200px' }" width="350" />
+          <g-bucket2 v-model="bucketId" v-model:bucketName="bucketName" :titleAttrs="{ width: 80 }" width="350" />
           <o-input
             v-model="form.key"
             v-debounce.500="init"
             width="440"
             class="mr2"
             title="对象名称"
+            :titleAttrs="{ width: 80 }"
             :disabled="!bucketId"
             @clear="init"
           />
@@ -171,7 +172,7 @@ const selectionChange = (val, ...a) => {
             :disabled="!bucketId"
             label="value"
             class="mr"
-            :titleAttrs="{ width: '200px' }"
+            :titleAttrs="{ width: 80 }"
             title="存储类型"
             width="350"
             @change="init"
@@ -181,6 +182,7 @@ const selectionChange = (val, ...a) => {
             title="写入时间"
             width="440"
             format="YYYY-MM-DD HH:mm:ss"
+            :titleAttrs="{ width: 80 }"
             type="datetimerange"
             :disabled="!bucketId"
             start-placeholder="开始时间"
@@ -190,9 +192,16 @@ const selectionChange = (val, ...a) => {
         </div>
       </div>
       <div class="w-440 f-ed-un">
-        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
-          批量下载
-        </el-button>
+        <o-popconfirm
+          content="确定要批量下载吗? "
+          title="批量下载"
+          :reConfirm="selections.length > 0"
+          class="mr"
+          @confirm="download"
+        >
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量下载</el-button>
+        </o-popconfirm>
+
         <el-button
           type="primary"
           :disabled="selections.length === 0"
@@ -203,9 +212,17 @@ const selectionChange = (val, ...a) => {
           </template>
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">
-          批量删除
-        </el-button>
+        <o-popconfirm
+          content="确定要批量删除吗? "
+          title="批量删除"
+          :reConfirm="selections.length > 0"
+          class="mlr"
+          @confirm="multypleDelete"
+        >
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">
+            批量删除
+          </el-button>
+        </o-popconfirm>
         <el-button type="primary" icon="el-icon-search" :disabled="!bucketId" @click="init">查询</el-button>
       </div>
     </div>

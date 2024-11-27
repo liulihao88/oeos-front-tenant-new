@@ -66,8 +66,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       oeos-components:
-        specifier: ^0.1.40
-        version: 0.1.40(@algolia/client-search@4.23.3)(@types/node@20.12.11)(async-validator@4.2.5)(axios@1.6.8)(eslint@9.2.0)(nprogress@0.2.0)(postcss@8.4.38)(search-insights@2.13.0)(sortablejs@1.15.2)(terser@5.32.0)(vite@5.2.11(@types/node@20.12.11)(sass@1.79.5)(terser@5.32.0))
+        specifier: ^0.1.42
+        version: 0.1.42(@algolia/client-search@4.23.3)(@types/node@20.12.11)(async-validator@4.2.5)(axios@1.6.8)(eslint@9.2.0)(nprogress@0.2.0)(postcss@8.4.38)(search-insights@2.13.0)(sortablejs@1.15.2)(terser@5.32.0)(vite@5.2.11(@types/node@20.12.11)(sass@1.79.5)(terser@5.32.0))
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -3723,8 +3723,8 @@ packages:
     resolution: {integrity: sha512-tqa/UMy/CCoYmj+H5qc07qvSL9dqcs/WZENZ1JbtWBlATP+iVOe778gE6MSijnyCnORzDuX6hU+LA4SZ09YjFQ==}
     engines: {node: '>=0.10.0'}
 
-  oeos-components@0.1.40:
-    resolution: {integrity: sha512-FWG92rdI1dNiUNdO4qfzKK4ZVSM3fccp7Hb6RR8TbKkTR5PYpvZMPOgolYzs0CeGOPMaIxWkb2jey9tiGhjKiw==}
+  oeos-components@0.1.42:
+    resolution: {integrity: sha512-O4O4ftVxKhtPg3KDijSyF0it/K+2m4/Cu4MGi1xG6VuqGRq6IgrrB3x77c7qh/j/CnLpaynEPLVqnssvzGplRw==}
 
   ohash@1.1.3:
     resolution: {integrity: sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==}
@@ -9118,7 +9118,7 @@ snapshots:
     dependencies:
       isobject: 3.0.1
 
-  oeos-components@0.1.40(@algolia/client-search@4.23.3)(@types/node@20.12.11)(async-validator@4.2.5)(axios@1.6.8)(eslint@9.2.0)(nprogress@0.2.0)(postcss@8.4.38)(search-insights@2.13.0)(sortablejs@1.15.2)(terser@5.32.0)(vite@5.2.11(@types/node@20.12.11)(sass@1.79.5)(terser@5.32.0)):
+  oeos-components@0.1.42(@algolia/client-search@4.23.3)(@types/node@20.12.11)(async-validator@4.2.5)(axios@1.6.8)(eslint@9.2.0)(nprogress@0.2.0)(postcss@8.4.38)(search-insights@2.13.0)(sortablejs@1.15.2)(terser@5.32.0)(vite@5.2.11(@types/node@20.12.11)(sass@1.79.5)(terser@5.32.0)):
     dependencies:
       '@element-plus/icons-vue': 2.3.1(vue@3.4.27(typescript@5.4.5))
       '@fortawesome/fontawesome-svg-core': 6.5.2

@@ -1,3 +1,7 @@
+# 文档地址
+
+[请点击](https://pure-admin.cn/pages/introduction/)
+
 <h1>vue-pure-admin精简版（非国际化版本）</h1>
 [预览](https://pure-admin.github.io/vue-pure-admin/#/welcome)
 [![license](https://img.shields.io/github/license/pure-admin/vue-pure-admin.svg)](LICENSE)

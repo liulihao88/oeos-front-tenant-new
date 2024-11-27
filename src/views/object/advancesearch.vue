@@ -159,6 +159,16 @@ const changeSelect = async (val, label, obj) => {
           @changeSelect="changeSelect"
         />
         <template v-if="data.length > 0">
+          <o-popconfirm
+            content="确定要批量下载吗? "
+            title="批量下载"
+            :reConfirm="selections.length > 0"
+            class="mr"
+            @confirm="download"
+          >
+            <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量下载</el-button>
+          </o-popconfirm>
+
           <el-button
             type="primary"
             :disabled="selections.length === 0"
@@ -169,12 +179,22 @@ const changeSelect = async (val, label, obj) => {
             </template>
             批量恢复
           </el-button>
-          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="download">
-            批量下载
-          </el-button>
-          <el-button type="primary" icon="el-icon-delete" :disabled="selections.length === 0" @click="multypleDelete">
-            批量删除
-          </el-button>
+          <o-popconfirm
+            content="确定要批量删除吗? "
+            title="批量删除"
+            :reConfirm="selections.length > 0"
+            class="mlr"
+            @confirm="multypleDelete"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-download"
+              :disabled="selections.length === 0"
+              @click="multypleDelete"
+            >
+              批量删除
+            </el-button>
+          </o-popconfirm>
         </template>
         <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>
       </div>
