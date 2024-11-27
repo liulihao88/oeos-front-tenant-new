@@ -20,7 +20,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
   async function deleteRow(row) {
     let params = {
       bucket: row.bucket,
-      key: row.name,
+      key: row.key,
     }
     await deleteOne(params)
     $toast('删除成功')

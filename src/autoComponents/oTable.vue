@@ -214,7 +214,6 @@ function updatePage() {
                           class="mlr2"
                           v-bind="val.attrs"
                           :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                          @click.stop.prevent="val.handler?.(scope.row, scope)"
                         />
                         <el-button
                           v-else
@@ -267,7 +266,6 @@ function updatePage() {
                                 v-if="val.comp"
                                 v-bind="val.attrs"
                                 :disabled="parseDisabled(val.disabled, scope.row, scope)"
-                                @click="val.handler?.(scope.row, scope)"
                               />
                               <el-button
                                 v-else
