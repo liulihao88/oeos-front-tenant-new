@@ -280,6 +280,8 @@ const eventMore = () => {
   height: 100%;
   padding: 8px;
   background-color: #fff;
+  border-radius: 4px;
+  transition: all 0.5s ease-out;
 
   &:hover {
     box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);

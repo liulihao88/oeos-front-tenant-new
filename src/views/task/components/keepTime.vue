@@ -117,8 +117,8 @@ defineExpose({
 </script>
 
 <template>
-  <div class="f-st-ct w-100% flex-wrap">
-    <div class="mr f-st-ct w-100% flex-wrap">
+  <div class="f-st-ct w-100% flex-wrap h-100%">
+    <div class="mr f-st-ct w-100% flex-wrap h-100%">
       <el-input-number
         v-model="days"
         class="mr"
@@ -133,9 +133,28 @@ defineExpose({
         </template>
       </el-input-number>
 
-      <o-radio v-model="easyTime" :options="timeOptions" />
+      <div class="radio-box">
+        <o-radio v-model="easyTime" :options="timeOptions" />
+      </div>
 
       <o-svg v-if="!isView" name="eraser" size="16" class="ml2 link" @click="clearValue" />
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.radio-box {
+  box-sizing: border-box;
+  height: calc(100%);
+  padding: 0 8px;
+  margin-left: 8px;
+  line-height: calc(100%);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: all 0.5s ease-out;
+
+  &:hover {
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+  }
+}
+</style>
