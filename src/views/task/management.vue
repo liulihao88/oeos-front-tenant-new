@@ -163,14 +163,15 @@ async function deleteRow(row) {
 
     <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false" height="calc(100vh - 180px)">
       <template #enable="{ scope, row }">
-        <el-switch
-          v-model="row.enabled"
-          inline-prompt
-          class="w-60 mr"
-          :before-change="() => beforeChange(row.enabled, row)"
-          active-text="启用"
-          inactive-text="未启用"
-        />
+        <div class="w-64 mr tr">
+          <el-switch
+            v-model="row.enabled"
+            inline-prompt
+            :before-change="() => beforeChange(row.enabled, row)"
+            active-text="启用"
+            inactive-text="未启用"
+          />
+        </div>
       </template>
       <template #viewEdit="{ scope, row }">
         <template v-if="row.enabled">

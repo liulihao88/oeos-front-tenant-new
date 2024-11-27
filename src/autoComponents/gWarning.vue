@@ -8,7 +8,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: '',
+    default: '', // icon
   },
 })
 </script>
@@ -55,14 +55,13 @@ const props = defineProps({
 
 .icon-box {
   display: flex;
-  align-items: top;
+  align-items: center;
   width: 100%;
   min-height: 32px;
   border-radius: 2px;
 
   .icon {
     position: relative;
-    top: 8px;
     margin-right: 8px;
   }
 }

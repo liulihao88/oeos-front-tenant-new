@@ -86,7 +86,14 @@ defineExpose({
 </script>
 
 <template>
-  <o-dialog ref="dialogRef" v-model="isShow" title="高级配置[数据冷冻配置]" confirmText="保存" @confirm="confirm">
+  <o-dialog
+    ref="dialogRef"
+    v-model="isShow"
+    title="高级配置[数据冷冻配置]"
+    confirmText="保存"
+    width="1000"
+    @confirm="confirm"
+  >
     <el-form
       id="highSettingsForm"
       ref="formRef"
@@ -97,28 +104,21 @@ defineExpose({
     >
       <el-form-item label="保持原始对象" prop="">
         <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
-        <o-icon
-          class="ml"
-          name="warning"
-          color="#DCDEE0"
-          content="对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。
+        <g-warning
+          type="icon"
+          content="对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。<br>
 注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！"
         />
       </el-form-item>
 
       <el-form-item label="对象名前缀" prop="">
         <o-radio v-model="form.rawKeyPrefix" :options="prefixOptions" :disabled="!form.KeepRawKey" />
-        <o-icon
-          class="ml"
-          color="#DCDEE0"
-          name="warning"
-          content="在原始对象名前添加前缀（父目录）可防止多个桶内出现重名文件情况下的冷冻失败"
-        />
+        <g-warning type="icon" content="在原始对象名前添加前缀（父目录）可防止多个桶内出现重名文件情况下的冷冻失败" />
       </el-form-item>
       <el-form-item label="聚合存储上限" prop="packageSizeThreshold">
-        <gBtoMb
-          v-model="form.packageSizeThreshold"
-          :disabled="form.KeepRawKey"
+        <gBtoMb v-model="form.packageSizeThreshold" :disabled="form.KeepRawKey" />
+        <g-warning
+          type="icon"
           content="对于小于[单个打包范围最小大小]的文件其内容将合并物理存储；此值标定包体体积上限；建议1G~2G"
         />
       </el-form-item>
@@ -126,53 +126,63 @@ defineExpose({
         <div class="f-st-ct w-93%">
           <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" class="mr" />
           <div class="mr">-</div>
-          <gBtoMb
-            v-model="form.singleSizeRange[1]"
-            :disabled="form.KeepRawKey"
-            content="介于此大小范围的文件将独立冷冻存储不进行合并或分片处理"
-          />
+          <gBtoMb v-model="form.singleSizeRange[1]" :disabled="form.KeepRawKey" />
+          <div class="ml">
+            <g-warning type="icon" content="介于此大小范围的文件将独立冷冻存储不进行合并或分片处理" />
+          </div>
         </div>
       </el-form-item>
 
       <el-form-item label="分片存储大小" prop="fragmentSizeThreshold">
-        <gBtoMb
-          v-model="form.fragmentSizeThreshold"
-          :disabled="form.KeepRawKey"
-          content="超过[独立存储]上限的文件数据将被分片存储；建议1G~5G"
-        />
+        <gBtoMb v-model="form.fragmentSizeThreshold" :disabled="form.KeepRawKey" />
+        <div class="ml">
+          <g-warning type="icon" content="超过[独立存储]上限的文件数据将被分片存储；建议1G~5G" />
+        </div>
       </el-form-item>
       <el-form-item label="工作线程数量" prop="workerCount">
-        <o-input v-model="form.workerCount" v-number :min="1" content="通过多线程提升处理性能" />
+        <o-radio v-model="form.workerCount" :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" type="simple" />
+        <div>
+          <g-warning type="icon" content="通过多线程提升处理性能" class="ml" />
+        </div>
       </el-form-item>
       <el-form-item label="数据传输线程" prop="threadOfTransmission">
-        <o-input
+        <o-radio
           v-model="form.threadOfTransmission"
-          v-number
-          :min="1"
-          content="单个工作线程内的传输线程"
+          :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+          type="simple"
           :disabled="form.KeepRawKey"
         />
+        <div>
+          <g-warning type="icon" content="单个工作线程内的传输线程" class="ml" />
+        </div>
       </el-form-item>
 
       <el-form-item label="开启元数据注入" prop="InjectSelftMeta">
         <el-switch v-model="form.InjectSelftMeta" class="mr" :disabled="form.KeepRawKey" />
-        <o-icon name="warning" color="#DCDEE0" content="此功能可通过冷冻后的数据独立恢复原始文件；但会降低冷冻性能。" />
+        <div>
+          <g-warning type="icon" content="此功能可通过冷冻后的数据独立恢复原始文件；但会降低冷冻性能。" />
+        </div>
       </el-form-item>
       <el-form-item label="开启数据传输加速" prop="directTransmission">
         <el-switch v-model="form.directTransmission" class="mr" />
-        <o-icon name="warning" color="#DCDEE0" content="直接传输数据避免使用缓冲区" />
+        <div>
+          <g-warning type="icon" content="直接传输数据避免使用缓冲区" />
+        </div>
       </el-form-item>
       <el-form-item label="开启数据传输校验" prop="VerifyFreezeContent">
         <el-switch v-model="form.VerifyFreezeContent" class="mr" />
-        <o-icon
-          name="warning"
-          color="#DCDEE0"
-          content="当提交冷冻数据至存储系统时,校验提交内容正确性避免数据传输错误；会小幅影响性能。"
-        />
+        <div>
+          <g-warning
+            type="icon"
+            content="当提交冷冻数据至存储系统时,校验提交内容正确性避免数据传输错误；会小幅影响性能。"
+          />
+        </div>
       </el-form-item>
       <el-form-item label=" 开启自适应分片大小" prop="dynamicFragmentSize">
-        <el-switch v-model="form.dynamicFragmentSize" :disabled="form.KeepRawKey" class="mr" />
-        <o-icon name="warning" color="#DCDEE0" content="根据系统分片自动调整大小提升处理性能" />
+        <el-switch v-model="form.dynamicFragmentSize" :disabled="form.KeepRawKey" />
+        <div class="ml">
+          <g-warning type="icon" content="根据系统分片自动调整大小提升处理性能" />
+        </div>
       </el-form-item>
     </el-form>
   </o-dialog>
