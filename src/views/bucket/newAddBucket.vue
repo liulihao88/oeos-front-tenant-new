@@ -40,7 +40,7 @@ const validateNumber = (rule, value, callback) => {
 }
 const fieldList = [
   {
-    label: '桶名',
+    label: '存储桶名称',
     prop: 'bucketName',
     placeholder: '桶名必填, 限3-63个字符',
     directives: {
@@ -60,7 +60,7 @@ const fieldList = [
   },
 
   {
-    label: '配额',
+    label: '存储桶配额',
     prop: 'quota',
     useSlot: true,
     rules: [
@@ -76,7 +76,7 @@ const fieldList = [
     ],
   },
   {
-    label: '类型',
+    label: '存储桶配额类型',
     prop: 'quotaType',
     comp: 'o-select',
     useSlot: true,
@@ -86,15 +86,10 @@ const fieldList = [
     },
   },
   {
-    label: '桶版本',
+    label: '存储桶版本控制',
     prop: 'versionEnabled',
-    comp: 'o-radio',
-    attrs: {
-      options: [
-        { label: '启用', value: true },
-        { label: '禁用', value: false },
-      ],
-    },
+
+    useSlot: true,
   },
   // {
   //   label: '锁定',
@@ -169,6 +164,16 @@ defineExpose({
         <template #quotaType>
           <o-select v-model="model.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
           <g-dif-warning type="quota" class="mt2 w-100%" />
+        </template>
+        <template #versionEnabled>
+          <o-radio
+            v-model="model.versionEnabled"
+            :options="[
+              { label: '启用', value: true },
+              { label: '禁用', value: false },
+            ]"
+          />
+          <g-dif-warning class="mtb2" type="version" />
         </template>
       </o-form>
     </o-dialog>

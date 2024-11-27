@@ -220,10 +220,7 @@ const editDate = () => {
             </el-radio-group>
           </o-title>
 
-          <g-warning
-            class="mtb2"
-            content="版本控制是将某一对象的多个变体保留在同一存储桶中的一种方法，能够保留、检索以及还原该存储桶中每个对象的每个版本。通过版本控制，您可以轻松地将意外的用户操作和应用程序故障中恢复存储对象。"
-          />
+          <g-dif-warning class="mtb2" type="version" />
         </div>
 
         <div class="c-box mt h-33%">

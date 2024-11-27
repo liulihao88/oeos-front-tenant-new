@@ -52,7 +52,7 @@ const mergedAttrs = computed(() => {
   display: flex;
   align-items: baseline;
   min-height: 32px;
-  padding: 8px 16px;
+  padding: 8px;
   background: #fffaf4;
   border: 1px solid #dfca9e;
   border-radius: 2px;
@@ -69,10 +69,13 @@ const mergedAttrs = computed(() => {
   display: flex;
   align-items: baseline;
   min-height: 32px;
+  padding: 8px;
   border-radius: 2px;
 
   .icon {
     position: relative;
+    top: 2px;
+    // position: relative;
     margin-right: 8px;
   }
 }

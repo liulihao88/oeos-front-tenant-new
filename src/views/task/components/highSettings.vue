@@ -56,7 +56,7 @@ const devTest = () => {
 const beforeChange = async () => {
   if (!form.value.KeepRawKey) {
     await proxy.confirm('', {
-      dangerouslyUseHTMLString: true,
+      dangerouslyUseHTString: true,
       message:
         '<div class="">对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。</div><div class="cl-red">注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！您确定开启此功能吗</div>',
       appendTo: '#highSettingsForm',
@@ -103,12 +103,14 @@ defineExpose({
       :disabled="props.isView"
     >
       <el-form-item label="保持原始对象" prop="">
-        <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
-        <g-warning
-          type="icon"
-          content="对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。<br>
-注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！"
-        />
+        <div class="f-st-tp">
+          <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
+          <g-warning
+            type="icon"
+            content="对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。<br>
+            注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！"
+          />
+        </div>
       </el-form-item>
 
       <el-form-item label="对象名前缀" prop="">
@@ -127,7 +129,7 @@ defineExpose({
           <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" class="mr" />
           <div class="mr">-</div>
           <gBtoMb v-model="form.singleSizeRange[1]" :disabled="form.KeepRawKey" />
-          <div class="ml">
+          <div class="">
             <g-warning type="icon" content="介于此大小范围的文件将独立冷冻存储不进行合并或分片处理" />
           </div>
         </div>
@@ -135,14 +137,14 @@ defineExpose({
 
       <el-form-item label="分片存储大小" prop="fragmentSizeThreshold">
         <gBtoMb v-model="form.fragmentSizeThreshold" :disabled="form.KeepRawKey" />
-        <div class="ml">
+        <div class="">
           <g-warning type="icon" content="超过[独立存储]上限的文件数据将被分片存储；建议1G~5G" />
         </div>
       </el-form-item>
       <el-form-item label="工作线程数量" prop="workerCount">
         <o-radio v-model="form.workerCount" :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" type="simple" />
         <div>
-          <g-warning type="icon" content="通过多线程提升处理性能" class="ml" />
+          <g-warning type="icon" content="通过多线程提升处理性能" class="" />
         </div>
       </el-form-item>
       <el-form-item label="数据传输线程" prop="threadOfTransmission">
@@ -153,7 +155,7 @@ defineExpose({
           :disabled="form.KeepRawKey"
         />
         <div>
-          <g-warning type="icon" content="单个工作线程内的传输线程" class="ml" />
+          <g-warning type="icon" content="单个工作线程内的传输线程" class="" />
         </div>
       </el-form-item>
 
@@ -180,7 +182,7 @@ defineExpose({
       </el-form-item>
       <el-form-item label=" 开启自适应分片大小" prop="dynamicFragmentSize">
         <el-switch v-model="form.dynamicFragmentSize" :disabled="form.KeepRawKey" />
-        <div class="ml">
+        <div class="">
           <g-warning type="icon" content="根据系统分片自动调整大小提升处理性能" />
         </div>
       </el-form-item>
