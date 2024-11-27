@@ -141,8 +141,21 @@ const beforeChange = async (enabledBoolean, row) => {
   if (!sendEnabled && !proxy.$dev) {
     await proxy.confirm('确定关闭此任务嘛?')
   }
-  await toggleTaskStatus(row.id, sendEnabled)
-  init()
+  try {
+    await toggleTaskStatus(row.id, sendEnabled)
+    if (sendEnabled) {
+      proxy.$toast('启动成功!')
+    } else {
+      proxy.$toast('停止成功!')
+    }
+    init()
+  } catch (e) {
+    if (sendEnabled) {
+      proxy.$toast('启动失败!', 'e')
+    } else {
+      proxy.$toast('停止失败!', 'e')
+    }
+  }
 }
 
 async function deleteRow(row) {
