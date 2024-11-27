@@ -144,7 +144,7 @@ const init = async () => {
     })
   } else {
     form.value.data = res
-    baseForm.value.data = res
+    baseForm.value.data = proxy.clone(res)
   }
 }
 init()
