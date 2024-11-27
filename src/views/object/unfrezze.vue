@@ -4,6 +4,7 @@ import { restoreList, adjustLevelApi, allCancelUnFreeze, cancelUnFreezeApi } fro
 
 const { proxy } = getCurrentInstance()
 const bucketRef = ref(null)
+const pageNumber = ref(0)
 
 const bucketId = ref(proxy.getStorage('tenant-freeze-bucket-id'))
 const bucketName = ref()
@@ -12,6 +13,9 @@ const levelValue = ref(0)
 const selections = ref([])
 const frezzeStatus = ref('unfreezed')
 const prefixKey = ref('')
+const prevHisList = ref([])
+const emptyText = ref('暂无数据')
+
 const frezzeOptions = [
   { label: '已解冻', value: 'unfreezed' },
   { label: '解冻中', value: 'unfreezing' },
@@ -83,6 +87,7 @@ const columns = computed(() => {
       key: 'operation',
       label: '操作',
       isShowColumn: frezzeStatus.value !== 'unfreezing',
+      width: 100,
       btns: [
         {
           content: '下载',
@@ -118,19 +123,29 @@ const handleSelectionChange = (val) => {
   selections.value = val
 }
 
-const init = async () => {
+const init = async (type = '') => {
   if (frezzeStatus.value === 'unfreezed') {
     selections.value = []
+  }
+  if (type === 'next' || type === 'prev') {
+    emptyText.value = '没有更多数据了'
+  } else {
+    pageNumber.value = 0
+    prevHisList.value = []
+    emptyText.value = '暂无数据'
   }
   await nextTick()
   const sendData = {
     bucket: bucketName.value,
+    pageNumber: pageNumber.value,
+    pageSize: 30,
     prefixKey: prefixKey.value,
     status: frezzeStatus.value,
   }
   let res = await restoreList(sendData)
   data.value = res
 }
+
 const adjustLevel = () => {
   levelValue.value = 0
   isShow.value = true
@@ -165,6 +180,16 @@ const cancelUnFreeze = async () => {
   await cancelUnFreezeApi(sendData)
   proxy.$toast('取消解冻成功')
   init()
+}
+const prev = () => {
+  let popList = prevHisList.value.pop()
+  pageNumber.value = popList
+  init('prev')
+}
+const next = () => {
+  prevHisList.value.push(pageNumber.value)
+  pageNumber.value++
+  init('next')
 }
 </script>
 
@@ -210,8 +235,15 @@ const cancelUnFreeze = async () => {
       class="mt2"
       :showFooter="false"
       height="calc(100vh - 250px)"
+      :showPage="false"
+      :emptyText="emptyText"
       @selection-change="handleSelectionChange"
     />
+
+    <div class="mt2">
+      <el-button type="primary" :disabled="prevHisList.length === 0" @click="prev">上一页</el-button>
+      <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+    </div>
 
     <o-dialog ref="dialogRef" v-model="isShow" title="调整优先级">
       <o-radio v-model="levelValue" :options="levelOptions" @confirm="levelConfirm" />
