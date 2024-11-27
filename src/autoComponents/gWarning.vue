@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, computed, useAttrs } from 'vue'
 const { proxy } = getCurrentInstance()
+const attrs = useAttrs()
 const props = defineProps({
   content: {
     type: String,
@@ -10,6 +11,18 @@ const props = defineProps({
     type: String,
     default: '', // icon
   },
+  width: {
+    type: [String, Number],
+    default: '100%',
+  },
+})
+
+const mergedAttrs = computed(() => {
+  let res = {
+    width: proxy.processWidth(props.width, true),
+    ...attrs,
+  }
+  return res
 })
 </script>
 
@@ -23,7 +36,7 @@ const props = defineProps({
     </div>
   </template>
   <template v-else>
-    <div class="warning-box" v-bind="$attrs">
+    <div class="warning-box" :style="{ ...proxy.processWidth(props.width) }" v-bind="$attrs">
       <img src="@/assets/images/notic.png" class="w-16 h-16" />
       <span class="warning-box__content">
         <slot name="content">
@@ -37,8 +50,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .warning-box {
   display: flex;
-  align-items: top;
-  width: 100%;
+  align-items: baseline;
   min-height: 32px;
   padding: 8px 16px;
   background: #fffaf4;
@@ -55,8 +67,7 @@ const props = defineProps({
 
 .icon-box {
   display: flex;
-  align-items: center;
-  width: 100%;
+  align-items: baseline;
   min-height: 32px;
   border-radius: 2px;
 

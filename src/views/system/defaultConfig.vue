@@ -106,8 +106,8 @@ init()
             </div>
           </div>
           <div class="mt2">
-            <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="mb2" />
-            <g-warning :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" style="align-items: center" />
+            <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="mb2" width="700" />
+            <g-warning :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" width="700" />
           </div>
         </template>
 
@@ -115,7 +115,7 @@ init()
           <div>
             <o-select v-model="form.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
             <div class="mt2">
-              <g-dif-warning type="quota" />
+              <g-dif-warning type="quota" style="width: 700px" />
             </div>
           </div>
         </template>

@@ -168,7 +168,7 @@ defineExpose({
         </template>
         <template #quotaType>
           <o-select v-model="model.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
-          <g-dif-warning type="quota" />
+          <g-dif-warning type="quota" class="mt2 w-100%" />
         </template>
       </o-form>
     </o-dialog>

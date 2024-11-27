@@ -253,7 +253,7 @@ const editDate = () => {
         </div>
 
         <div class="c-box mt h-33%">
-          <o-title title="对象过期删除" type="simple">
+          <o-title title="对象定时删除" type="simple">
             <template #icon>
               <g-img src="bucket/delete" class="mr" />
             </template>
@@ -327,23 +327,17 @@ const editDate = () => {
 
         <el-form-item label="配额类型" prop="">
           <o-select v-model="quotaForm.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
-          <g-warning
-            type="icon"
-            content="软配额：用户可以使用超过配额限制的空间大小，并且不会限制存储桶内对象操作。 <br>硬配额：用户可以使用的空间大小不可超过配额限制，超过配额限制后会禁止继续写入数据。"
-          />
+          <g-dif-warning type="quota" class="mt2 w-100%" />
         </el-form-item>
       </el-form>
     </o-dialog>
 
-    <o-dialog ref="dialogRef" v-model="isShowDate" title="对象过期删除" @confirm="dateConfirm">
+    <o-dialog ref="dialogRef" v-model="isShowDate" title="对象定时删除" @confirm="dateConfirm">
       <el-form ref="dateFormRef" :model="dateForm" :rules="dateRules">
         <el-form-item label="是否开启" prop="enable">
           <el-switch v-model="dateForm.enable" />
         </el-form-item>
         <el-form-item label="过期时间" prop="expireAfterDays">
-          <!-- <el-input-number v-model="dateForm.expireAfterDays" :min="0" :precision="1">
-            <template #suffix>天</template>
-          </el-input-number> -->
           <KeepTime v-model="dateForm.expireAfterDays" type="default" />
         </el-form-item>
       </el-form>
