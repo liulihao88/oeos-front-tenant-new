@@ -31,7 +31,7 @@ const props = defineProps({
   total: {
     type: Number,
   },
-  emptyText: {
+  columnEmptyText: {
     type: String,
     default: '-',
   },
@@ -154,7 +154,7 @@ const handleEmptyText = (scope, v) => {
   // 判断'   '为空
   const trimIsEmpty = proxy.getType(scope.row[v.prop]) === 'string' && scope.row[v.prop].trim().length === 0
   if (scope.row[v.prop] === null || scope.row[v.prop] === undefined || scope.row[v.prop] === '' || trimIsEmpty) {
-    return v.emptyText || props.emptyText
+    return v.columnEmptyText || props.columnEmptyText
   }
   return scope.row[v.prop]
 }

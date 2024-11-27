@@ -17,6 +17,7 @@ const bucketOverviewHistoryRef = ref(null)
 const BucketFileDetailsCompRef = ref(null)
 import { useBtns } from '@/hooks/useBtns.ts'
 const { btns } = useBtns(RestoreExpirationInDaysRef, bucketOverviewHistoryRef, BucketFileDetailsCompRef, init)
+const emptyText = ref('暂无数据')
 
 import { preview } from '@/utils/remoteFunc.ts'
 
@@ -99,10 +100,16 @@ const selectDisabled = computed(() => {
   return selections.value.length === 0
 })
 
-async function init(isReset = false) {
-  if (isReset) {
+async function init(isReset: string | boolean = false) {
+  if (isReset === true) {
     bucketSettings.clear()
   }
+  if (isReset === 'isNext') {
+    emptyText.value = '没有更多数据了~'
+  } else {
+    emptyText.value = '暂无数据'
+  }
+
   let sendParams = {
     bucket: bucketName.value,
     pageMarker: bucketSettings.prevFolderList.at(-1) ?? '',
@@ -131,7 +138,7 @@ const prev = () => {
 const next = () => {
   let laskKey = data.value.at(-1).key
   bucketSettings.changePrevFolder(laskKey)
-  init()
+  init('isNext')
 }
 
 const inside = (row) => {
@@ -204,6 +211,7 @@ const inside = (row) => {
       class="m-t-16"
       :showPage="false"
       height="calc(100vh - 240px)"
+      :empty-text="emptyText"
       @selection-change="selectionChange"
     >
       <template #name="{ scope, row }">
