@@ -83,9 +83,9 @@ Object.keys(globalData).forEach((v) => {
 })
 
 app.config.globalProperties.$echarts = echarts
-app.config.globalProperties.$dev = import.meta.env.DEV
+let $dev = import.meta.env.MODE === 'development'
+app.config.globalProperties.$dev = utils.getStorage('tenant-$dev') ?? $dev
 // app.config.globalProperties.$dev = false
-// app.config.globalProperties.request = request
 
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)

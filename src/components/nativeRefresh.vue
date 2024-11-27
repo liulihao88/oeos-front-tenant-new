@@ -33,6 +33,7 @@ const isDev = ref(proxy.$dev)
 function changeMode() {
   isDev.value = !isDev.value
   instance.appContext.app.config.globalProperties.$dev = isDev.value
+  proxy.setStorage('tenant-$dev', isDev.value)
   nativeRefresh()
 }
 defineExpose({

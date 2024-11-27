@@ -95,7 +95,6 @@ init()
   <div class="c-container">
     <o-title title="默认桶配置" b="16" />
     <div class="c-box">
-      <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="mb2" />
       <o-form ref="oFormRef" :fieldList="fieldList" :model="form" :rules="rules">
         <template #quota>
           <div class="f-st-ed w-100%">
@@ -107,13 +106,18 @@ init()
             </div>
           </div>
           <div class="mt2">
+            <g-warning content="默认空间不能小于0.5GB、不能小于0.1TB或者不能小于0.01PB" class="mb2" />
             <g-warning :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" style="align-items: center" />
           </div>
         </template>
 
         <template #quotaType>
-          <o-select v-model="form.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
-          <g-dif-warning type="quota" />
+          <div>
+            <o-select v-model="form.quotaType" :options="QUOTA_OPTIONS" :clearable="false" />
+            <div class="mt2">
+              <g-dif-warning type="quota" />
+            </div>
+          </div>
         </template>
       </o-form>
 
