@@ -107,6 +107,7 @@ defineExpose({
           <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
           <g-warning
             type="icon"
+            class="t--2 po-r"
             content="对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。<br>
             注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！"
           />
@@ -126,8 +127,8 @@ defineExpose({
       </el-form-item>
       <el-form-item label="独立存储区间" prop="singleSizeRange">
         <div class="f-st-ct w-93%">
-          <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" class="mr" />
-          <div class="mr">-</div>
+          <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" />
+          <div class="mlr">-</div>
           <gBtoMb v-model="form.singleSizeRange[1]" :disabled="form.KeepRawKey" />
           <div class="">
             <g-warning type="icon" content="介于此大小范围的文件将独立冷冻存储不进行合并或分片处理" />
@@ -160,19 +161,19 @@ defineExpose({
       </el-form-item>
 
       <el-form-item label="开启元数据注入" prop="InjectSelftMeta">
-        <el-switch v-model="form.InjectSelftMeta" class="mr" :disabled="form.KeepRawKey" />
+        <el-switch v-model="form.InjectSelftMeta" :disabled="form.KeepRawKey" />
         <div>
           <g-warning type="icon" content="此功能可通过冷冻后的数据独立恢复原始文件；但会降低冷冻性能。" />
         </div>
       </el-form-item>
       <el-form-item label="开启数据传输加速" prop="directTransmission">
-        <el-switch v-model="form.directTransmission" class="mr" />
+        <el-switch v-model="form.directTransmission" />
         <div>
           <g-warning type="icon" content="直接传输数据避免使用缓冲区" />
         </div>
       </el-form-item>
       <el-form-item label="开启数据传输校验" prop="VerifyFreezeContent">
-        <el-switch v-model="form.VerifyFreezeContent" class="mr" />
+        <el-switch v-model="form.VerifyFreezeContent" />
         <div>
           <g-warning
             type="icon"

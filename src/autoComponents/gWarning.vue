@@ -75,7 +75,6 @@ const mergedAttrs = computed(() => {
   .icon {
     position: relative;
     top: 2px;
-    // position: relative;
     margin-right: 8px;
   }
 }
