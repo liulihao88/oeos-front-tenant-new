@@ -350,9 +350,11 @@ const deleteTime = (v, i, val = '', idx = '') => {
 
   .r {
     flex: 1;
-    height: calc(100vh - 172px);
+    min-width: calc(100vw - 1000px);
+    height: calc(100%);
     margin-left: 300px;
-    // position: absolute;
+    overflow-x: auto;
+
     .r-top {
       display: flex;
       align-items: center;
@@ -369,6 +371,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
 
       .item {
         flex: 1;
+        min-width: 180px;
         height: 100%;
         padding: 8px;
         overflow: auto;

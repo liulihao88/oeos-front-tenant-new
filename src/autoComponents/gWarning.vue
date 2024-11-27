@@ -29,7 +29,7 @@ const mergedAttrs = computed(() => {
 <template>
   <template v-if="type === 'icon'">
     <div class="icon-box">
-      <o-icon name="warning" size="16" :color="'var(--45)'" v-bind="$attrs" class="icon" />
+      <o-icon name="warning" :color="'var(--45)'" v-bind="$attrs" class="icon" />
       <slot name="content">
         <div class="fs-14 cl-45" v-html="content" />
       </slot>
@@ -37,7 +37,7 @@ const mergedAttrs = computed(() => {
   </template>
   <template v-else>
     <div class="warning-box" :style="{ ...proxy.processWidth(props.width) }" v-bind="$attrs">
-      <img src="@/assets/images/notic.png" class="w-16 h-16" />
+      <img src="@/assets/images/notic.png" class="icon" />
       <span class="warning-box__content">
         <slot name="content">
           <span v-html="content" />
@@ -71,11 +71,13 @@ const mergedAttrs = computed(() => {
   min-height: 32px;
   padding: 8px;
   border-radius: 2px;
+}
 
-  .icon {
-    position: relative;
-    top: 2px;
-    margin-right: 8px;
-  }
+.icon {
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
 }
 </style>
