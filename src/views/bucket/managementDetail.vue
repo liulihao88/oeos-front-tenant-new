@@ -204,8 +204,6 @@ const editDate = () => {
       </div>
     </div>
 
-    <!-- <o-table ref="tableRef" :showPage="false" :columns="columns" :data="data" /> -->
-
     <o-title title="属性设置" t="8" b="8" />
 
     <el-row :gutter="8" class="row-height">
@@ -213,7 +211,7 @@ const editDate = () => {
         <div class="c-box h-33%">
           <o-title class="mr2" title="存储桶版本控制:" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('bucket/control')" class="mr" />
+              <g-img src="bucket/control" class="mr" />
             </template>
             <el-radio-group :model-value="versionStatus" class="ml2" @change="radioInput">
               <el-radio value="Disabled" disabled>{{ radioMap.Disabled }}</el-radio>
@@ -231,7 +229,7 @@ const editDate = () => {
         <div class="c-box mt h-33%">
           <o-title title="存储桶配额" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('bucket/quota')" class="mr" />
+              <g-img src="bucket/quota" class="mr" />
             </template>
           </o-title>
           <g-warning
@@ -257,7 +255,7 @@ const editDate = () => {
         <div class="c-box mt h-33%">
           <o-title title="对象过期删除" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('bucket/delete')" class="mr" />
+              <g-img src="bucket/delete" class="mr" />
             </template>
           </o-title>
           <g-warning

@@ -40,7 +40,7 @@ const itemList = computed(() => {
   <div class="box">
     <o-title title="对外服务信息" type="simple">
       <template #icon>
-        <g-img :src="proxy.formatImg('overview/overview-service')" class="mr" />
+        <g-img src="overview/overview-service" class="mr" />
       </template>
     </o-title>
     <div class="top">

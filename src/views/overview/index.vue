@@ -158,7 +158,7 @@ const eventMore = () => {
         <div class="item-box">
           <o-title title="租户信息与状态" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('overview/overview-tenant')" class="mr" />
+              <g-img src="overview/overview-tenant" class="mr" />
             </template>
           </o-title>
           <div class="t-l-box">
@@ -188,7 +188,7 @@ const eventMore = () => {
         <div class="item-box">
           <o-title title="租户信息与状态" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('overview/overview-space')" class="mr" />
+              <g-img src="overview/overview-space" class="mr" />
             </template>
           </o-title>
           <div class="t-l-box">
@@ -246,7 +246,7 @@ const eventMore = () => {
         <div class="item-box h-100% o-a">
           <o-title title="租户事件列表" b="8" type="simple">
             <template #icon>
-              <g-img :src="proxy.formatImg('overview/overview-event')" class="mr" />
+              <g-img src="overview/overview-event" class="mr" />
             </template>
             <span class="ml">(共{{ eventTotal }}条)</span>
             <template #right>
