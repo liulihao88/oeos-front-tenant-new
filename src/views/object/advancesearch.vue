@@ -186,14 +186,7 @@ const changeSelect = async (val, label, obj) => {
             class="mlr"
             @confirm="multypleDelete"
           >
-            <el-button
-              type="primary"
-              icon="el-icon-download"
-              :disabled="selections.length === 0"
-              @click="multypleDelete"
-            >
-              批量删除
-            </el-button>
+            <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量删除</el-button>
           </o-popconfirm>
         </template>
         <el-button type="primary" class="mr" icon="el-icon-search" @click="editSearch">编辑搜索表达式</el-button>

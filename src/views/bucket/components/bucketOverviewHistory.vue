@@ -41,7 +41,7 @@ const open = async (row) => {
 const deleteRow = async (row) => {
   let params = {
     bucket: props.bucketName,
-    key: row.name,
+    key: row.key,
   }
   await deleteOne(params)
   proxy.$toast('删除成功!')
@@ -95,14 +95,42 @@ const columns = [
     prop: 'operation',
     maxBtns: 4,
     btns: [
-      { content: '下载', handler: proxy.gDownload },
+      {
+        content: '下载',
+        handler: proxy.gDownload,
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'download',
+          content: '下载',
+          size: 6,
+        },
+      },
       {
         content: '恢复',
         handler: (row) => {
           RestoreExpirationInDaysRef.value.open(row)
         },
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'restore',
+          content: '恢复',
+          size: 6,
+        },
       },
-      { content: '删除', handler: deleteRow },
+      {
+        content: '删除',
+        handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          type: 'svg',
+          size: 6,
+          content: '删除',
+        },
+        reConfirm: !proxy.$dev,
+      },
     ],
   },
 ]
@@ -130,19 +158,36 @@ defineExpose({
   <div>
     <o-dialog ref="dialogRef" v-model="isShow" title="历史版本" width="80%">
       <div class="mb2 f-ed-ct">
-        <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
-          批量下载
-        </el-button>
+        <o-popconfirm
+          content="确定要批量下载吗? "
+          title="批量下载"
+          :reConfirm="selections.length > 0"
+          class="mr"
+          @confirm="batchDownload"
+        >
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量下载</el-button>
+        </o-popconfirm>
 
-        <el-button type="primary" :disabled="selectDisabled" @click="RestoreExpirationInDaysRef.open(selections)">
+        <el-button
+          type="primary"
+          :disabled="selections.length === 0"
+          @click="RestoreExpirationInDaysRef.open(selections)"
+        >
           <template #icon>
             <o-svg name="restore" />
           </template>
           批量恢复
         </el-button>
-        <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
-          批量删除
-        </el-button>
+
+        <o-popconfirm
+          content="确定要批量删除吗? "
+          title="批量删除"
+          :reConfirm="selections.length > 0"
+          class="mlr"
+          @confirm="multypleDelete"
+        >
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量删除</el-button>
+        </o-popconfirm>
       </div>
       <o-table
         :columns="columns"

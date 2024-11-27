@@ -158,19 +158,7 @@ const inside = (row) => {
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'AdvanceSearch' })">
         高级搜索
       </el-button>
-      <!-- <el-button type="primary" icon="el-icon-download" :disabled="selectDisabled" @click="batchDownload">
-        批量下载
-      </el-button>
 
-      <el-button type="primary" :disabled="selectDisabled" @click="RestoreExpirationInDaysRef.open(selections)">
-        <template #icon>
-          <o-svg name="restore" />
-        </template>
-        批量恢复
-      </el-button>
-      <el-button type="primary" icon="el-icon-delete" :disabled="selectDisabled" @click="multypleDelete">
-        批量删除
-      </el-button> -->
       <o-popconfirm
         content="确定要批量下载吗? "
         title="批量下载"
@@ -198,9 +186,7 @@ const inside = (row) => {
         class="mlr"
         @confirm="multypleDelete"
       >
-        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">
-          批量删除
-        </el-button>
+        <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量删除</el-button>
       </o-popconfirm>
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>

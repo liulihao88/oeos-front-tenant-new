@@ -226,9 +226,7 @@ const selectionChange = (val, ...a) => {
           class="mlr"
           @confirm="multypleDelete"
         >
-          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0" @click="multypleDelete">
-            批量删除
-          </el-button>
+          <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量删除</el-button>
         </o-popconfirm>
         <el-button type="primary" icon="el-icon-search" :disabled="!bucketId" @click="init">查询</el-button>
       </div>
