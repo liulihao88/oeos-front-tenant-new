@@ -103,8 +103,8 @@ const save = async () => {
 <template>
   <div class="">
     <o-title title="用户编辑">
-      <el-button type="primary" class="ml2" size="small" @click="save">保存</el-button>
-      <el-button class="ml2" size="small" @click="proxy.jump('/apps/security/user')">取消</el-button>
+      <el-button type="primary" class="ml2" @click="save">保存</el-button>
+      <el-button class="ml2" @click="proxy.jump('/apps/security/user')">取消</el-button>
     </o-title>
     <div class="c-box mtb">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline>

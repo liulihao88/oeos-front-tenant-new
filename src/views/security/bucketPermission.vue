@@ -30,23 +30,23 @@ const props = defineProps({
 
 const permissionInfos = `
   <div>
-    <span class="mr cl-green w-30 d-ib">浏览:</span>
+    <span class="mr cl-green tr w-30 d-ib">浏览:</span>
     <span>列出桶对象或对象版本, 列出未完成的分片</span>
   </div>
   <div>
-    <span class="mr cl-green w-30 d-ib">读:</span>
+    <span class="mr cl-green tr w-30 d-ib">读:</span>
     <span>读取对象数据或对象版本数据, 列出未完成的分片</span>
   </div>
   <div>
-    <span class="mr cl-green w-30 d-ib">写:</span>
+    <span class="mr cl-green tr w-30 d-ib">写:</span>
     <span>上传对象, 或通过分片上传设置对象元数据或Tag等</span>
   </div>
   <div>
-    <span class="mr cl-green w-30 d-ib">删除:</span>
+    <span class="mr cl-green tr w-30 d-ib">删除:</span>
     <span>删除当前对象或某个版本, 删除元数据或Tag等</span>
   </div>
   <div>
-    <span class="mr cl-green w-30 d-ib">管理:</span>
+    <span class="mr cl-green tr w-30 d-ib">管理:</span>
     <span>浏览桶对象, 删除，配置桶权限</span>
   </div>
   `
@@ -243,18 +243,22 @@ defineExpose({
     </o-title>
     <div :class="{ 'c-box': props.type !== 'group' }">
       <o-title title="所有桶权限" type="simple">
-        <div class="ml f-st-ct">
-          <o-checkbox
-            v-model="permissionValues"
-            :options="proxy.PERMISSION_OPTIONS"
-            :disabled="!!permissionBucketAdmin"
-          />
-          <o-icon name="warning" raw-content :content="permissionInfos" class="ml2" />
-        </div>
+        <g-warning
+          style="width: calc(100% - 100px)"
+          class="ml"
+          content=" 设置所有
+          桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
+        />
       </o-title>
-      <g-warning
-        content=" 设置所有桶权限即所有（已创建及未来创建）的单桶都具备该权限，设置单个桶权限仅代表此桶具有该权限。"
-      />
+      <div class="ml f-st-ct">
+        <o-checkbox
+          v-model="permissionValues"
+          :options="proxy.PERMISSION_OPTIONS"
+          :disabled="!!permissionBucketAdmin"
+        />
+        <o-icon name="warning" raw-content :content="permissionInfos" class="ml2" />
+      </div>
+
       <o-title title="单个桶权限" tb="8" type="simple">
         <span class="fw-400 ml2">共 {{ originData.length }} 个桶</span>
         <o-input

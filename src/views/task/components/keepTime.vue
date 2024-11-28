@@ -51,6 +51,12 @@ watch(
   () => props.value,
   (val) => {
     if (val) {
+      if (val === EMPTY_VALUE) {
+        setTimeout(() => {
+          clearValue()
+        }, 0)
+        return
+      }
       const regex = /(\d+)y(\d+)m(\d+\.?\d*)d([\d]*\.[\d]+|[\d]+)h/
       const match = val.match(regex)
       if (match) {
@@ -90,18 +96,29 @@ watch(easyTime, (val) => {
 })
 
 const changeInputNumber = () => {
+  if (years.value === '') {
+    return EMPTY_VALUE
+  }
   const mergeHoursNumber = Number(hours.value) + Number((minutes.value / 60).toFixed(2))
   let res = `${years.value}y${months.value}m${days.value}d${mergeHoursNumber}h`
   return res
 }
 
-const clearValue = () => {
+function clearValue() {
   easyTime.value = ''
-  years.value = 0
-  months.value = 0
-  days.value = 0
-  hours.value = 0
-  minutes.value = 0
+  if (props.type === 'restore') {
+    years.value = '0'
+    months.value = '0'
+    days.value = '0'
+    hours.value = '0'
+    minutes.value = '0'
+  } else {
+    years.value = ''
+    months.value = ''
+    days.value = ''
+    hours.value = ''
+    minutes.value = ''
+  }
 }
 
 const getValue = () => {
@@ -124,7 +141,8 @@ defineExpose({
         class="mr"
         style="width: 180px"
         :disabled="!!easyTime"
-        :precision="1"
+        :precision="2"
+        :min="0.01"
         v-bind="inputAttrs"
         @change="changeInputNumber"
       >

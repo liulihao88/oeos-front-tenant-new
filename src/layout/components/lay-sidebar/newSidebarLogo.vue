@@ -40,7 +40,7 @@ const { title, backTopMenu } = useNav()
   height: 48px;
   padding-left: 10px;
   cursor: pointer;
-  background-color: lightblue;
+  border-bottom: 1px solid var(--line);
   transition: all var(--pure-transition-duration) ease;
 
   img {

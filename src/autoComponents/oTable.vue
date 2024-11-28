@@ -93,6 +93,7 @@ watch(
     immediate: true,
   },
 )
+
 // isShow 或者 content支持 函数或字符串两种写法。
 const operatorBtnFn = (cont, row = '', scope = '') => {
   if (typeof cont === 'function') {
@@ -184,11 +185,17 @@ function updatePage() {
       :header-cell-style="{
         background: '#f7f8fa',
         color: 'rgba(39,48,75,0.85)',
-        height: '50px',
+        height: '44px',
+        textAlign: 'center',
       }"
     >
       <slot />
-      <el-table-column v-if="showIndex" type="index" width="50" />
+      <el-table-column v-if="showIndex" type="index" width="60" align="center">
+        <!-- 使用 #header 插槽自定义表头 -->
+        <template #header="{ column }">
+          <span>NO</span>
+        </template>
+      </el-table-column>
       <template v-for="(v, i) in finalColumns" :key="i">
         <template v-if="parseIsShowColumn(v.isShowColumn, v, i)">
           <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
