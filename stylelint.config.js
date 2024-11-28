@@ -16,6 +16,7 @@ export default {
     },
   ],
   rules: {
+    'no-empty-source': null,
     'custom-property-pattern': null,
     'prettier/prettier': true,
     'selector-class-pattern': null,
