@@ -16,6 +16,7 @@ export default {
     },
   ],
   rules: {
+    'function-no-unknown': null,
     'selector-id-pattern': null,
     'no-empty-source': null,
     'custom-property-pattern': null,

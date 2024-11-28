@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, watch, nextTick, computed } from 'vue'
+import { ref, getCurrentInstance, watch, nextTick, computed, h } from 'vue'
 import KeepTime from './keepTime.vue'
 import HighSettings from '@/views/task/components/highSettings.vue'
 
 import { getSchedules, getTargetStorageList, saveTask, taskDetails } from '@/api/taskApi.ts'
+import OpenAllSwitch from '@/views/task/components/openAllSwitch.vue'
 
 const FREEZE = 'FREEZE'
 const ZERO_COPY_FREEZE = 'ZERO_COPY_FREEZE'
@@ -158,7 +159,7 @@ defineExpose({
 <template>
   <div>
     <o-dialog v-model="isShow" :title="compTitle" width="60%" :enableConfirm="false">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="150" :disabled="isView">
+      <el-form id="taskForm" ref="formRef" :model="form" :rules="rules" label-width="150" :disabled="isView">
         <o-title title="基本信息" />
         <el-form-item label="计划名称" prop="name">
           <o-input v-model="form.name" min="3" max="20" />
@@ -222,13 +223,8 @@ defineExpose({
           </el-form-item>
           <el-form-item label="处理目标桶" prop="" required>
             <div class="f-st-ct w-100%">
-              <el-switch
-                v-model="isTargetBucket"
-                inline-prompt
-                active-text="所有桶"
-                inactive-text="所有桶"
-                class="mr2"
-              />
+              <OpenAllSwitch v-model="isTargetBucket" />
+
               <g-bucket2
                 v-if="!isTargetBucket"
                 ref="bucketRef"

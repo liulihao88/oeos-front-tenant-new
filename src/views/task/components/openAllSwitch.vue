@@ -2,12 +2,17 @@
 import { ref, getCurrentInstance, h } from 'vue'
 const { proxy } = getCurrentInstance()
 import GWarning from '@/autoComponents/gWarning.vue'
-import { ElNotification, ElProgress } from 'element-plus'
-import { ElMessageBox } from 'element-plus'
+import { useVModel } from '@vueuse/core'
+
+const props = defineProps({
+  modelValue: {
+    required: true,
+  },
+})
 
 const isShow = ref(false)
 const isLock = ref(true)
-const isTargetBucket = ref(true)
+const sonIsTargetBucket = useVModel(props)
 const open = async () => {
   isLock.value = true
   isShow.value = true
@@ -17,7 +22,7 @@ const open = async () => {
 }
 
 const beforeAllBucketChange = async () => {
-  if (!isTargetBucket.value) {
+  if (!sonIsTargetBucket.value) {
     open()
     return false
   } else {
@@ -26,16 +31,14 @@ const beforeAllBucketChange = async () => {
 }
 const confirmAllBucket = () => {
   isShow.value = false
-  isTargetBucket.value = true
+  sonIsTargetBucket.value = true
 }
 </script>
 
 <template>
   <div>
-    <div>test/t1.vue</div>
-    <el-button type="primary" @click="open">测试48</el-button>
     <el-switch
-      v-model="isTargetBucket"
+      v-model="sonIsTargetBucket"
       inline-prompt
       :before-change="beforeAllBucketChange"
       active-text="所有桶"
@@ -45,13 +48,12 @@ const confirmAllBucket = () => {
     <o-dialog
       ref="dialogRef"
       v-model="isShow"
-      title="t1"
+      title="开启所有桶配置提示"
       :confirmAttrs="{
         loading: isLock,
       }"
       @confirm="confirmAllBucket"
     >
-      =={{ isLock }}??
       <g-warning
         content="开启所有桶配置会导致无法开启其他类型的桶任务, 并且新增的存储桶会自动启动冷冻任务, 请谨慎选择!"
       />

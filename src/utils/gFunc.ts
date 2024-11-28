@@ -1,6 +1,7 @@
 import { $toast, getStorage, isEmpty, formatTime, formatDurationTime } from 'oeos-components'
 import settings from '@/config/settings.ts'
 import { router } from '@/router/index.ts'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { isStringNumber, isNumber } from './types.js'
 
 export function gDownload(item) {
@@ -137,4 +138,25 @@ export function formatToFixed(number, fixed = 2) {
   let unit = matches[4] || '' // 单位部分，如果没有则为空字符串
   let numTofixed = parseFloat(numericString + decimalString).toFixed(fixed)
   return `${numTofixed}${unit}`
+}
+
+export function confirm2(message, options) {
+  const baseOptions = {
+    title: '提示',
+    draggable: true,
+    showCancelButton: false,
+    confirmButtonText: '确定',
+  }
+  let mergeOptions = Object.assign({}, baseOptions, options)
+  return new Promise((r, j) => {
+    const instance = ElMessageBox.confirm(message, mergeOptions)
+      .then(() => {
+        console.log(`87 instance`, instance)
+        r(instance)
+      })
+      .catch(() => {
+        console.log(`54 instance`, instance)
+        j(instance)
+      })
+  })
 }
