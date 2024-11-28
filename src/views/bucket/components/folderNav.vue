@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, computed } from 'vue'
+import { ref, getCurrentInstance, computed, nextTick } from 'vue'
 const { proxy } = getCurrentInstance()
 import useBucketSettings from '@/store/modules/bucketSettings.ts'
 const bucketSettings = useBucketSettings()
@@ -7,6 +7,7 @@ const bucketSettings = useBucketSettings()
 const emits = defineEmits(['change'])
 const isEdit = ref(false)
 const originPrefixKey = ref()
+const isClear = ref(false)
 
 const editFolder = () => {
   if (isEdit.value !== true) {
@@ -42,7 +43,14 @@ const editPrefixKey = () => {
   isEdit.value = false
   emits('change')
 }
+const handleClear = () => {
+  isClear.value = true
+}
 const blurInput = () => {
+  if (isClear.value) {
+    isClear.value = false
+    return
+  }
   if (isEdit.value !== false) {
     bucketSettings.changePrefixKey(originPrefixKey.value)
     isEdit.value = false
@@ -51,7 +59,7 @@ const blurInput = () => {
 </script>
 
 <template>
-  <div class="folder-box" @click="editFolder">
+  <div v-click-outside="blurInput" class="folder-box" @click="editFolder">
     <div class="inner-box">
       <template v-if="!isEdit">
         <div v-if="bucketSettings.prefixKey" @click.stop="toPrevFolder">
@@ -74,8 +82,12 @@ const blurInput = () => {
           v-focus
           width="100%"
           @keyup.enter="editPrefixKey"
-          @blur="blurInput"
-        />
+          @clear="handleClear"
+        >
+          <template #append>
+            <o-icon name="search" @click="editPrefixKey" />
+          </template>
+        </o-input>
       </template>
     </div>
   </div>
@@ -85,7 +97,8 @@ const blurInput = () => {
 .folder-box {
   width: 1000px;
   height: 40px;
-  background: #e9f3ff;
+  padding-left: 16px;
+  background: #9db8d8;
 
   .inner-box {
     display: inline-flex;

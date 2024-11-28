@@ -191,12 +191,16 @@ const inside = (row) => {
       <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
     </div>
 
+    <div class="m-t-8">
+      <FolderNav class="" @change="init" />
+    </div>
+
     <o-table
       :columns="columns"
       :data="data"
-      class="m-t-16"
+      class="m-tb-8"
       :showPage="false"
-      height="calc(100vh - 240px)"
+      height="calc(100vh - 260px)"
       :empty-text="emptyText"
       @selection-change="selectionChange"
     >
@@ -216,11 +220,9 @@ const inside = (row) => {
       </template>
     </o-table>
 
-    <div class="middle m-t-16">
+    <div class="middle f-ed-ct">
       <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
       <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
-
-      <FolderNav class="ml2" @change="init" />
     </div>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />

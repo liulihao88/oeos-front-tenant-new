@@ -240,7 +240,7 @@ const next = () => {
       @selection-change="handleSelectionChange"
     />
 
-    <div class="mt2">
+    <div class="mt2 f-ed-ct">
       <el-button type="primary" :disabled="prevHisList.length === 0" @click="prev">上一页</el-button>
       <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
     </div>
