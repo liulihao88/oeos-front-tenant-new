@@ -83,7 +83,7 @@ const open = async (row = '') => {
     }
     isEdit.value = true
     actionChange()
-    isTargetBucket.value = form.value.properties.includeBuckets.length === 0 ? true : false
+    isTargetBucket.value = !form.value.properties.includeBuckets ? true : false
     isShow.value = true
   } else {
     isEdit.value = false
@@ -110,7 +110,7 @@ const save = async () => {
   }
   await proxy.validForm(formRef)
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
-    if (!isTargetBucket.value && form.value.properties.includeBuckets.length === 0) {
+    if (!isTargetBucket.value && !form.value.properties.includeBuckets) {
       proxy.$toast('请选择桶', 'w')
       return
     }
