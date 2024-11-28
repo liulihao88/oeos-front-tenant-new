@@ -4,21 +4,38 @@ const { proxy } = getCurrentInstance()
 import GWarning from '@/autoComponents/gWarning.vue'
 import { useVModel } from '@vueuse/core'
 
+const TIME_DURATION = 3
+
 const props = defineProps({
   modelValue: {
     required: true,
   },
 })
+const confirmText = ref('确定')
 
 const isShow = ref(false)
 const isLock = ref(true)
 const sonIsTargetBucket = useVModel(props)
+const num = ref(TIME_DURATION)
+const timer = ref(null)
+
+const timerFn = () => {
+  num.value--
+  confirmText.value = num.value
+  if (num.value === 0) {
+    clearInterval(timer.value)
+    confirmText.value = '确定'
+    isLock.value = false
+  }
+}
 const open = async () => {
   isLock.value = true
   isShow.value = true
-  setTimeout(() => {
-    isLock.value = false
-  }, 2000)
+  num.value = TIME_DURATION
+  timerFn()
+  timer.value = setInterval(() => {
+    timerFn()
+  }, 1000)
 }
 
 const beforeAllBucketChange = async () => {
@@ -32,6 +49,9 @@ const beforeAllBucketChange = async () => {
 const confirmAllBucket = () => {
   isShow.value = false
   sonIsTargetBucket.value = true
+}
+const close = () => {
+  clearInterval(timer.value)
 }
 </script>
 
@@ -52,6 +72,8 @@ const confirmAllBucket = () => {
       :confirmAttrs="{
         loading: isLock,
       }"
+      :confirmText="confirmText"
+      @close="close"
       @confirm="confirmAllBucket"
     >
       <g-warning
