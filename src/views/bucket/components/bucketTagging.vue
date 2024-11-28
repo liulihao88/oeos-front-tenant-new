@@ -109,7 +109,7 @@ const columns = computed(() => {
 
 const permissionOptions = [
   { label: '只读', value: 'read' },
-  { label: '只写', value: 'write' },
+  { label: '只写', value: 'put' },
   { label: '读写', value: 'all' },
 ]
 

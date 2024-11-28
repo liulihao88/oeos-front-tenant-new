@@ -40,7 +40,7 @@ const open = async (row) => {
 }
 const deleteRow = async (row) => {
   let params = {
-    bucket: props.bucketName,
+    bucket: props.bucketName || rowDetails.value.bucket,
     key: row.key,
   }
   await deleteOne(params)
