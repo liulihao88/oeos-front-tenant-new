@@ -42,6 +42,7 @@ const deleteRow = async (row) => {
   let params = {
     bucket: props.bucketName || rowDetails.value.bucket,
     key: row.key,
+    version: row.version,
   }
   await deleteOne(params)
   proxy.$toast('删除成功!')

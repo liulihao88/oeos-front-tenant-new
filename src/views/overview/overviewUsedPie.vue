@@ -109,7 +109,7 @@ let initOptions = {
       text: getValue, // 自定义文本内容
       textAlign: 'center',
       fill: '#000', // 文字颜色
-      fontSize: 12,
+      fontSize: 14,
       fontWeight: 'bold', // 文字加粗
     },
   },

@@ -311,6 +311,7 @@ const eventMore = () => {
     width: calc(50% - 16px);
     padding: 8px;
     margin: 8px;
+    font-size: 18px;
     text-align: center;
     border: 1px solid #eee;
     border-radius: 5px;

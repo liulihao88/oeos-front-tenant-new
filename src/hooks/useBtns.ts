@@ -21,6 +21,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
     let params = {
       bucket: row.bucket,
       key: row.key,
+      version: row.version,
     }
     await deleteOne(params)
     $toast('删除成功')
