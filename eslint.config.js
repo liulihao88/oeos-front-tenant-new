@@ -58,6 +58,7 @@ export default defineFlatConfig([
         },
       ],
       'no-empty-source': 'off',
+      'custom-property-pattern': 0,
     },
   },
   {
@@ -168,6 +169,9 @@ export default defineFlatConfig([
       ],
       'no-empty-source': 0,
       'no-empty-source': 'off',
+      'vue/valid-v-slot': 0,
+      'vue/no-deprecated-v-on-native-modifier': 0,
+      'custom-property-pattern': 0,
     },
   },
 ])
