@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, computed } from 'vue'
+import { ref, getCurrentInstance, computed, h } from 'vue'
 const { proxy } = getCurrentInstance()
 import { saveTask } from '@/api/taskApi.ts'
+import GWarning from '@/autoComponents/gWarning.vue'
 
 const props = defineProps({
   isView: {
@@ -56,10 +57,17 @@ const devTest = () => {
 const beforeChange = async () => {
   if (!form.value.KeepRawKey) {
     await proxy.confirm('', {
-      dangerouslyUseHTString: true,
-      message:
-        '<div class="">对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。</div><div class="cl-red">注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！您确定开启此功能吗</div>',
+      dangerouslyUseHTMLString: true,
+      customStyle: {
+        maxWidth: '600px',
+      },
+      message: h(GWarning, {
+        content:
+          '对于光存储开启保持原始对象名称后，对象将作为独立文件在光存储介质直接存储。<br>注意：当桶内文件大小普遍较小（<100MB）或过大（>5GB）时不推荐打开此功能！您确定开启此功能吗?',
+      }),
+      showCancelButton: true,
       appendTo: '#highSettingsForm',
+      cancelButtonText: '取消',
     })
     return true
   } else {
@@ -91,7 +99,7 @@ defineExpose({
     v-model="isShow"
     title="高级配置[数据冷冻配置]"
     confirmText="保存"
-    width="1000"
+    width="1040"
     @confirm="confirm"
   >
     <el-form
@@ -190,3 +198,10 @@ defineExpose({
     </el-form>
   </o-dialog>
 </template>
+
+<style lang="scss" scoped>
+#highSettingsForm .icon-box {
+  // padding-top: 4px;
+  // padding-bottom: 4px;
+}
+</style>

@@ -146,6 +146,7 @@ defineExpose({
 .radio-box {
   box-sizing: border-box;
   height: calc(100%);
+  max-height: 34px;
   padding: 0 8px;
   margin-left: 8px;
   line-height: calc(100%);

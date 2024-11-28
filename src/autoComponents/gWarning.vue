@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed, useAttrs } from 'vue'
+import { processWidth } from 'oeos-components'
 const { proxy } = getCurrentInstance()
-const attrs = useAttrs()
 const props = defineProps({
   content: {
     type: String,
@@ -16,14 +16,6 @@ const props = defineProps({
     default: '100%',
   },
 })
-
-const mergedAttrs = computed(() => {
-  let res = {
-    width: proxy.processWidth(props.width, true),
-    ...attrs,
-  }
-  return res
-})
 </script>
 
 <template>
@@ -36,7 +28,7 @@ const mergedAttrs = computed(() => {
     </div>
   </template>
   <template v-else>
-    <div class="warning-box" :style="{ ...proxy.processWidth(props.width) }" v-bind="$attrs">
+    <div class="warning-box" :style="{ ...processWidth(props.width) }" v-bind="$attrs">
       <img src="@/assets/images/notic.png" class="icon" />
       <span class="warning-box__content">
         <slot name="content">
