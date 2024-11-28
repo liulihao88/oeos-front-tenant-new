@@ -26,10 +26,10 @@ const handleExpression = (cForm) => {
 }
 
 const confirm = async () => {
+  await proxy.validForm(formRef) // , { message: '维度(域名)必填' }
   if (proxy.isEmpty(form.value.matchFields)) {
     return proxy.$toast('请至少添加一个搜索条件', 'e')
   }
-  await proxy.validForm(formRef, { message: '维度(域名)必填' })
   const copyForm = proxy.clone(form)
   copyForm.matchFields = copyForm.matchFields.map((v, idx) => {
     let { name, operator, values } = v
@@ -79,7 +79,7 @@ devTest()
 
 const rules = {
   queryName: [proxy.validate()],
-  // buckets: [proxy.validate('请选择')],
+  buckets: [proxy.validate('请选择')],
 }
 const nameOptions = [
   { label: '对象键', value: 'objectKey' },
@@ -205,7 +205,7 @@ defineExpose({
         <el-form-item label="搜索表达式配置名称" prop="queryName">
           <o-input v-model="form.queryName" v-focus />
         </el-form-item>
-        <el-form-item label="桶名" prop="buckets">
+        <el-form-item label="存储桶名称" prop="buckets">
           <o-select
             ref="selectRef"
             v-model="form.buckets"
