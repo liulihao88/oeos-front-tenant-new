@@ -201,7 +201,7 @@ function updatePage() {
           <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
           <el-table-column
             v-else-if="v.baseBtns && v.baseBtns.length > 0"
-            v-bind="{ ...{ fixed: 'right', width: 180 }, ...v }"
+            v-bind="{ ...{ fixed: 'right', width: 210 }, ...v }"
           >
             <template #default="scope">
               <template v-if="parseIsShow(v.isShow, scope.row, scope)">

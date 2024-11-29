@@ -44,7 +44,6 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
             type: 'svg',
             name: 'detail',
             content: '详情',
-            size: 5,
           },
         },
         {
@@ -55,7 +54,6 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
             type: 'svg',
             name: 'download',
             content: '下载',
-            size: 6,
           },
         },
         {
@@ -65,7 +63,6 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
           attrs: {
             name: 'delete',
             type: 'svg',
-            size: 6,
             content: '删除',
           },
           reConfirm: !proxy.$dev,

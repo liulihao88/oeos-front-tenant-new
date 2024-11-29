@@ -93,7 +93,7 @@ const columns = [
         comp: 'o-icon',
         attrs: {
           type: 'svg',
-          size: 6,
+
           content: '标记确认',
           name: 'tag-confirm',
         },
@@ -104,7 +104,7 @@ const columns = [
         comp: 'o-icon',
         attrs: {
           type: 'svg',
-          size: 6,
+
           content: '确认解决',
           name: 'confirm-resolve',
         },
@@ -115,7 +115,7 @@ const columns = [
         comp: 'o-icon',
         attrs: {
           type: 'svg',
-          size: 6,
+
           content: '取消解决',
           name: 'cancel-resolve',
         },
@@ -126,7 +126,6 @@ const columns = [
         comp: 'o-icon',
         reConfirm: !proxy.$dev,
         attrs: {
-          size: 6,
           type: 'svg',
           content: '删除',
           name: 'delete',

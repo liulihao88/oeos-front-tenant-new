@@ -100,7 +100,6 @@ const columns = computed(() => {
             type: 'svg',
             name: 'download',
             content: '下载',
-            size: 6,
           },
         },
       ],

@@ -62,10 +62,12 @@ const topObj = ref([
 ])
 
 const capacityData = ref([])
+const tableRef = ref(null)
 
 function add() {
   addRef.value.open()
 }
+
 async function deleteRow(row) {
   await deleteBucket(row.bucketName)
   proxy.$toast('删除成功')
@@ -139,7 +141,6 @@ const columns = [
         attrs: {
           type: 'svg',
           name: 'detail',
-          size: 5,
           content: '桶详情',
         },
         handler: handleDetail,
@@ -279,6 +280,19 @@ function currentChange(nowRow, oldCurrentRow) {
   getBucketHistogram(nowRow.bucketName)
   _handleUsedData(usedSpace)
 }
+
+const rowClick = async (row) => {
+  let res = await getBucketDetail(row.bucketName)
+  let findIdx = data.value.findIndex((val) => val.bucketName === row.bucketName)
+  if (findIdx !== -1) {
+    const cloneData = proxy.clone(data.value)
+    data.value[findIdx] = { ...cloneData[findIdx], ...res }
+    await nextTick()
+    let nowItem = data.value.find((item) => item.bucketName === row.bucketName)
+    tableRef.value.$refs.tableRef.setCurrentRow(nowItem)
+  }
+}
+
 function _handleUsedData(usedSpace) {
   const leaveSpace = proxy.formatBytesConvert(totalCapacity.value) - usedSpace
   capacityData.value = [
@@ -347,6 +361,7 @@ onMounted(() => {
               highlight-current-row
               height="calc(100vh - 396px)"
               @update="update"
+              @row-click="rowClick"
               @current-change="currentChange"
             >
               <template #bucketName="{ scope, row }">

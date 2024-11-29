@@ -104,7 +104,6 @@ const columns = [
           type: 'svg',
           name: 'download',
           content: '下载',
-          size: 6,
         },
       },
       {
@@ -117,7 +116,6 @@ const columns = [
           type: 'svg',
           name: 'restore',
           content: '恢复',
-          size: 6,
         },
       },
       {
@@ -127,7 +125,7 @@ const columns = [
         attrs: {
           name: 'delete',
           type: 'svg',
-          size: 6,
+
           content: '删除',
         },
         reConfirm: !proxy.$dev,

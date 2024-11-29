@@ -43,7 +43,7 @@ const columns = [
         attrs: {
           name: 'delete',
           type: 'svg',
-          size: 6,
+
           content: '删除',
         },
         reConfirm: !proxy.$dev,
