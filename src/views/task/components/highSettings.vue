@@ -90,6 +90,7 @@ const confirm = async () => {
 defineExpose({
   open,
   originForm,
+  isShow,
 })
 </script>
 

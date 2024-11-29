@@ -158,7 +158,20 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog v-model="isShow" :title="compTitle" width="60%" :enableConfirm="false">
+    <o-dialog
+      v-model="isShow"
+      :title="compTitle"
+      width="60%"
+      confirmText="完成"
+      cancelText="高级配置"
+      :enableConfirm="highSettingsRef && !highSettingsRef.isShow"
+      :showCancel="form.action === FREEZE || form.action === ZERO_COPY_FREEZE"
+      :cancelAttrs="{
+        type: 'primary',
+      }"
+      @confirm="save"
+      @cancel="highSettings"
+    >
       <el-form id="taskForm" ref="formRef" :model="form" :rules="rules" label-width="150" :disabled="isView">
         <o-title title="基本信息" />
         <el-form-item label="计划名称" prop="name">
@@ -264,16 +277,6 @@ defineExpose({
         </template>
       </el-form>
 
-      <template #footer>
-        <el-button
-          v-if="form.action === FREEZE || form.action === ZERO_COPY_FREEZE"
-          type="primary"
-          @click="highSettings"
-        >
-          高级配置
-        </el-button>
-        <el-button type="primary" @click="save">完成</el-button>
-      </template>
       <HighSettings ref="highSettingsRef" :isView="isView" @save="highSave" />
     </o-dialog>
   </div>
