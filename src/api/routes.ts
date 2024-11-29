@@ -207,8 +207,8 @@ let testRes = [
 ]
 
 export const getAsyncRoutes = () => {
-  return getMenu()
   // return new Promise((resolve, reject) => {
-  //   resolve(testRes)
+  //   resolve([])
   // })
+  return getMenu()
 }

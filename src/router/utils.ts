@@ -9,7 +9,7 @@ import { router } from './index'
 import { isProxy, toRaw } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
 import { isString, cloneDeep, isAllEmpty, intersection, storageLocal, isIncludeAllChildren } from '@pureadmin/utils'
-import { clone, getStorage, setStorage } from 'oeos-components'
+import { clone, getStorage, setStorage, $toast } from 'oeos-components'
 import { getConfig } from '@/config'
 import { buildHierarchyTree } from '@/utils/tree'
 import { userKey, type DataInfo } from '@/utils/auth'
@@ -166,9 +166,12 @@ function initRouter() {
         resolve(router)
       })
     } else {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         getAsyncRoutes().then((remoteData) => {
-          // remoteData = remoteData.slice(4)
+          if (remoteData.length === 0) {
+            $toast('菜单为空, 请配置后重试', 'e')
+            reject()
+          }
           let data = mergeMenus(TenantRouter, remoteData)
           setStorage('tenant-async-routes', data)
           handleAsyncRoutes(clone(data))
@@ -178,8 +181,13 @@ function initRouter() {
       })
     }
   } else {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       getAsyncRoutes().then((remoteData) => {
+        console.log(`65 remoteData`, remoteData)
+        if (remoteData.length === 0) {
+          $toast('菜单为空, 请配置后重试', 'e')
+          reject()
+        }
         // remoteData = remoteData.slice(4)
         let data = mergeMenus(TenantRouter, remoteData)
         setStorage('tenant-async-routes', data)
