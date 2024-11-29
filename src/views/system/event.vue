@@ -124,7 +124,7 @@ const columns = [
         content: '删除',
         handler: deleteRow,
         comp: 'o-icon',
-        reConfirm: true,
+        reConfirm: !proxy.$dev,
         attrs: {
           size: 6,
           type: 'svg',

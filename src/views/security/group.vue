@@ -38,8 +38,15 @@ const columns = [
     width: 60,
     btns: [
       {
-        content: '删除',
         handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          type: 'svg',
+          size: 6,
+          content: '删除',
+        },
+        reConfirm: !proxy.$dev,
       },
     ],
   },

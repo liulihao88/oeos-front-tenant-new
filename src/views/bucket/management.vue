@@ -131,7 +131,7 @@ const columns = [
           name: 'delete',
           content: '删除',
         },
-        reConfirm: proxy.$dev ? false : true,
+        reConfirm: !proxy.$dev,
         handler: deleteRow,
       },
       {

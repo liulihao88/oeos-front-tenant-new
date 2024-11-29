@@ -103,6 +103,7 @@ const columns = [
       {
         content: '删除',
         handler: deleteRow,
+        reConfirm: !proxy.$dev,
         comp: 'o-icon',
         attrs: {
           name: 'delete',
