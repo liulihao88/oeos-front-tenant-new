@@ -175,7 +175,7 @@ const eventMore = () => {
               </div>
               <div class="item-card card2" style="background: '#fef6e9'">
                 <div>桶任务数量</div>
-                <div class="item-card-value">{{ details.tenant?.tenantCount }}</div>
+                <div class="item-card-value">{{ details.tenant?.handleTaskCount }}</div>
               </div>
               <div class="item-card card3">
                 <div>健康模式</div>

@@ -193,7 +193,7 @@ function updatePage() {
       <el-table-column v-if="showIndex" type="index" width="60" align="center">
         <!-- 使用 #header 插槽自定义表头 -->
         <template #header="{ column }">
-          <span>NO</span>
+          <span>序号</span>
         </template>
       </el-table-column>
       <template v-for="(v, i) in finalColumns" :key="i">
