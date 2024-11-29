@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
-import { getHistory, deleteOne, deleteBatch, objectDownloadBatch } from '@/api/bucketReview.ts'
+
+import { getHistory, deleteOne, deleteBatch, objectDownloadBatch, objectPropertyDetail } from '@/api/bucketReview.ts'
+import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
+
 const isShow = ref(false)
 const data = ref([])
+const BucketFileDetailsCompRef = ref(null)
 const RestoreExpirationInDaysRef = ref(null)
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 const props = defineProps({
@@ -18,9 +22,6 @@ const prevHisList = ref([])
 const pageMarker = ref()
 const versionIdMarker = ref()
 
-const selectDisabled = computed(() => {
-  return selections.value.length === 0
-})
 const init = async (isReset = false) => {
   if (isReset) {
   }
@@ -33,6 +34,17 @@ const init = async (isReset = false) => {
   let res = await getHistory(params)
   data.value = res
 }
+
+const detailRow = async (row) => {
+  let params = {
+    bucket: row.bucket,
+    key: row.key,
+    version: row.version,
+  }
+  let res = await objectPropertyDetail(params)
+  BucketFileDetailsCompRef.value.open(res)
+}
+
 const open = async (row) => {
   rowDetails.value = row
   await init()
@@ -96,6 +108,16 @@ const columns = [
     prop: 'operation',
     maxBtns: 4,
     btns: [
+      {
+        content: '详情',
+        handler: detailRow,
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          name: 'detail',
+          content: '详情',
+        },
+      },
       {
         content: '下载',
         handler: proxy.gDownload,
@@ -203,5 +225,6 @@ defineExpose({
       </div>
     </o-dialog>
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
+    <BucketFileDetailsComp ref="BucketFileDetailsCompRef" />
   </div>
 </template>
