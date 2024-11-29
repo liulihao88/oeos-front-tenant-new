@@ -76,6 +76,7 @@ const columns = [
       return proxy.formatTime(val)
     },
     width: proxy.TIME_WIDTH,
+    align: 'center',
   },
   { ...btns.value },
 ]

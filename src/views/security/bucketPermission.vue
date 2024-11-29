@@ -290,44 +290,54 @@ defineExpose({
           <el-tag v-if="row.management" class="mr">管理</el-tag>
         </template>
         <template #browse="{ scope, row }">
-          <el-checkbox
-            v-model="row.browse"
-            label=""
-            :disabled="permissionValues.includes('PERMISSION_BUCKET_BROWSE') || !!permissionBucketAdmin"
-            @change="checkboxChange"
-          />
+          <div class="tc">
+            <el-checkbox
+              v-model="row.browse"
+              label=""
+              :disabled="permissionValues.includes('PERMISSION_BUCKET_BROWSE') || !!permissionBucketAdmin"
+              @change="checkboxChange"
+            />
+          </div>
         </template>
         <template #read="{ scope, row }">
-          <el-checkbox
-            v-model="row.read"
-            label=""
-            :disabled="permissionValues.includes('PERMISSION_BUCKET_READ') || !!permissionBucketAdmin"
-            @change="checkboxChange"
-          />
+          <div class="tc">
+            <el-checkbox
+              v-model="row.read"
+              label=""
+              :disabled="permissionValues.includes('PERMISSION_BUCKET_READ') || !!permissionBucketAdmin"
+              @change="checkboxChange"
+            />
+          </div>
         </template>
         <template #write="{ scope, row }">
-          <el-checkbox
-            v-model="row.write"
-            label=""
-            :disabled="permissionValues.includes('PERMISSION_BUCKET_WRITE') || !!permissionBucketAdmin"
-            @change="checkboxChange"
-          />
+          <div class="tc">
+            <el-checkbox
+              v-model="row.write"
+              label=""
+              :disabled="permissionValues.includes('PERMISSION_BUCKET_WRITE') || !!permissionBucketAdmin"
+              @change="checkboxChange"
+            />
+          </div>
         </template>
         <template #delete="{ scope, row }">
-          <el-checkbox
-            v-model="row.delete"
-            label=""
-            :disabled="permissionValues.includes('PERMISSION_BUCKET_DELETE') || !!permissionBucketAdmin"
-            @change="checkboxChange"
-          />
+          <div class="tc">
+            <el-checkbox
+              v-model="row.delete"
+              label=""
+              :disabled="permissionValues.includes('PERMISSION_BUCKET_DELETE') || !!permissionBucketAdmin"
+              @change="checkboxChange"
+            />
+          </div>
         </template>
         <template #management="{ scope, row }">
-          <el-checkbox
-            v-model="row.management"
-            label=""
-            :disabled="permissionValues.includes('PERMISSION_BUCKET_MANAGEMENT') || !!permissionBucketAdmin"
-            @change="checkboxChange"
-          />
+          <div class="tc">
+            <el-checkbox
+              v-model="row.management"
+              label=""
+              :disabled="permissionValues.includes('PERMISSION_BUCKET_MANAGEMENT') || !!permissionBucketAdmin"
+              @change="checkboxChange"
+            />
+          </div>
         </template>
       </o-table>
     </div>

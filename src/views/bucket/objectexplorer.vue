@@ -70,12 +70,14 @@ const columns = [
   {
     label: '更新时间',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     prop: 'lastModifiedTime',
     filter: (value) => proxy.formatTime(value),
   },
   {
     label: '写入时间',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     prop: 'injectTime',
     filter: (value) => proxy.formatTime(value),
   },

@@ -74,6 +74,7 @@ const columns = [
     label: '更新时间',
     prop: 'lastModifiedTime',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     filter: (val, row, prop) => {
       return proxy.formatTime(val)
     },
@@ -82,6 +83,7 @@ const columns = [
     label: '写入时间',
     prop: 'injectTime',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     filter: (val, row, prop) => {
       return proxy.formatTime(val)
     },

@@ -51,27 +51,32 @@ const columns = [
     label: '事件等级',
     prop: 'level',
     width: 100,
+    align: 'center',
     useSlot: true,
   },
   {
     label: '服务',
     prop: 'appId',
+    align: 'center',
     width: 100,
   },
   {
     label: '节点',
     prop: 'nodeId',
+    align: 'center',
     width: 100,
   },
   {
     label: '发生时间',
     prop: 'datetime',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     filter: (val) => proxy.formatTimeByRule(val),
   },
   {
     label: '状态',
     prop: 'mark',
+    align: 'center',
     width: 120,
     filter: (val) => {
       return statusOptions.value.find((v) => v.value === val)?.label || '-'

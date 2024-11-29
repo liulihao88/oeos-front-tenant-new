@@ -25,6 +25,7 @@ const columns = computed(() => {
       label: '开始运行时间',
       prop: 'startTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       filter: (val) => proxy.formatTimeByRule(val),
     },
     {

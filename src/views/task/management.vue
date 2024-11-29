@@ -74,6 +74,7 @@ const columns = computed(() => {
       label: '创建时间',
       prop: 'createTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },
@@ -82,6 +83,7 @@ const columns = computed(() => {
       label: '更新时间',
       prop: 'lastModifiedTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },

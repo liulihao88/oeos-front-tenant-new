@@ -26,10 +26,12 @@ const columns1 = [
   {
     label: '服务状态',
     prop: 'serveStatus',
+    align: 'center',
   },
   {
     label: '健康状态',
     prop: 'healthLevel',
+    align: 'center',
   },
 ]
 const columns2 = [
@@ -127,22 +129,26 @@ const eventColumns = [
     label: '事件等级',
     prop: 'level',
     width: 100,
+    align: 'center',
     useSlot: true,
   },
   {
     label: '服务',
     prop: 'appId',
+    align: 'center',
     width: 100,
   },
   {
     label: '节点',
     prop: 'nodeId',
+    align: 'center',
     width: 100,
   },
   {
     label: '发生时间',
     prop: 'datetime',
     width: proxy.TIME_WIDTH,
+    align: 'center',
     filter: (val) => proxy.formatTimeByRule(val),
   },
 ]
@@ -186,7 +192,7 @@ const eventMore = () => {
       </el-col>
       <el-col :span="12">
         <div class="item-box">
-          <o-title title="租户信息与状态" type="simple">
+          <o-title title="租户空间信息" type="simple">
             <template #icon>
               <g-img src="overview/overview-space" class="mr" />
             </template>

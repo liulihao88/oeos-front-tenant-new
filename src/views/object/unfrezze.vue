@@ -62,6 +62,7 @@ const columns = computed(() => {
       label: '注入时间',
       prop: 'injectTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },
@@ -70,6 +71,7 @@ const columns = computed(() => {
       label: '解冻触发时间',
       prop: 'triggerTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       filter: (val) => {
         return proxy.formatTimeByRule(val)
       },
@@ -78,6 +80,7 @@ const columns = computed(() => {
       label: '解冻保留时间',
       prop: 'expireTime',
       width: proxy.TIME_WIDTH,
+      align: 'center',
       isShowColumn: frezzeStatus.value !== 'unfreezing',
       filter: (val) => {
         return proxy.formatTimeByRule(val)

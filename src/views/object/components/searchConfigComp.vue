@@ -70,12 +70,12 @@ const devTest = async () => {
           values: '',
         },
       ],
+      buckets: [getBucketList.bucketOptions[0].value],
       queryName: proxy.uuid('queryName'),
       querySentence: '',
     }
   }
 }
-devTest()
 
 const rules = {
   queryName: [proxy.validate()],
@@ -184,6 +184,8 @@ const changeName = (idx, isInput) => {
 }
 const open = () => {
   isShow.value = true
+
+  devTest()
 }
 
 defineExpose({
