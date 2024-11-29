@@ -176,14 +176,19 @@ onBeforeUnmount(() => {
             </Motion>
             <Motion :delay="100">
               <el-form-item prop="username">
-                <el-input v-model="ruleForm.username" clearable placeholder="账号" :prefix-icon="useRenderIcon(User)" />
+                <el-input
+                  v-model.trim="ruleForm.username"
+                  clearable
+                  placeholder="账号"
+                  :prefix-icon="useRenderIcon(User)"
+                />
               </el-form-item>
             </Motion>
 
             <Motion :delay="150">
               <el-form-item prop="password">
                 <el-input
-                  v-model="ruleForm.password"
+                  v-model.trim="ruleForm.password"
                   clearable
                   show-password
                   placeholder="密码"

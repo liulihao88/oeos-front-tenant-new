@@ -205,7 +205,7 @@ defineExpose({
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <el-form-item label="搜索表达式配置名称" prop="queryName">
-          <o-input v-model="form.queryName" v-focus />
+          <o-input v-model.trim="form.queryName" v-focus />
         </el-form-item>
         <el-form-item label="存储桶名称" prop="buckets">
           <o-select
@@ -220,9 +220,9 @@ defineExpose({
         <el-form-item label="搜索表达式( 支持：AND，OR，NOT，（，） )" prop="querySentence">
           <o-input v-model="form.querySentence" type="textarea" placeholder="示例: (1 AND 2) OR (3 AND 4)" />
         </el-form-item>
-        <o-title title="自定义搜索条件" sub-title="条件的维度(域名)必填" t="16px" b="16px">
+        <o-title title="自定义搜索条件" t="16px" b="16px">
           <template #right>
-            <el-button type="primary" icon="el-icon-plus" size="small" class="mb" @click="addNew">新增</el-button>
+            <el-button type="primary" icon="el-icon-plus" size="small" class="" @click="addNew">新增</el-button>
           </template>
         </o-title>
         <o-table
@@ -253,7 +253,7 @@ defineExpose({
 
                   <o-input
                     v-if="form.matchFields[scope.$index].isInput"
-                    v-model="form.matchFields[scope.$index].name"
+                    v-model.trim="form.matchFields[scope.$index].name"
                     width="90%"
                     class="f-1"
                   />
@@ -296,7 +296,7 @@ defineExpose({
                 <el-date-picker v-model="form.matchFields[scope.$index].values" type="datetime" style="width: 95%" />
               </template>
               <template v-else>
-                <o-input v-model="form.matchFields[scope.$index].values" width="90%" />
+                <o-input v-model.trim="form.matchFields[scope.$index].values" width="90%" />
               </template>
             </template>
           </template>

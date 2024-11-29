@@ -253,21 +253,21 @@ const confirm = async () => {
     <o-dialog ref="dialogRef" v-model="isShow" title="新增用户" @confirm="confirm">
       <el-form ref="formRef" :model="dialogForm" :rules="rules" label-width="auto">
         <el-form-item label="名称" prop="username">
-          <o-input v-model="dialogForm.username" v-focus placeholder="3-10位字符且只支持数字、英文" />
+          <o-input v-model.trim="dialogForm.username" v-focus placeholder="3-10位字符且只支持数字、英文" />
         </el-form-item>
         <el-form-item label="用户全称" prop="fullName">
-          <o-input v-model="dialogForm.fullName" placeholder="1-20位字符" />
+          <o-input v-model.trim="dialogForm.fullName" placeholder="1-20位字符" />
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
           <o-input
-            v-model="dialogForm.pwd"
+            v-model.trim="dialogForm.pwd"
             placeholder="8-40位字符组合、特殊字符可选"
             :type="proxy.$dev ? '' : 'password'"
           />
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPwd">
           <o-input
-            v-model="dialogForm.confirmPwd"
+            v-model.trim="dialogForm.confirmPwd"
             placeholder="8-40位字符组合、特殊字符可选"
             :type="proxy.$dev ? '' : 'password'"
           />

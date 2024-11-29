@@ -292,7 +292,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
     </div>
     <div class="r">
       <div class="r-top">
-        <o-input v-model="taskName" title="计划名称" width="300" />
+        <o-input v-model.trim="taskName" title="计划名称" width="300" />
         <el-button v-throttle="save" size="small" type="primary" class="m-l-16">保存</el-button>
       </div>
       <div class="r-content">

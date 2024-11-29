@@ -64,7 +64,7 @@ defineExpose({
     <g-title title="基本信息" />
     <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
       <el-form-item label="组名" prop="groupname">
-        <o-input v-model="form.groupname" v-focus :disabled="isEdit" />
+        <o-input v-model.trim="form.groupname" v-focus :disabled="isEdit" />
       </el-form-item>
       <el-form-item label="描述" prop="description">
         <o-input v-model="form.description" />
