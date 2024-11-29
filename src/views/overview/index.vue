@@ -236,7 +236,7 @@ const eventMore = () => {
           <OutServiceComp :servicePoint="details.servicePoint" />
           <o-title title="租户关键服务状态" />
           <o-table ref="tableRef" :columns="columns1" :data="data1" :showPage="false" />
-          <o-title title="存储信息" />
+          <o-title title="存储信息" t="8" />
           <o-table ref="tableRef" :columns="columns2" :data="details.spaces" :showPage="false">
             <template #usedSpace="{ row, scope }">
               <template v-if="scope.$index !== -1">

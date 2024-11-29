@@ -12,11 +12,16 @@ const editRow = (row) => {
   addTaskRef.value.open(row)
 }
 
+const viewRow = (row) => {
+  addTaskRef.value.open(row)
+}
+
 const columns = computed(() => {
   return [
     {
       label: '名称',
       prop: 'name',
+      handler: viewRow,
     },
     {
       label: '任务类型',
