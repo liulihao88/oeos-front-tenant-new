@@ -141,7 +141,7 @@ init()
 const beforeChange = async (enabledBoolean, row) => {
   let sendEnabled = !enabledBoolean
   if (!sendEnabled && !proxy.$dev) {
-    await proxy.confirm('确定关闭此任务嘛?')
+    await proxy.confirm(`确定关闭任务 ${row.name} 吗?`)
   }
   try {
     await toggleTaskStatus(row.id, sendEnabled)
@@ -190,10 +190,10 @@ async function deleteRow(row) {
       </template>
       <template #viewEdit="{ scope, row }">
         <template v-if="row.enabled">
-          <o-icon name="view" size="16" content="查看" class="mlr2" @click="editRow(row)" />
+          <o-icon name="view" size="16" content="查看" class="mlr2 cp" @click="editRow(row)" />
         </template>
         <template v-else>
-          <o-icon name="edit" size="16" content="编辑" class="mlr2" @click="editRow(row)" />
+          <o-icon name="edit" size="16" content="编辑" class="mlr2 cp" @click="editRow(row)" />
         </template>
       </template>
     </o-table>
