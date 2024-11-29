@@ -181,11 +181,17 @@ const newAddUser = () => {
 }
 const switchChange = async (row) => {
   if (row.status === 'on') {
+    await proxy.confirm('', {
+      message: `你确定要禁用用户 ${row.username} 吗?`,
+      showCancelButton: true,
+      cancelButtonText: '取消',
+    })
     await disableUser(row.username)
+    proxy.$toast('禁用成功')
   } else if (row.status === 'off') {
     await enableUser(row.username)
+    proxy.$toast('启用成功')
   }
-  proxy.$toast('操作成功')
   statisticInit()
   return true
 }

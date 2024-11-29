@@ -218,7 +218,7 @@ function updatePage() {
                         <component
                           :is="val.comp"
                           v-if="val.comp"
-                          class="mlr2"
+                          class="mlr2 cp"
                           v-bind="val.attrs"
                           :disabled="parseDisabled(val.disabled, scope.row, scope)"
                         />
@@ -236,7 +236,7 @@ function updatePage() {
                     <component
                       :is="val.comp"
                       v-else-if="val.comp"
-                      class="mlr2"
+                      class="mlr2 cp"
                       v-bind="val.attrs"
                       :disabled="parseDisabled(val.disabled, scope.row, scope)"
                       @click="val.handler?.(scope.row, scope)"
