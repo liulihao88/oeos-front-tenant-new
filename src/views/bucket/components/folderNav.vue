@@ -63,7 +63,7 @@ const blurInput = () => {
     <div class="inner-box">
       <template v-if="!isEdit">
         <div v-if="bucketSettings.prefixKey" @click.stop="toPrevFolder">
-          <o-icon name="arrow-up" size="16" class="mlr2">你好啊</o-icon>
+          <o-icon name="arrow-up" size="16" class="mr2" />
         </div>
         <div v-if="bucketSettings.prefixKeyArr.length !== 0" class="item" @click.stop="toRoot">
           <div class="text">根目录</div>
@@ -98,7 +98,7 @@ const blurInput = () => {
   width: 1000px;
   height: 40px;
   padding-left: 16px;
-  background: #9db8d8;
+  border: 1px solid var(--line);
 
   .inner-box {
     display: inline-flex;
