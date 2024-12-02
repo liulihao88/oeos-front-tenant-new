@@ -63,7 +63,7 @@ const columns = [
   {
     label: '用户名',
     prop: 'username',
-    width: 120,
+    width: 150,
     handler: editRow,
   },
   {

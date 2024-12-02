@@ -35,7 +35,7 @@ const columns = [
   {
     key: 'operation',
     label: '操作',
-    width: 60,
+    width: 80,
     btns: [
       {
         handler: deleteRow,
