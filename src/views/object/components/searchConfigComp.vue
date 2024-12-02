@@ -38,14 +38,23 @@ const confirm = async () => {
         values = new Date(values).getTime()
       }
     }
-    if (v.isInput) {
+    if (v.isInput || v.name.startsWith('location')) {
       name = `userMetadata.${name}`
     }
+
+    let arrayValues = [values]
+    // 对 / 进行转义
+    arrayValues = arrayValues.map((val) => {
+      if (typeof val === 'string') {
+        val = val.replace(/\//g, '\\/')
+      }
+      return val
+    })
     return {
       id: idx + 1,
       name,
       operator,
-      values: [values],
+      values: arrayValues,
     }
   })
   copyForm.buckets = proxy.clone(form.value.buckets)
@@ -195,14 +204,7 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog
-      ref="dialogRef"
-      v-model="isShow"
-      title="搜索表达式配置"
-      width="60%"
-      :closeOnClickModal="false"
-      @confirm="confirm"
-    >
+    <o-dialog ref="dialogRef" v-model="isShow" title="搜索表达式配置" width="60%" @confirm="confirm">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <el-form-item label="搜索表达式配置名称" prop="queryName">
           <o-input v-model.trim="form.queryName" v-focus />

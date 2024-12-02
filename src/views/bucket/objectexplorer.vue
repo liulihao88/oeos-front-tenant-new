@@ -45,6 +45,7 @@ const columns = [
     label: '对象名称',
     prop: 'name',
     useSlot: true,
+    width: 200,
   },
   {
     label: '对象大小',
@@ -65,7 +66,6 @@ const columns = [
   {
     label: '对象版本号',
     prop: 'version',
-    width: 360,
   },
   {
     label: '更新时间',
