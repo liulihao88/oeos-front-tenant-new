@@ -198,7 +198,7 @@ function updatePage() {
       </el-table-column>
       <template v-for="(v, i) in finalColumns" :key="i">
         <template v-if="parseIsShowColumn(v.isShowColumn, v, i)">
-          <el-table-column v-if="v.type" :key="v.type" v-bind="{ ...v }" />
+          <el-table-column v-if="v.type" :key="v.type" v-bind="{ align: 'center', ...v }" />
           <el-table-column
             v-else-if="v.baseBtns && v.baseBtns.length > 0"
             v-bind="{ ...{ fixed: 'right', width: 210 }, ...v }"
@@ -377,21 +377,27 @@ function updatePage() {
     align-items: center;
     min-height: 23px;
     line-height: 23px;
-    // justify-content: flex-start;
   }
-}
 
-.hide-btns-button {
-  color: var(--blue);
-  cursor: pointer;
-  // padding: 5px 16px ;
-}
+  :deep(
+      .el-table__body-wrapper .el-table-column--selection > .cell,
+      .el-table__header-wrapper .el-table-column--selection > .cell
+    ) {
+    justify-content: center;
+    min-width: unset;
+  }
 
-:deep(.el-dropdown-menu__item) {
-  // padding: 0;
-  justify-content: center;
-  min-width: 60px;
-  height: 30px;
-  line-height: 30px;
+  .hide-btns-button {
+    color: var(--blue);
+    cursor: pointer;
+  }
+
+  :deep(.el-dropdown-menu__item) {
+    // padding: 0;
+    justify-content: center;
+    min-width: 60px;
+    height: 30px;
+    line-height: 30px;
+  }
 }
 </style>
