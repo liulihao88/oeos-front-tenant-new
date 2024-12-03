@@ -307,7 +307,7 @@ const eventMore = () => {
   }
 
   .pie-box {
-    width: 300px;
+    width: 260px;
   }
 
   .item-card {
