@@ -32,6 +32,8 @@ const options = computed(() => {
           { label: '所在库名', value: lib.value },
           { label: '所在盘匣', value: box.value },
           { label: '所在桶位', value: slot.value },
+          { label: '已缓存', value: cached.value, slotName: 'cached' },
+          { label: '可读取', value: accessible.value, slotName: 'accessible' },
         ]
       : [],
   )
@@ -40,6 +42,8 @@ const options = computed(() => {
 const lib = ref()
 const box = ref()
 const slot = ref()
+const cached = ref()
+const accessible = ref()
 const columns = [
   {
     label: '存储',
@@ -61,6 +65,8 @@ const open = (sendDetails) => {
   box.value = ''
   slot.value = ''
   lib.value = ''
+  cached.value = ''
+  accessible.value = ''
   ;(details.value.metadatas || []).forEach((v) => {
     if (v.name === 'location.lib' || v.name === '_location_.lib') {
       lib.value = v.value
@@ -70,6 +76,12 @@ const open = (sendDetails) => {
     }
     if (v.name === 'location.slot' || v.name === '_location_.slot') {
       slot.value = v.value
+    }
+    if (v.name === 'cached' || v.name === 'cached') {
+      cached.value = v.value
+    }
+    if (v.name === 'accessible' || v.name === 'accessible') {
+      accessible.value = v.value
     }
   })
   isShow.value = true
@@ -83,7 +95,24 @@ defineExpose({
 <template>
   <div>
     <o-dialog ref="dialogRef" v-model="isShow" title="对象详情" width="80%">
-      <o-description :column="2" :options="options" label-width="140" />
+      <o-description :column="2" :options="options" label-width="140">
+        <template #cached="{ value, item }">
+          <el-tag v-if="value == 'true'" class="mr f-ct-ct w-40">
+            <o-icon name="select" style="cursor: auto" />
+          </el-tag>
+          <el-tag v-else type="danger" class="f-ct-ct w-40">
+            <o-icon name="close" style="cursor: auto" />
+          </el-tag>
+        </template>
+        <template #accessible="{ value, item }">
+          <el-tag v-if="value == 'true'" class="mr f-ct-ct w-40">
+            <o-icon name="select" style="cursor: auto" />
+          </el-tag>
+          <el-tag v-else type="danger" class="f-ct-ct w-40">
+            <o-icon name="close" style="cursor: auto" />
+          </el-tag>
+        </template>
+      </o-description>
 
       <o-title title="存储位置" tb="20" />
       <o-table ref="tableRef" :columns="columns" :data="details.contentLocations" :showPage="false" />
