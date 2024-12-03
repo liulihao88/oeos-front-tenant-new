@@ -16,6 +16,8 @@ export type appType = {
     withoutAnimation: boolean
     // 判断是否手动点击Collapse
     isClickCollapse: boolean
+    // 需要展开的菜单项
+    expand: Array<string>
   }
   layout: string
   device: string

@@ -7,7 +7,7 @@
 import Mousetrap from 'mousetrap'
 import { ref, getCurrentInstance, nextTick, onMounted } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
-import useNativeRefresh from '@/store/nativeRefresh.js'
+import useNativeRefresh from '@/store/nativeRefresh'
 
 const { proxy } = getCurrentInstance()
 const instance = getCurrentInstance()

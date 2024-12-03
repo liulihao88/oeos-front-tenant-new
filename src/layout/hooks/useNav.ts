@@ -82,6 +82,7 @@ export function useNav() {
   async function logout() {
     clearStorage('token')
     let nowPath = router.currentRoute.value.path
+    pureApp.TOGGLE_EXPAND([])
     _clearCacheWithPrefix('tenant')
     router.push(`/login?redirect=${nowPath}`)
   }

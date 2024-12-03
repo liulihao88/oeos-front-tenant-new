@@ -13,7 +13,7 @@ withDefaults(defineProps<Props>(), {
   isActive: false,
 })
 
-const { tooltipEffect } = useNav()
+const { tooltipEffect, pureApp } = useNav()
 
 const iconClass = computed(() => {
   return ['w-[16px]', 'h-[16px]', 'inline-block', 'align-middle', 'cursor-pointer', 'duration-[100ms]']
@@ -32,7 +32,11 @@ const toggleClick = () => {
 </script>
 
 <template>
-  <div class="left-collapse cp" :style="{ width: isActive ? '50%' : '100%' }" @click="toggleClick">
+  <div
+    class="left-collapse cp"
+    :style="{ width: isActive && pureApp.layout === 'vertical' ? '50%' : '100%' }"
+    @click="toggleClick"
+  >
     <o-tooltip :content="isActive ? '点击折叠' : '点击展开'">
       <IconifyIconOffline
         :icon="MenuFold"

@@ -17,7 +17,6 @@ import LaySidebarCenterCollapse from '../lay-sidebar/components/SidebarCenterCol
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 const isShow = ref(false)
-const defaultOpeneds = ref([])
 const isToggle = ref(true)
 const showLogo = ref(
   storageLocal().getItem<StorageConfigs>(`${responsiveStorageNameSpace()}configure`)?.showLogo ?? true,
@@ -30,25 +29,6 @@ const subMenuData = ref([])
 const menuData = computed(() => {
   return pureApp.layout === 'mix' && device.value !== 'mobile' ? subMenuData.value : usePermissionStoreHook().wholeMenus
 })
-
-const initOpeneds = (type: boolean | '' = '') => {
-  if (type === true) {
-    let res = menuData.value.map((v) => {
-      return v.path
-    })
-
-    return res
-  } else if (type === false) {
-    return []
-  }
-  if (!proxy.$dev) {
-    return []
-  }
-  return menuData.value.map((v) => {
-    return v.path
-  })
-}
-defaultOpeneds.value = initOpeneds()
 
 const loading = computed(() => (pureApp.layout === 'mix' ? false : menuData.value.length === 0 ? true : false))
 
@@ -68,8 +48,8 @@ function getSubMenuData() {
 
 const toggleOpen = async () => {
   isToggle.value = false
-  let res = initOpeneds(defaultOpeneds.value.length === 0 ? true : false)
-  defaultOpeneds.value = res
+  let res = initOpeneds(pureApp.sidebar.expand.length <= 1 ? true : false)
+  pureApp.TOGGLE_EXPAND(res)
   await nextTick()
   isToggle.value = true
 }
@@ -83,20 +63,62 @@ watch(
   },
 )
 
+const isWhiteRoute = (route) => {
+  if (route.startsWith('/test') || route === '/apps/overview') {
+    return false
+  }
+  return true
+}
+
+const initOpeneds = (type: boolean | '' = '') => {
+  if (type === true) {
+    let res = menuData.value
+      .map((v) => {
+        return v.path
+      })
+      .filter((v) => {
+        return isWhiteRoute(v)
+      })
+
+    return res
+  } else if (type === false) {
+    return []
+  }
+}
+
+const devTest = () => {
+  if (proxy.$dev) {
+    let res = initOpeneds(true)
+    pureApp.TOGGLE_EXPAND(res)
+  }
+}
+devTest()
+
 const openContent = computed(() => {
-  return defaultOpeneds.value.length === 0 ? '展开所有菜单' : '折叠所有菜单'
+  return pureApp.sidebar.expand.length <= 1 ? '展开所有菜单' : '折叠所有菜单'
 })
 
 const iconTransform = computed(() => {
-  const deg = defaultOpeneds.value.length === 0 ? '-90deg' : '0deg'
+  const deg = pureApp.sidebar.expand.length <= 1 ? '-90deg' : '0deg'
   return {
     transform: `rotate(${deg})`,
   }
 })
 
+const handleOpen = (menuPath, ...rest) => {
+  if (isWhiteRoute(menuPath)) {
+    pureApp.TOGGLE_EXPAND(menuPath)
+  }
+}
+
+const handleClose = (rest) => {
+  if (isWhiteRoute(rest)) {
+    pureApp.TOGGLE_EXPAND(rest, false)
+  }
+}
+
 onMounted(() => {
   getSubMenuData()
-
   emitter.on('logoChange', (key) => {
     showLogo.value = key
   })
@@ -122,13 +144,15 @@ onBeforeUnmount(() => {
         v-if="isToggle"
         :unique-opened="false"
         mode="vertical"
-        :default-openeds="defaultOpeneds"
+        :default-openeds="pureApp.getExpand"
         popper-class="pure-scrollbar"
         class="outer-most select-none"
         :collapse="isCollapse"
         :collapse-transition="false"
         :popper-effect="tooltipEffect"
         :default-active="defaultActive"
+        @open="handleOpen"
+        @close="handleClose"
       >
         <LaySidebarItem
           v-for="routes in menuData"
@@ -150,9 +174,9 @@ onBeforeUnmount(() => {
       :is-active="pureApp.sidebar.opened"
       @toggleClick="toggleSideBar"
     />
-    <div v-if="!isCollapse" class="right-collapse" @click="toggleOpen">
+    <div v-if="!isCollapse && pureApp.layout === 'vertical'" class="right-collapse" @click="toggleOpen">
       <o-tooltip :content="openContent" width="100%" style="width: 100%" class="cp">
-        <div class="h-40 w-100% f-ct-ct">
+        <div class="h-40 w-100% f-ct-ct cp">
           <o-icon name="expand" :style="iconTransform" type="svg" class="icon-el" />
         </div>
       </o-tooltip>

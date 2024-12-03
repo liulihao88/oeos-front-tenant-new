@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { type appType, store, getConfig, storageLocal, deviceDetection, responsiveStorageNameSpace } from '../utils'
+import { getStorage, setStorage, clearStorage } from 'oeos-components'
 
 export const useAppStore = defineStore({
   id: 'pure-app',
@@ -10,6 +11,7 @@ export const useAppStore = defineStore({
         getConfig().SidebarStatus,
       withoutAnimation: false,
       isClickCollapse: false,
+      expand: getStorage('tenant-expand') ?? [], // 要展开的菜单项
     },
     // 这里的layout用于监听容器拖拉后恢复对应的导航模式
     layout:
@@ -34,8 +36,23 @@ export const useAppStore = defineStore({
     getViewportHeight(state) {
       return state.viewportSize.height
     },
+    getExpand(state) {
+      return state.sidebar.expand
+    },
   },
   actions: {
+    TOGGLE_EXPAND(expandArr: Array<string> | string, isAdd: boolean = true) {
+      if (Array.isArray(expandArr)) {
+        this.sidebar.expand = expandArr
+      } else {
+        if (isAdd) {
+          this.sidebar.expand = [...new Set([...this.sidebar.expand, expandArr])]
+        } else {
+          this.sidebar.expand = this.sidebar.expand.filter((item) => item !== expandArr)
+        }
+      }
+      setStorage('tenant-expand', this.sidebar.expand)
+    },
     TOGGLE_SIDEBAR(opened?: boolean, resize?: string) {
       const layout = storageLocal().getItem<StorageConfigs>(`${responsiveStorageNameSpace()}layout`)
       if (opened && resize) {
@@ -51,6 +68,8 @@ export const useAppStore = defineStore({
         this.sidebar.opened = !this.sidebar.opened
         this.sidebar.isClickCollapse = !this.sidebar.opened
         layout.sidebarStatus = this.sidebar.opened
+        // sidebar点击变窄的时候, 将default-openeds的菜单置空
+        this.TOGGLE_EXPAND([])
       }
       storageLocal().setItem(`${responsiveStorageNameSpace()}layout`, layout)
     },
