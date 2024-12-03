@@ -12,5 +12,5 @@ export function queryAdvance(data) {
 
 // 获取存储类型列表
 export function getStorageClassList() {
-  return request('space/accessablestorages')
+  return request('space/accessibleStorages')
 }

@@ -37,7 +37,7 @@ export function getScheduleDetail(id) {
 
 // 获取数据冷冻目标存储列表
 export function getTargetStorageList() {
-  return request('space/accessablestorages', {
+  return request('space/accessibleStorages', {
     params: {
       type: 'GlacierStoragePool',
     },
