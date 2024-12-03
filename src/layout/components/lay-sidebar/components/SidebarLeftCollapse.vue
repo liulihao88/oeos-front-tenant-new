@@ -37,7 +37,7 @@ const toggleClick = () => {
     :style="{ width: isActive && pureApp.layout === 'vertical' ? '50%' : '100%' }"
     @click="toggleClick"
   >
-    <o-tooltip :content="isActive ? '点击折叠' : '点击展开'">
+    <o-tooltip :content="isActive ? '变窄' : '变宽'" class="w-100% h-100% f-ct-ct tooltip-box">
       <IconifyIconOffline
         :icon="MenuFold"
         :class="[iconClass, themeColor === 'light' ? '' : 'text-primary']"
@@ -58,5 +58,11 @@ const toggleClick = () => {
   line-height: 40px;
   cursor: pointer;
   box-shadow: 0 0 6px -3px var(--el-color-primary);
+
+  :deep(.tooltip-box) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 }
 </style>

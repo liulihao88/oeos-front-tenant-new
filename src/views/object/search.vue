@@ -158,13 +158,13 @@ const selectionChange = (val, ...a) => {
             v-model="bucketId"
             v-model:bucketName="bucketName"
             :titleAttrs="{ width: 80 }"
-            width="440"
+            width="400"
             class="mb2"
           />
           <o-input
             v-model="form.key"
             v-debounce.500="init"
-            width="440"
+            width="400"
             class="mr2 mb"
             title="对象名称"
             :titleAttrs="{ width: 80 }"
@@ -181,13 +181,13 @@ const selectionChange = (val, ...a) => {
             class="mr mb2"
             :titleAttrs="{ width: 80 }"
             title="存储类型"
-            width="440"
+            width="400"
             @change="init"
           />
           <o-date-range
             v-model="timeRange"
             title="写入时间"
-            width="440"
+            width="400"
             class="mb2"
             format="YYYY-MM-DD HH:mm:ss"
             :titleAttrs="{ width: 80 }"

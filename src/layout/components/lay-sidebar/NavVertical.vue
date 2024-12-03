@@ -95,7 +95,7 @@ const devTest = () => {
 devTest()
 
 const openContent = computed(() => {
-  return pureApp.sidebar.expand.length <= 1 ? '展开所有菜单' : '折叠所有菜单'
+  return pureApp.sidebar.expand.length <= 1 ? '展开菜单' : '折叠菜单'
 })
 
 const iconTransform = computed(() => {
