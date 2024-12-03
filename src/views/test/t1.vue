@@ -1,62 +1,26 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, h } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
-import GWarning from '@/autoComponents/gWarning.vue'
-import { ElNotification, ElProgress } from 'element-plus'
-import { ElMessageBox } from 'element-plus'
-
-const isShow = ref(false)
-const isLock = ref(true)
-const isTargetBucket = ref(true)
-const open = async () => {
-  isLock.value = true
-  isShow.value = true
-  setTimeout(() => {
-    isLock.value = false
-  }, 2000)
-}
-
-const beforeAllBucketChange = async () => {
-  if (!isTargetBucket.value) {
-    open()
-    return false
-  } else {
-    return true
-  }
-}
-const confirmAllBucket = () => {
-  isShow.value = false
-  isTargetBucket.value = true
-}
 </script>
 
 <template>
   <div>
     <div>test/t1.vue</div>
-    <el-button type="primary" @click="open">测试48</el-button>
-    <el-switch
-      v-model="isTargetBucket"
-      inline-prompt
-      :before-change="beforeAllBucketChange"
-      active-text="所有桶"
-      inactive-text="所有桶"
-      class="mr2"
-    />
-    <o-dialog
-      ref="dialogRef"
-      v-model="isShow"
-      title="t1"
-      :confirmAttrs="{
-        loading: isLock,
-      }"
-      @confirm="confirmAllBucket"
-    >
-      =={{ isLock }}??
-      <g-warning
-        content="开启所有桶配置会导致无法开启其他类型的桶任务, 并且新增的存储桶会自动启动冷冻任务, 请谨慎选择!"
-      />
-    </o-dialog>
+    <div class="translate-icon1">
+      旋转 90度
+      <g-img :src="proxy.formatImg('login/bg')" />
+      <o-icon name="expand" type="svg" class="m-l-6 m-t-10 w-100" size="100" />
+    </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// trans
+.translate-icon1 {
+  width: 100px; /* 设置宽度以便观察旋转效果 */
+  height: 100px; /* 设置高度以便观察旋转效果 */
+  background-color: lightblue; /* 设置背景颜色以便观察旋转效果 */
+  transition: all 0.5s ease-out;
+  transform: rotate(90deg);
+}
+</style>
