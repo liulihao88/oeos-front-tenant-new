@@ -65,7 +65,7 @@ defineExpose({
     <o-dialog v-model="isShow" title="修改密码" @confirm="confirm">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <el-form-item label="旧密码" prop="oldPassword">
-          <o-input v-model="form.oldPassword" v-focus :type="passwordType" />
+          <o-input v-model="form.oldPassword" :type="passwordType" />
         </el-form-item>
         <el-form-item label="新密码" prop="newPwd">
           <o-input v-model="form.newPwd" :type="passwordType" />
