@@ -32,6 +32,7 @@ const loading = ref(false)
 const ruleFormRef = ref(null)
 const tenantOptions = ref([])
 const redirectUrl = ref()
+const passwordRef = ref(null)
 
 redirectUrl.value = route.query.redirect || ''
 
@@ -58,6 +59,7 @@ async function init() {
   tenantOptions.value = optionsRes
   if (getTenantSysdomain.value?.tenantId) {
     ruleForm.tenantId = getTenantSysdomain.value.tenantId
+    passwordRef.value.focus()
     return
   }
   if (proxy.$dev) {
@@ -194,6 +196,7 @@ onBeforeUnmount(() => {
             <Motion :delay="150">
               <el-form-item prop="password">
                 <el-input
+                  ref="passwordRef"
                   v-model.trim="ruleForm.password"
                   clearable
                   show-password
