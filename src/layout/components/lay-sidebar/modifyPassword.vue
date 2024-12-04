@@ -36,8 +36,8 @@ const confirm = async () => {
 }
 
 const open = () => {
-  form.value = proxy.clone(originForm)
   isShow.value = true
+  form.value = proxy.clone(originForm)
   if (proxy.$dev) {
     let randomNum = proxy.random(1, 3)
     form.value = {
