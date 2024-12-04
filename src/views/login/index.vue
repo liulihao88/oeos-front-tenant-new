@@ -20,10 +20,12 @@ import User from '@iconify-icons/ri/user-3-fill'
 import useLogoSettings from '@/store/modules/logoSettings.ts'
 const storeLogoSettings = useLogoSettings()
 
+const { proxy } = getCurrentInstance()
+
 defineOptions({
   name: 'Login',
 })
-const { proxy } = getCurrentInstance()
+const getTenantSysdomain = ref(proxy.getStorage('tenant-sysdomain')) ?? {}
 const router = useRouter()
 const route = useRoute()
 const loading = ref(false)
@@ -47,13 +49,17 @@ dataThemeChange(overallStyle.value)
 const { title } = useNav()
 
 const ruleForm = reactive({
-  username: proxy.$dev ? 'admin' : '',
+  username: getTenantSysdomain.value?.loginName ? getTenantSysdomain.value.loginName : proxy.$dev ? 'admin' : '',
   tenantId: '',
   password: proxy.$dev ? 'adminadmin' : '',
 })
 async function init() {
   let optionsRes = await getTenants()
   tenantOptions.value = optionsRes
+  if (getTenantSysdomain.value?.tenantId) {
+    ruleForm.tenantId = getTenantSysdomain.value.tenantId
+    return
+  }
   if (proxy.$dev) {
     let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'liu')
     ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex === -1 ? 0 : nameIndex })

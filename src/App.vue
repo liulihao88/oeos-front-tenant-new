@@ -1,6 +1,8 @@
 <template>
   <el-config-provider :locale="currentLocale">
-    <router-view v-if="useRefresh.refresh" />
+    <transition name="fade">
+      <router-view v-if="useRefresh.refresh" />
+    </transition>
     <ReDialog />
   </el-config-provider>
 </template>

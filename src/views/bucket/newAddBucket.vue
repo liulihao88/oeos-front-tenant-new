@@ -154,11 +154,7 @@ defineExpose({
             </div>
           </div>
           <div class="mt2 w-100%">
-            <g-warning
-              width="100%"
-              :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`"
-              style="align-items: center"
-            />
+            <g-warning width="100%" :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" />
           </div>
         </template>
         <template #quotaType>

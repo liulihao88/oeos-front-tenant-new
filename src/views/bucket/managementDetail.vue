@@ -314,10 +314,7 @@ const editDate = () => {
               <o-radio v-model="quotaForm.quotaUnit" :options="QUOTA_UNIT" showType="button" />
             </div>
             <div class="mt2 w-100%">
-              <g-warning
-                :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`"
-                style="align-items: center"
-              />
+              <g-warning :content="`新建桶配额下限为 0.5GB, 剩余可用容量为 ${limitQuota}`" />
             </div>
           </div>
         </el-form-item>

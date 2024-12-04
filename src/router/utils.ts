@@ -183,7 +183,6 @@ function initRouter() {
   } else {
     return new Promise((resolve, reject) => {
       getAsyncRoutes().then((remoteData) => {
-        console.log(`65 remoteData`, remoteData)
         if (remoteData.length === 0) {
           $toast('菜单为空, 请配置后重试', 'e')
           reject()
