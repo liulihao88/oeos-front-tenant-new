@@ -85,6 +85,7 @@ const columns = [
     label: '文件大小',
     prop: 'size',
     filter: proxy.formatBytes,
+    width: 100,
   },
   {
     label: '存储类型',
@@ -102,6 +103,8 @@ const columns = [
     label: '更新时间',
     prop: 'lastModifiedTime',
     filter: (val) => proxy.formatTime(val),
+    width: proxy.TIME_WIDTH,
+    align: 'center',
   },
   {
     label: '操作',

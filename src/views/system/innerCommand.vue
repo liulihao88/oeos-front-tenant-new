@@ -41,6 +41,7 @@ const columns = computed(() => {
       label: '命令执行状态',
       prop: 'status',
       useSlot: true,
+      align: 'center',
     },
     {
       key: 'operation',

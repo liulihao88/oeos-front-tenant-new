@@ -289,7 +289,7 @@ const rowClick = async (row) => {
     data.value[findIdx] = { ...cloneData[findIdx], ...res }
     await nextTick()
     let nowItem = data.value.find((item) => item.bucketName === row.bucketName)
-    tableRef.value.$refs.tableRef.setCurrentRow(nowItem)
+    tableRef.value?.$refs?.tableRef?.setCurrentRow?.(nowItem)
   }
 }
 
