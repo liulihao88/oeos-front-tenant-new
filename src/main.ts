@@ -26,6 +26,9 @@ import 'virtual:svg-icons-register'
 
 const app = createApp(App)
 
+import GDirectives from '@/directives/gDirectives.ts'
+GDirectives(app)
+
 // 自定义指令
 import * as directives from '@/directives'
 Object.keys(directives).forEach((key) => {
