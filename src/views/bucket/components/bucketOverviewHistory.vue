@@ -30,6 +30,7 @@ const init = async (isReset = false) => {
     bucket: props.bucketName || rowDetails.value.bucket,
     pageMarker: pageMarker.value,
     versionIdMarker: versionIdMarker.value,
+    version: rowDetails.value.version,
   }
   let res = await getHistory(params)
   data.value = res

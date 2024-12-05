@@ -256,7 +256,7 @@ const selectionChange = (val, ...a) => {
       >
         <template #key="{ scope, row }">
           <template v-if="row.size > 0">
-            <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.key)">
+            <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.key, row)">
               {{ row.key }}
             </div>
             <template v-else>

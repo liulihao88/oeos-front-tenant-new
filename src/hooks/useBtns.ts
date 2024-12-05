@@ -13,6 +13,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
     let params = {
       bucket: row.bucket,
       key: row.key,
+      version: row.version,
     }
     let res = await objectPropertyDetail(params)
     BucketFileDetailsCompRef.value.open(res)
@@ -82,7 +83,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
           isShow: (row) => {
             return isImage(row.key)
           },
-          handler: (row) => preview(row.bucket, row.name),
+          handler: (row) => preview(row.bucket, row.name, row),
         },
       ],
     }

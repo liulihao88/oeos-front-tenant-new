@@ -2,10 +2,11 @@ import { api as viewerApi } from 'v-viewer'
 import { previewImage } from '@/api/spaceScan.ts'
 import { $toast } from 'oeos-components'
 
-export const preview = async (bucketName, key) => {
+export const preview = async (bucketName, key, row) => {
   const params = {
     bucket: bucketName,
     key: key,
+    version: row.version,
   }
   let res = await previewImage(params)
   if (res?.status !== 200 || !res) {

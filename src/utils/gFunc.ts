@@ -20,26 +20,22 @@ export function gDownload(item) {
   let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}&version=${objectVersionID}`
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  window.location.href = _href
+  downloadFile(_href, objectKey)
+}
+
+function downloadFile(url, filename = 'default') {
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename || 'default'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 
 export function gDownloadAll(id) {
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let getUrl = `/v1/admin/tenant/object/download/batch`
   let _href = baseUrl + getUrl + `?id=${encodeURIComponent(id)}&Authorization=${getStorage('tenant-token')}`
-  window.location.href = _href
-}
-
-export function gDownloadUrl(url, params = {}) {
-  let baseUrl = import.meta.env.DEV ? settings.url : window.origin
-  const token = {
-    Authorization: getStorage('tenant-token'),
-  }
-  const mergeParams = Object.assign(params, token)
-  const queryString = Object.keys(mergeParams)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(mergeParams[key])}`)
-    .join('&')
-  let _href = baseUrl + url + '?' + queryString
   window.location.href = _href
 }
 

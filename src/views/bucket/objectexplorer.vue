@@ -207,7 +207,7 @@ const inside = (row) => {
     >
       <template #name="{ scope, row }">
         <template v-if="row.injectTime">
-          <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.name)">
+          <div v-if="proxy.isImage(row.key)" class="link cp" @click="preview(row.bucket, row.name, row)">
             {{ row.name }}
           </div>
           <template v-else>
