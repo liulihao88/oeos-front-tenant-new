@@ -63,11 +63,21 @@ const columns = [
   {
     label: '对象版本号',
     prop: 'version',
+    width: proxy.VERSION_WIDTH,
   },
   {
     label: '存储类型',
     prop: 'storageClass',
     width: 200,
+  },
+  {
+    label: '更新时间',
+    prop: 'lastModifiedTime',
+    filter: (val) => {
+      return proxy.formatTime(val)
+    },
+    width: proxy.TIME_WIDTH,
+    align: 'center',
   },
   {
     label: '写入时间',

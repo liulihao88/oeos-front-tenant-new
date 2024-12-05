@@ -10,6 +10,7 @@ export const QUOTA_UNIT = [
 ]
 
 export const TIME_WIDTH = 160
+export const VERSION_WIDTH = 350
 
 export const ROLE_OPTIONS = [
   { label: '系统管理员', value: 'ROLE_ADMIN_SYSTEM' },

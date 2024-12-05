@@ -59,6 +59,7 @@ const columns = [
   {
     label: '对象版本号',
     prop: 'version',
+    width: proxy.VERSION_WIDTH,
   },
   {
     label: '存储类型',
@@ -68,7 +69,7 @@ const columns = [
   {
     label: '所属桶',
     prop: 'bucket',
-    width: 150,
+    width: 100,
   },
   {
     label: '更新时间',
