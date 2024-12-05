@@ -78,7 +78,7 @@ const columns = [
     type: 'selection',
   },
   {
-    label: '文件名',
+    label: '文件名称',
     prop: 'name',
   },
   {
@@ -92,16 +92,19 @@ const columns = [
     prop: 'storageClass',
   },
   {
-    label: '对象内容md5值',
-    prop: 'chechsum',
-  },
-  {
-    label: '版本',
+    label: '对象版本号',
     prop: 'version',
   },
   {
     label: '更新时间',
     prop: 'lastModifiedTime',
+    filter: (val) => proxy.formatTime(val),
+    width: proxy.TIME_WIDTH,
+    align: 'center',
+  },
+  {
+    label: '写入时间',
+    prop: 'injectTime',
     filter: (val) => proxy.formatTime(val),
     width: proxy.TIME_WIDTH,
     align: 'center',
