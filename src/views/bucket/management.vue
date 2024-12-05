@@ -184,13 +184,19 @@ async function init(isReset = false) {
   await getSpaceHistogramApi()
 }
 
-overviewApi()
-
 const getSpaceInit = async () => {
   let res = await getSpace()
   topObj.value[0].value = res.objectCount
   topObj.value[1].value = res.objectSize
 }
+
+async function overviewInit() {
+  let res = await getOverview()
+  rightTableData.value = res.spaces
+  rightTableData.value = proxy.clone(res.spaces, 10)
+}
+
+overviewInit()
 getSpaceInit()
 
 const update = (num, size) => {
@@ -217,12 +223,6 @@ async function getSpaceHistogramApi() {
   objectNumData.value = Object.entries(obj).map(([name, value]) => {
     return { value: value === 0 ? null : value, name: name }
   })
-}
-
-async function overviewApi() {
-  let res = await getOverview()
-  rightTableData.value = res.spaces
-  rightTableData.value = proxy.clone(res.spaces, 10)
 }
 
 async function getBucketHistogram(bucketName = 'space') {
@@ -307,6 +307,12 @@ function _handleUsedData(usedSpace) {
   ]
 }
 
+const refresh = () => {
+  overviewInit()
+  getSpaceInit()
+  init()
+}
+
 onMounted(() => {
   setTimeout(() => {
     init()
@@ -348,7 +354,7 @@ onMounted(() => {
                 @clear="searchBucket()"
               />
               <template #right>
-                <el-button type="" icon="el-icon-refresh" @click="init()">刷新</el-button>
+                <el-button type="" icon="el-icon-refresh" @click="refresh">刷新</el-button>
                 <el-button type="primary" icon="el-icon-plus" @click="add">新增桶</el-button>
               </template>
             </o-title>
