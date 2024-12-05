@@ -80,6 +80,9 @@ groupInit()
 
 const save = async () => {
   await proxy.validForm(formRef)
+  if (form.value.username === form.value.pwd) {
+    return proxy.$toast('为了您的账户安全, 密码和用户名不能相同!', 'e')
+  }
   const sendForm = omit(form.value, ['pwd', 'confirmPwd'])
   if (form.value.pwd) {
     let encRes = await encryptionPassword(form.value.pwd)

@@ -197,6 +197,11 @@ const switchChange = async (row) => {
 }
 const confirm = async () => {
   await proxy.validForm(formRef)
+  // 用户名和密码不能相同
+  if (dialogForm.value.username === dialogForm.value.pwd) {
+    return proxy.$toast('为了您的账户安全, 密码和用户名不能相同!', 'e')
+  }
+
   const sendForm = omit(dialogForm.value, ['pwd', 'confirmPwd'])
   let encRes = await encryptionPassword(dialogForm.value.pwd)
   sendForm.password = encRes[0]
