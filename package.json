@@ -66,6 +66,7 @@
     "js-cookie": "^3.0.5",
     "jsencrypt": "^3.3.2",
     "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
     "mousetrap": "^1.6.5",

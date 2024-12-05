@@ -272,7 +272,6 @@ export default [
   },
   {
     path: '/test3',
-
     component: Layout,
     meta: {
       showLink: isDev,
