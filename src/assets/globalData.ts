@@ -46,7 +46,7 @@ export const TASK_TYPE_OPTIONS = [
   { label: '标准数据冷冻', value: 'FREEZE' },
   { label: '零拷贝数据冷冻', value: 'ZERO_COPY_FREEZE' },
   { label: '数据解冻', value: 'UNFREEZE' },
-  { label: '数据过期', value: 'DELETE' },
+  { label: '对象定时删除', value: 'DELETE' },
 ]
 
 export const PAGE_SIZE = 30
