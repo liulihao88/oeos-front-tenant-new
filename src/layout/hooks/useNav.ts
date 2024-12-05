@@ -18,6 +18,9 @@ import { clearStorage } from 'oeos-components'
 import useBucketList from '@/hooks/getBucketList.ts'
 const bucketList = useBucketList()
 
+import useBucketSettings from '@/store/modules/bucketSettings.ts'
+const bucketSettings = useBucketSettings()
+
 const errorInfo = 'The current routing configuration is incorrect, please check the configuration'
 
 export function useNav() {
@@ -85,6 +88,7 @@ export function useNav() {
     pureApp.TOGGLE_EXPAND([])
     _clearCacheWithPrefix('tenant')
     router.push(`/login?redirect=${nowPath}`)
+    bucketSettings.clear()
   }
 
   function _clearCacheWithPrefix(prefix) {

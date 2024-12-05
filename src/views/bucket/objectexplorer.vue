@@ -98,11 +98,10 @@ watch(
   },
 )
 
-const selectDisabled = computed(() => {
-  return selections.value.length === 0
-})
-
 async function init(isReset: string | boolean = false) {
+  if (!bucketName.value) {
+    return
+  }
   if (isReset === true) {
     bucketSettings.clear()
   }

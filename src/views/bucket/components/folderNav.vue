@@ -29,6 +29,7 @@ const changeFolder = (v, i) => {
 }
 const toRoot = () => {
   bucketSettings.clearPrefixKey()
+  bucketSettings.pushPrev('')
   emits('change')
 }
 const toPrevFolder = () => {
@@ -41,6 +42,7 @@ const toPrevFolder = () => {
 
 const editPrefixKey = () => {
   isEdit.value = false
+  bucketSettings.pushPrev(bucketSettings.prefixKey)
   emits('change')
 }
 const handleClear = () => {
@@ -56,39 +58,52 @@ const blurInput = () => {
     isEdit.value = false
   }
 }
+
+const prev = () => {
+  bucketSettings.returnPrev()
+  emits('change')
+}
+const next = () => {
+  bucketSettings.returnNext()
+  emits('change')
+}
 </script>
 
 <template>
-  <div v-click-outside="blurInput" class="folder-box" @click="editFolder">
-    <div class="inner-box">
-      <template v-if="!isEdit">
-        <div v-if="bucketSettings.prefixKey" @click.stop="toPrevFolder">
-          <o-icon name="arrow-up" size="16" class="mr2" />
-        </div>
-        <div v-if="bucketSettings.prefixKeyArr.length !== 0" class="item" @click.stop="toRoot">
-          <div class="text">根目录</div>
-          <o-icon name="arrow-right" class="mlr" size="12" />
-        </div>
-        <div v-for="(v, i) in bucketSettings.prefixKeyArr" :key="i" class="item" @click.stop="changeFolder(v, i)">
-          <div class="text" :class="{ 'last-text': i === bucketSettings.prefixKeyArr.length - 1 }">
-            {{ v }}
+  <div class="f-st-ct">
+    <o-icon name="back" :disabled="bucketSettings.prevList.length <= 1" size="20" class="cp" @click="prev" />
+    <o-icon name="right" :disabled="bucketSettings.nextList.length <= 1" size="20" class="cp mr" @click="next" />
+    <div v-click-outside="blurInput" class="folder-box" @click="editFolder">
+      <div class="inner-box">
+        <template v-if="!isEdit">
+          <div v-if="bucketSettings.prefixKey" @click.stop="toPrevFolder">
+            <o-icon name="arrow-up" size="16" class="mr2" />
           </div>
-          <o-icon v-if="i !== bucketSettings.prefixKeyArr.length - 1" name="arrow-right" class="mlr" size="12" />
-        </div>
-      </template>
-      <template v-else>
-        <o-input
-          v-model="bucketSettings.prefixKey"
-          v-focus
-          width="100%"
-          @keyup.enter="editPrefixKey"
-          @clear="handleClear"
-        >
-          <template #append>
-            <o-icon name="search" @click="editPrefixKey" />
-          </template>
-        </o-input>
-      </template>
+          <div v-if="bucketSettings.prefixKeyArr.length !== 0" class="item" @click.stop="toRoot">
+            <div class="text">根目录</div>
+            <o-icon name="arrow-right" class="mlr" size="12" />
+          </div>
+          <div v-for="(v, i) in bucketSettings.prefixKeyArr" :key="i" class="item" @click.stop="changeFolder(v, i)">
+            <div class="text" :class="{ 'last-text': i === bucketSettings.prefixKeyArr.length - 1 }">
+              {{ v }}
+            </div>
+            <o-icon v-if="i !== bucketSettings.prefixKeyArr.length - 1" name="arrow-right" class="mlr" size="12" />
+          </div>
+        </template>
+        <template v-else>
+          <o-input
+            v-model="bucketSettings.prefixKey"
+            v-focus
+            width="100%"
+            @keyup.enter.stop="editPrefixKey"
+            @clear="handleClear"
+          >
+            <template #append>
+              <o-icon name="search" @click="editPrefixKey" />
+            </template>
+          </o-input>
+        </template>
+      </div>
     </div>
   </div>
 </template>
