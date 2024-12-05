@@ -51,7 +51,7 @@ export default [
     component: Layout,
     meta: {
       icon: spaceManagementSvg,
-      title: '空间管理222',
+      title: '空间管理',
     },
     children: [
       {

@@ -160,11 +160,18 @@ const editDate = () => {
   isShowDate.value = true
   dateForm.value = Object.assign({}, originDateForm.value)
 }
+const goBack = () => {
+  proxy.jump({
+    name: 'Management',
+  })
+}
 </script>
 
 <template>
   <div>
-    <o-title title="基本信息" t="0" b="8" />
+    <o-title title="基本信息" t="0" b="8">
+      <el-button class="ml" @click="goBack">返回</el-button>
+    </o-title>
     <div class="c-box w-100% p-lr-32 p-tb-16">
       <div class="mb2">
         <span class="cl-45">存储桶名称:</span>
