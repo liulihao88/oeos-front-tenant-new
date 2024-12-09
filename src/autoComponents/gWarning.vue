@@ -67,9 +67,9 @@ const props = defineProps({
 
 .icon {
   position: relative;
-  top: 3px;
+  top: 2px;
   width: 16px;
   height: 16px;
-  margin-right: 8px;
+  margin-right: 2px;
 }
 </style>

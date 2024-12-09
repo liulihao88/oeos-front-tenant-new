@@ -54,6 +54,7 @@ const columns2 = [
     label: '总体空间用量',
     useSlot: true,
     prop: 'usedSpace',
+    minWidth: 200,
   },
 ]
 
