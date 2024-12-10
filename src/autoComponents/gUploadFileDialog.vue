@@ -34,7 +34,7 @@ const onChange = (file, files) => {
   formData.append('bucket', props.bucketName)
   formData.append('key', bucketSettings.prefixKey || '/')
 
-  const fileName = file.name
+  let fileName = file.name
 
   axios
     .put(import.meta.env.VITE_PROXY_API + '/v1/admin/tenant/object/upload', formData, {

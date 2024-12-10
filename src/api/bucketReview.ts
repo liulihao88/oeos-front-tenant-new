@@ -6,7 +6,7 @@ export function getBucketOptions(config = {}) {
 }
 
 export function getObjectList(params) {
-  return request('object/list', { params: params, showLoading: true })
+  return request('object/list', { params: params })
 }
 
 export function uploadFile(data) {
