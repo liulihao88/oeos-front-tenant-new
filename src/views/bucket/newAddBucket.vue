@@ -8,6 +8,7 @@ import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
 import GetBucketList from '@/hooks/getBucketList.ts'
 const getBucketList = GetBucketList()
 const limitQuota = ref(0)
+const isLoading = ref(false)
 
 async function getLimitCeilingInit() {
   let res = await getLimitCeiling()
@@ -117,7 +118,11 @@ const fieldList = [
 
 async function confirm() {
   await formRef.value.validate()
-  await saveBucket(model.value)
+  isLoading.value = true
+  try {
+    await saveBucket(model.value)
+  } catch (error) {}
+  isLoading.value = false
   await getBucketList.update()
   isShow.value = false
   emits('success')
@@ -142,7 +147,14 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog v-model="isShow" title="新增桶" confirmText="保存" width="800" @confirm="confirm">
+    <o-dialog
+      v-model="isShow"
+      title="新增桶"
+      confirmText="保存"
+      width="800"
+      :confirmAttrs="{ loading: isLoading }"
+      @confirm="confirm"
+    >
       <o-form ref="formRef" :model="model" :fieldList="fieldList">
         <template #quota>
           <div class="f-st-ct w-100%">
