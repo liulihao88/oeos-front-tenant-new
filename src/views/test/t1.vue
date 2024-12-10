@@ -2,27 +2,43 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 
-function map(arr, fn) {
-  if (!Array.isArray(arr) || typeof fn !== 'function') {
-    throw new Error('invalid params')
-  }
+const fileRef = ref(null)
+const data = ref([])
+const columns = [
+  {
+    label: '名字',
+    prop: 'name',
+  },
+  {
+    label: '上传进度',
+    prop: 'permission',
+  },
+  {
+    key: 'operation',
+    label: '操作',
+    btns: [
+      {
+        content: '编辑',
+      },
+    ],
+  },
+]
 
-  let result = []
-  for (let i = 0; i < arr.length; i++) {
-    result.push(fn(arr[i], i, arr))
-  }
-  return result
-}
-
-let res = map([1, 3, 5, 7], (item, index, arr) => {
-  console.log(`03 item, index, arr`, item, index, arr)
-  return Math.pow(item, 2)
-})
-console.log(`%c35 21行 test/t1.vue res`, 'background:#fff;color:red', res)
+// setInterval(() => {
+//   let obj = fileRef.value?.fileObj ?? {}
+//   data.value = Object.keys(obj).map((key) => {
+//     return {
+//       name: key,
+//       permission: obj[key].message,
+//     }
+//   })
+// }, 1000)
 </script>
 
 <template>
   <div>
-    <div>test/t1.vue</div>
+    <g-upload-file-dialog ref="fileRef" bucketName="bucket1">
+      <el-button type="primary" icon="el-icon-upload">上传文件</el-button>
+    </g-upload-file-dialog>
   </div>
 </template>

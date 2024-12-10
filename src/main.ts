@@ -7,6 +7,7 @@ import { MotionPlugin } from '@vueuse/motion'
 import { createApp, type Directive } from 'vue'
 import { useElementPlus } from '@/plugins/elementPlus'
 import { injectResponsiveStorage } from '@/utils/responsive'
+import mitt from 'mitt'
 
 import Table from '@pureadmin/table'
 // import PureDescriptions from "@pureadmin/descriptions";
@@ -90,6 +91,7 @@ let $dev = import.meta.env.MODE === 'development'
 app.config.globalProperties.$dev = utils.getStorage('tenant-$dev') ?? $dev
 app.config.globalProperties.$test = location.hostname.startsWith('10.0.11.33') || location.hostname === 'localhost'
 // app.config.globalProperties.$dev = false
+app.config.globalProperties.$mitt = mitt()
 
 getPlatformConfig(app).then(async (config) => {
   setupStore(app)

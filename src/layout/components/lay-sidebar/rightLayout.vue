@@ -7,6 +7,7 @@ import { useNav } from '@/layout/hooks/useNav'
 import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 import DropdownLayout from '@/layout/components/dropdownLayout.vue'
 import LaySidebarFullScreen from '@/layout/components/lay-sidebar/components/SidebarFullScreen.vue'
+import LayoutFileList from '@/layout/components/lay-sidebar/layoutFileList.vue'
 
 import Setting from '@iconify-icons/ri/settings-3-line'
 
@@ -42,6 +43,8 @@ function onFresh() {
         <IconifyIconOffline :icon="RefreshRight" />
       </div>
     </o-tooltip>
+
+    <LayoutFileList />
 
     <!-- 全屏 -->
     <LaySidebarFullScreen id="full-screen" />

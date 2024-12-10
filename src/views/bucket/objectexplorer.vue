@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, nextTick, h, watch } from 'vue'
+import { ref, computed, getCurrentInstance, nextTick, h, watch, unref } from 'vue'
 const { proxy } = getCurrentInstance()
 import { getObjectList, deleteBatch, objectDownloadBatch } from '@/api/bucketReview'
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
+import { throttle } from 'lodash-es'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
 
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
@@ -26,6 +27,7 @@ bucketId.value = proxy.getStorage('tenant-bucket-id') ?? ''
 const bucketName = ref()
 const bucketRef = ref(null)
 const selections = ref([])
+const timer = ref(null)
 
 function selectableFn(row, index) {
   return row.injectTime
@@ -85,18 +87,20 @@ const columns = [
 ]
 const data = ref([])
 
-watch(
-  [bucketId, bucketName],
-  ([bId, bName], [bOldId, bOldName]) => {
-    if (bId && bName && bOldName !== bName) {
-      proxy.setStorage('tenant-bucket-id', bId)
-      init(true)
-    }
-  },
-  {
-    immediate: true,
-  },
-)
+proxy.$mitt.on('upload-file', (fileObj) => {
+  let unRefFileObj = unref(fileObj)
+  if (timer.value) {
+    return
+  }
+  let status = Object.values(unRefFileObj)[0].status
+  if (status === 'done') {
+    timer.value = setTimeout(() => {
+      init()
+      timer.value = null
+      clearTimeout(timer.value)
+    }, 1000)
+  }
+})
 
 async function init(isReset: string | boolean = false) {
   if (!bucketName.value) {
@@ -146,15 +150,28 @@ const inside = (row) => {
   bucketSettings.changePrefixKey(row.key)
   init()
 }
+
+watch(
+  [bucketId, bucketName],
+  ([bId, bName], [bOldId, bOldName]) => {
+    if (bId && bName && bOldName !== bName) {
+      proxy.setStorage('tenant-bucket-id', bId)
+      init(true)
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 </script>
 
 <template>
   <div>
     <div class="top f">
       <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
-      <UploadFile :bucketName="bucketName" @success="init">
+      <g-upload-file-dialog :bucketName="bucketName">
         <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
-      </UploadFile>
+      </g-upload-file-dialog>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'AdvanceSearch' })">
         高级搜索
