@@ -54,7 +54,7 @@ export function useGlobalLoading() {
       }
       if (loadingText === 'loading1') {
         if (loadingNumberObj.value.loading1 === 1) {
-          useLoading.value = false
+          useLoading1.value = false
           loadingNumberObj.value.loading1 === ''
           delete loadingNumberObj.value.loading1
         } else {
@@ -63,7 +63,7 @@ export function useGlobalLoading() {
       }
       if (loadingText === 'loading2') {
         if (loadingNumberObj.value.loading2 === 1) {
-          useLoading.value = false
+          useLoading2.value = false
           loadingNumberObj.value.loading2 === ''
           delete loadingNumberObj.value.loading2
         } else {
