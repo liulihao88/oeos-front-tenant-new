@@ -28,12 +28,13 @@ const init = async (isReset = false) => {
   let params = {
     key: rowDetails.value.key,
     bucket: props.bucketName || rowDetails.value.bucket,
-    pageMarker: pageMarker.value,
+    pageMarker: pageMarker.value ?? '',
     versionIdMarker: versionIdMarker.value,
     version: rowDetails.value.version,
   }
   let res = await getHistory(params)
-  data.value = res
+  data.value = res.page
+  pageMarker.value = res.pageMarker
 }
 
 const detailRow = async (row) => {
@@ -169,10 +170,9 @@ const prev = () => {
   init()
 }
 const next = () => {
-  pageMarker.value = data.value.at(-1).key
   versionIdMarker.value = data.value.at(-1).version
   prevHisList.value.push({
-    pageMaker: pageMarker.value,
+    pageMarker: pageMarker.value,
     versionIdMarker: versionIdMarker.value,
   })
   init()
