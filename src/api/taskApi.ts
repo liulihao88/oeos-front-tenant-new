@@ -2,7 +2,7 @@ import request from '@/utils/request.ts'
 
 // 桶任务
 export function getBucketTask() {
-  return request('objecthandle/task/status')
+  return request('objecthandle/task/status', { showLoading: true })
 }
 
 // 启用或禁用桶任务
@@ -12,7 +12,7 @@ export function toggleTaskStatus(id, status) {
 
 // 保存或更新桶任务
 export function saveTask(data) {
-  return request('objecthandle/task/', 'put', { data: data })
+  return request('objecthandle/task/', 'put', { data: data, showLoading: 'loading1' })
 }
 
 // 桶任务详情
@@ -51,5 +51,5 @@ export function deleteSchedule(id) {
 
 // 保存任务
 export function saveSchedule(data) {
-  return request(`/schedule`, 'put', { data: data })
+  return request(`/schedule`, 'put', { data: data, showLoading: true })
 }

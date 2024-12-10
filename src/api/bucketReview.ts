@@ -1,4 +1,4 @@
-import request, { requestOld } from '@/utils/request'
+import request from '@/utils/request'
 
 // 获取桶列表
 export function getBucketOptions(config = {}) {
@@ -6,7 +6,7 @@ export function getBucketOptions(config = {}) {
 }
 
 export function getObjectList(params) {
-  return request('object/list', { params: params })
+  return request('object/list', { params: params, showLoading: true })
 }
 
 export function uploadFile(data) {

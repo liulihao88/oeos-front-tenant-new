@@ -5,6 +5,7 @@ import HighSettings from '@/views/task/components/highSettings.vue'
 
 import { getSchedules, getTargetStorageList, saveTask, taskDetails } from '@/api/taskApi.ts'
 import OpenAllSwitch from '@/views/task/components/openAllSwitch.vue'
+import { loading1 } from '@/utils/request.ts'
 
 const FREEZE = 'FREEZE'
 const ZERO_COPY_FREEZE = 'ZERO_COPY_FREEZE'
@@ -167,6 +168,9 @@ defineExpose({
       :showCancel="form.action === FREEZE || form.action === ZERO_COPY_FREEZE"
       :cancelAttrs="{
         type: 'primary',
+      }"
+      :confirmAttrs="{
+        loading: loading1,
       }"
       @confirm="save"
       @cancel="highSettings"

@@ -28,7 +28,7 @@ defineOptions({
 const getTenantSysdomain = ref(proxy.getStorage('tenant-sysdomain')) ?? {}
 const router = useRouter()
 const route = useRoute()
-const loading = ref(false)
+const isLoading = ref(false)
 const ruleFormRef = ref(null)
 const tenantOptions = ref([])
 const redirectUrl = ref()
@@ -93,8 +93,8 @@ const _findSubMenu = (menuItems, pathToFind, sendArr = []) => {
   return sendArr
 }
 
-const onLogin = async (formEl) => {
-  await proxy.validForm(formEl)
+const _login = async () => {
+  await proxy.validForm(ruleFormRef.value)
   let genPwdList = await encryptionPassword(ruleForm.password)
   const loginParams = {
     username: ruleForm.username,
@@ -142,10 +142,20 @@ const onLogin = async (formEl) => {
   })
 }
 
+const onLogin = async () => {
+  isLoading.value = true
+  try {
+    await _login()
+  } catch (e) {
+  } finally {
+    isLoading.value = false
+  }
+}
+
 /** 使用公共函数，避免`removeEventListener`失效 */
 function onkeypress(event) {
   if (event.code === 'Enter') {
-    onLogin(ruleFormRef.value)
+    onLogin()
   }
 }
 const customTenantLabel = (obj) => {
@@ -208,13 +218,7 @@ onBeforeUnmount(() => {
             </Motion>
 
             <Motion :delay="250">
-              <el-button
-                class="w-full mt-4"
-                size="default"
-                type="primary"
-                :loading="loading"
-                @click="onLogin(ruleFormRef)"
-              >
+              <el-button class="w-full mt-4" size="default" type="primary" :loading="isLoading" @click="onLogin()">
                 登录
               </el-button>
             </Motion>

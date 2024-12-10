@@ -5,6 +5,7 @@ import { useGlobal, isNumber } from '@pureadmin/utils'
 import BackTopIcon from '@/assets/svg/back_top.svg?component'
 import { h, computed, Transition, defineComponent } from 'vue'
 import { usePermissionStoreHook } from '@/store/modules/permission'
+import { globalLoading } from '@/utils/request.ts'
 
 const props = defineProps({
   fixedHeader: Boolean,
@@ -107,7 +108,7 @@ const transitionMain = defineComponent({
               <el-backtop title="回到顶部" target=".app-main .el-scrollbar__wrap">
                 <BackTopIcon />
               </el-backtop>
-              <div class="grow" style="height: calc(100vh - 100px)">
+              <div v-loading="globalLoading" class="grow" style="height: calc(100vh - 100px)">
                 <transitionMain :route="route">
                   <keep-alive v-if="isKeepAlive" :include="usePermissionStoreHook().cachePageList">
                     <component :is="Comp" :key="fullPath" :frameInfo="frameInfo" class="main-content" />
@@ -117,7 +118,7 @@ const transitionMain = defineComponent({
               </div>
               <!-- <LayFooter v-if="!hideFooter" /> -->
             </el-scrollbar>
-            <div v-else class="grow" style="height: calc(100vh - 100px)">
+            <div v-else v-loading="globalLoading" class="grow" style="height: calc(100vh - 100px)">
               <transitionMain :route="route">
                 <keep-alive v-if="isKeepAlive" :include="usePermissionStoreHook().cachePageList">
                   <component :is="Comp" :key="fullPath" :frameInfo="frameInfo" class="main-content" />

@@ -1,4 +1,4 @@
-import request, { requestOld } from '@/utils/request.ts'
+import request from '@/utils/request.ts'
 
 // 获取桶列表
 export function getCustomBucketList(params) {
@@ -28,12 +28,8 @@ export function getUsage(bucketName) {
   return request(`${bucketName}/usage`)
 }
 
-export function getOverview() {
-  return request('info/overview')
-}
-
 export function saveBucket(data) {
-  return request('bucket', 'post', { data: data })
+  return request('bucket', 'post', { data: data, showLoading: 'loading1' })
 }
 export function deleteBucket(bucketName) {
   return request(`bucket/${bucketName}`, 'delete')

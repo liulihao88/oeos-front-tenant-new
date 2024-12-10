@@ -6,6 +6,8 @@ defineOptions({
 import { ref, getCurrentInstance, computed, onMounted, watch } from 'vue'
 import { omit } from 'lodash-es'
 import { encryptionPassword } from '@/api/login.ts'
+import { loading1 } from '@/utils/request.ts'
+
 import {
   addUser,
   getBucketPermission,
@@ -91,22 +93,27 @@ const save = async () => {
     sendForm.password = ''
   }
   let dataRes = await bucketPermissionRef.value.$getData()
-  await Promise.all([
-    addUser(sendForm),
-    putRoles(userDetails.value.username, roleValues.value),
-    putGroup(userDetails.value.username, groupValues.value),
-    updateBucketPermission(userDetails.value.username, dataRes),
-  ])
-
-  proxy.$toast('保存成功')
-  proxy.jump('/apps/security/user')
+  loading1.value = true
+  try {
+    await Promise.all([
+      addUser(sendForm),
+      putRoles(userDetails.value.username, roleValues.value),
+      putGroup(userDetails.value.username, groupValues.value),
+      updateBucketPermission(userDetails.value.username, dataRes),
+    ])
+    proxy.$toast('保存成功')
+    proxy.jump('/apps/security/user')
+  } catch (e) {
+  } finally {
+    loading1.value = false
+  }
 }
 </script>
 
 <template>
   <div class="">
     <o-title title="用户编辑">
-      <el-button type="primary" class="ml2" @click="save">保存</el-button>
+      <el-button type="primary" class="ml2" :loading="loading1" @click="save">保存</el-button>
       <el-button class="ml2" @click="proxy.jump('/apps/security/user')">取消</el-button>
     </o-title>
     <div class="c-box mtb">

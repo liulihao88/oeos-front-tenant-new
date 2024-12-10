@@ -10,7 +10,7 @@ export function previewImage(params) {
 
 // 解冻浏览列表 object/restore/list
 export function restoreList(params) {
-  return request('object/restore/list', { params })
+  return request('object/restore/list', { params, showLoading: true })
 }
 
 // 调整优先级

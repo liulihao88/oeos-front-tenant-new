@@ -1,7 +1,16 @@
 import axios from 'axios'
 import { getStorage, getType, $toast } from 'oeos-components'
 import { devLogin } from '@/utils/local401LoginAgain.ts'
+import { ref } from 'vue'
 import qs from 'qs'
+
+import { useGlobalLoading } from '@/hooks/useGlobalLoading'
+
+const { useLoading, useLoading1, useLoading2, loadingTrue, loadingFalse } = useGlobalLoading()
+
+export const globalLoading = ref(useLoading)
+export const loading1 = ref(useLoading1)
+export const loading2 = ref(useLoading2)
 
 // import qs from 'qs'
 // 关于axios的一些默认配置项，调用接口时，按需要传递
@@ -33,6 +42,9 @@ const instance = axios.create({
 let timer = null
 // 请求拦截，使用sessionId方式控制权限，
 instance.interceptors.request.use((config) => {
+  if (_hasLoading(config.showLoading)) {
+    loadingTrue(config.showLoading)
+  }
   const token = getStorage('tenant-token')
   if (token) {
     config.headers.Authorization = token
@@ -60,6 +72,10 @@ instance.interceptors.request.use((config) => {
 // 响应拦截
 instance.interceptors.response.use(
   (response) => {
+    if (_hasLoading(response.config.showLoading)) {
+      loadingFalse(response.config.showLoading)
+    }
+
     if (response.config.customResponse) {
       return Promise.resolve(response)
     }
@@ -86,6 +102,7 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
+    loadingFalse()
     let obj = JSON.parse(JSON.stringify(error))
     if (obj.message?.indexOf('401') !== -1) {
       return devLogin()
@@ -128,9 +145,10 @@ export default function request(url, method?: MethodType | MethodOrConfig = 'get
   let finalMergeConfig = Object.assign({}, defaultConfig, mergeConfig)
   return instance(finalMergeConfig)
 }
-export function requestOld(config) {
-  let mergeConfig = Object.assign({}, defaultConfig, config)
-  return instance(mergeConfig)
+
+function _hasLoading(sendLoading) {
+  let loadingMap = [true, 'loading1', 'loading2']
+  return loadingMap.includes(sendLoading)
 }
 
 function getQueryObject(url) {

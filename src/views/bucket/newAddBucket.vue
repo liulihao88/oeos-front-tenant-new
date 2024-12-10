@@ -5,10 +5,11 @@ import { saveBucket } from '@/api/bucket.ts'
 import { getLimitCeiling } from '@/api/system.ts'
 import { QUOTA_UNIT, QUOTA_OPTIONS } from '@/assets/globalData.ts'
 
+import { loading1 } from '@/utils/request.ts'
+
 import GetBucketList from '@/hooks/getBucketList.ts'
 const getBucketList = GetBucketList()
 const limitQuota = ref(0)
-const isLoading = ref(false)
 
 async function getLimitCeilingInit() {
   let res = await getLimitCeiling()
@@ -118,11 +119,7 @@ const fieldList = [
 
 async function confirm() {
   await formRef.value.validate()
-  isLoading.value = true
-  try {
-    await saveBucket(model.value)
-  } catch (error) {}
-  isLoading.value = false
+  await saveBucket(model.value)
   await getBucketList.update()
   isShow.value = false
   emits('success')
@@ -152,7 +149,7 @@ defineExpose({
       title="新增桶"
       confirmText="保存"
       width="800"
-      :confirmAttrs="{ loading: isLoading }"
+      :confirmAttrs="{ loading: loading1 }"
       @confirm="confirm"
     >
       <o-form ref="formRef" :model="model" :fieldList="fieldList">

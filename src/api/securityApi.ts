@@ -7,7 +7,7 @@ export function userStatistic() {
 
 // 用户列表
 export function getUsers(params) {
-  return request('security/users', { params })
+  return request('security/users', { params, showLoading: true })
 }
 
 // 删除用户

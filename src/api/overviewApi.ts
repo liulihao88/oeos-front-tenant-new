@@ -15,5 +15,5 @@ export function tenantEventQuery() {
 
 // 获取租户概览
 export function getInfoOverview() {
-  return request('info/overview')
+  return request('info/overview', { showLoading: true })
 }

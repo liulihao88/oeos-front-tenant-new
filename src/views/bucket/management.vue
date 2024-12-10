@@ -15,7 +15,6 @@ import {
   getSpace,
   getHistogram,
   getUsage,
-  getOverview,
   deleteBucket,
 } from '@/api/bucket.ts'
 
@@ -30,7 +29,6 @@ const PAGE_NUMBER = 1
 import BucketCapacityPie from '@/views/bucket/bucketCapacityPie.vue'
 const totalCapacity = ref(0)
 const currentBucketName = ref('')
-const rightTableData = ref([])
 const addRef = ref(null)
 const searchValue = ref()
 
@@ -190,13 +188,6 @@ const getSpaceInit = async () => {
   topObj.value[1].value = res.objectSize
 }
 
-async function overviewInit() {
-  let res = await getOverview()
-  rightTableData.value = res.spaces
-  rightTableData.value = proxy.clone(res.spaces, 10)
-}
-
-overviewInit()
 getSpaceInit()
 
 const update = (num, size) => {

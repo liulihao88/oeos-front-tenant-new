@@ -13,6 +13,8 @@ import GroupBaseInfo from '@/views/security/groupBaseInfo.vue'
 import GroupMemberData from '@/views/security/groupMemberData.vue'
 import BucketPermission from '@/views/security/bucketPermission.vue'
 
+import { loading1 } from '@/utils/request.ts'
+
 const { proxy } = getCurrentInstance()
 
 const tableRef = ref(null)
@@ -122,11 +124,18 @@ const confirm = async () => {
 }
 
 const saveAll = async () => {
-  await proxy.validForm(groupBaseInfoEditRef.value.$refs.formRef)
-  await addNewGroupApi(groupBaseInfoEditRef.value.form)
-  let permissionData = await bucketPermissionRef.value.$getData()
-  await putGroupMemberPermission(selectedRows.value.name, permissionData)
-  proxy.$toast('保存成功')
+  loading1.value = true
+
+  try {
+    await proxy.validForm(groupBaseInfoEditRef.value.$refs.formRef)
+    await addNewGroupApi(groupBaseInfoEditRef.value.form)
+    let permissionData = await bucketPermissionRef.value.$getData()
+    await putGroupMemberPermission(selectedRows.value.name, permissionData)
+    proxy.$toast('保存成功')
+  } catch (e) {
+  } finally {
+    loading1.value = false
+  }
 }
 </script>
 
@@ -161,7 +170,7 @@ const saveAll = async () => {
       </div>
       <div v-else>
         <o-title title="组基本信息" b="8">
-          <el-button type="primary" class="ml" @click="saveAll">全部保存</el-button>
+          <el-button type="primary" class="ml" :loading="loading1" @click="saveAll">全部保存</el-button>
         </o-title>
         <GroupBaseInfo ref="groupBaseInfoEditRef" isEdit />
 
