@@ -10,7 +10,7 @@
 import { ref, getCurrentInstance } from 'vue'
 import { api as viewerApi } from 'v-viewer'
 import GetBucketList from '@/hooks/getBucketList.ts'
-import { querySimple, queryAdvance } from '@/api/searchApi.ts'
+import { queryCustomSimple, queryCustomAdvance } from '@/api/searchApi.ts'
 import { objectDownloadBatch, deleteBatch } from '@/api/bucketReview.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
@@ -109,9 +109,9 @@ const multypleDelete = async () => {
 async function init() {
   searchObj.value.pageSize = pageSize.value
   searchObj.value.pageNumber = pageNumber.value
-  let res = await queryAdvance(searchObj.value)
-  data.value = res.details
-  total.value = res.total
+  let res = await queryCustomAdvance(searchObj.value)
+  data.value = res.details.page
+  total.value = res.details.total
 }
 
 const success = (sendForm) => {

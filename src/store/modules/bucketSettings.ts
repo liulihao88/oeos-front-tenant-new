@@ -59,7 +59,6 @@ const useBucketSettings = defineStore('bucketSettings', {
     // 返回下一步
     returnNext() {
       let pop = this.nextList.pop()
-      console.log(`06 pop`, pop)
       this.prefixKey = pop
       this.prevList.push(pop)
     },

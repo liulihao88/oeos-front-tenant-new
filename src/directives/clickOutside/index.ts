@@ -1,7 +1,6 @@
 // click-outside.js
 export const clickOutside = {
   beforeMount(el, binding) {
-    console.log(`19 el`, el)
     // 绑定事件处理函数
     const handler = (event) => {
       // 检查点击事件是否发生在元素外部

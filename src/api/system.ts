@@ -27,7 +27,7 @@ export function getLevels() {
   return request(`/common/support/levels`, { type: 'common' })
 }
 // 事件列表
-export function getEventList(data) {
+export function getCustomEventList(data) {
   return request(`event/query`, 'put', { data: data, resolve: 'data' })
 }
 

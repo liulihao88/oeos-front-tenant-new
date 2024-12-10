@@ -142,7 +142,6 @@ const highSave = (highForm) => {
       ...highForm,
     },
   }
-  console.log(`02 form.value`, form.value)
 }
 
 const initSchedule = async () => {

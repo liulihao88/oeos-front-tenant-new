@@ -28,6 +28,7 @@ const bucketName = ref()
 const bucketRef = ref(null)
 const selections = ref([])
 const timer = ref(null)
+const pageMaker = ref()
 
 function selectableFn(row, index) {
   return row.injectTime
@@ -117,11 +118,12 @@ async function init(isReset: string | boolean = false) {
 
   let sendParams = {
     bucket: bucketName.value,
-    pageMarker: bucketSettings.prevFolderList.at(-1) ?? '',
+    pageMaker: pageMaker.value ?? '',
     prefixKey: bucketSettings.prefixKey,
   }
   let res = await getObjectList(sendParams)
-  data.value = proxy.clone(res, 1)
+  data.value = res.page
+  pageMaker.value = res.pageMaker
 }
 
 const selectionChange = (val, ...a) => {
@@ -240,7 +242,7 @@ watch(
 
     <div class="middle f-ed-ct">
       <el-button type="primary" :disabled="bucketSettings.prevFolderList.length === 0" @click="prev">上一页</el-button>
-      <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+      <el-button type="primary" :disabled="!pageMaker" @click="next">下一页</el-button>
     </div>
 
     <BucketOverviewHistory ref="bucketOverviewHistoryRef" :bucket-name="bucketName" />

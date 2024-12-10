@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, onUnmounted } from 'vue'
 const { proxy } = getCurrentInstance()
-import { getEventList, getLevels, markHandle, deleteEvent, exportEvent } from '@/api/system.ts'
+import { getCustomEventList, getLevels, markHandle, deleteEvent, exportEvent } from '@/api/system.ts'
 
 /**
  * {
@@ -149,9 +149,9 @@ const init = async () => {
   if (!copyForm.mark) {
     copyForm.mark = null
   }
-  let res = await getEventList(copyForm)
-  data.value = res.details
-  total.value = res.total
+  let res = await getCustomEventList(copyForm)
+  data.value = res.details.page
+  total.value = res.details.total
 }
 const getLevelOptions = async () => {
   let res = await getLevels()

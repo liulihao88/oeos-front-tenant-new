@@ -147,11 +147,9 @@ export function confirm2(message, options) {
   return new Promise((r, j) => {
     const instance = ElMessageBox.confirm(message, mergeOptions)
       .then(() => {
-        console.log(`87 instance`, instance)
         r(instance)
       })
       .catch(() => {
-        console.log(`54 instance`, instance)
         j(instance)
       })
   })

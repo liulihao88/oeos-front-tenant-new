@@ -2,7 +2,7 @@
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 import { getWarningOptions, tenantEventQuery, getInfoOverview } from '@/api/overviewApi.ts'
-import { getLevels, getEventList } from '@/api/system.ts'
+import { getLevels, getCustomEventList } from '@/api/system.ts'
 
 import OverviewUsedPie from '@/views/overview/overviewUsedPie.vue'
 import OutServiceComp from '@/views/overview/outServiceComp.vue'
@@ -88,9 +88,9 @@ const eventForm = ref({
   pageSize: 20,
 })
 const eventInit = async () => {
-  let res = await getEventList(eventForm.value)
-  eventData.value = res.details
-  eventTotal.value = res.total
+  let res = await getCustomEventList(eventForm.value)
+  eventData.value = res.details.page
+  eventTotal.value = res.details.total
 }
 eventInit()
 

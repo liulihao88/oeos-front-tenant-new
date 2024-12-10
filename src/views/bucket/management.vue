@@ -9,7 +9,7 @@ const router = useRouter()
 const route = useRoute()
 const { proxy } = getCurrentInstance()
 import {
-  getBucketList,
+  getCustomBucketList,
   getBucketDetail,
   getSpaceHistogram,
   getSpace,
@@ -166,11 +166,11 @@ async function getTableList() {
     pageNumber: pageNumber.value,
     bucketName: searchValue.value,
   }
-  let res = await getBucketList(params)
-  bucketLists.value = res.details
-  data.value = res.details
-  total.value = res.total
-  topObj.value[2].value = res.total
+  let res = await getCustomBucketList(params)
+  bucketLists.value = res.details.page
+  data.value = res.details.page
+  total.value = res.details.total
+  topObj.value[2].value = res.details.total
   getBucketDetailByName()
 }
 async function init(isReset = false) {

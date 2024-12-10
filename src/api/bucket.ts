@@ -1,7 +1,7 @@
 import request, { requestOld } from '@/utils/request.ts'
 
 // 获取桶列表
-export function getBucketList(params) {
+export function getCustomBucketList(params) {
   return request('bucket/summary', { params, resolve: 'data' })
 }
 

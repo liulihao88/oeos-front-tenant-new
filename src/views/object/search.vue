@@ -9,7 +9,7 @@
  */
 import { ref, getCurrentInstance, watch } from 'vue'
 import { api as viewerApi } from 'v-viewer'
-import { querySimple, getStorageClassList } from '@/api/searchApi.ts'
+import { queryCustomSimple, getStorageClassList } from '@/api/searchApi.ts'
 import { preview } from '@/utils/remoteFunc.ts'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
@@ -119,9 +119,9 @@ async function init() {
   if (!bucketId.value) {
     return proxy.$toast('请先选择桶名后查询', 'e')
   }
-  let res = await querySimple(form.value)
-  data.value = res.details
-  total.value = res.total
+  let res = await queryCustomSimple(form.value)
+  data.value = res.details.page
+  total.value = res.details.total
   // proxy.$toast('查询成功')
 }
 
