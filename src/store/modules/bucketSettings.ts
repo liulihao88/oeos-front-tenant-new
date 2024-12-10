@@ -22,6 +22,8 @@ const useBucketSettings = defineStore('bucketSettings', {
     },
     changePrevFolder(key = '') {
       if (!key) {
+        this.prevFolderList = []
+      } else if (key === 'pop') {
         this.prevFolderList.pop()
       } else {
         this.prevFolderList.push(key)

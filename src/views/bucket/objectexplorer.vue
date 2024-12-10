@@ -118,8 +118,12 @@ async function init(isReset: string | boolean = false) {
 
   let sendParams = {
     bucket: bucketName.value,
-    pageMarker: pageMarker.value ?? '',
     prefixKey: bucketSettings.prefixKey,
+  }
+  if (isReset === 'isPrev' || isReset === 'isNext') {
+    sendParams.pageMarker = pageMarker.value
+  } else {
+    bucketSettings.changePrevFolder()
   }
   let res = await getObjectList(sendParams)
   data.value = res.page
@@ -139,12 +143,12 @@ const multypleDelete = async () => {
 }
 
 const prev = () => {
-  bucketSettings.changePrevFolder()
-  init()
+  let popValue = bucketSettings.changePrevFolder('pop')
+  pageMarker.value = popValue
+  init('isPrev')
 }
 const next = () => {
-  let laskKey = data.value.at(-1).key
-  bucketSettings.changePrevFolder(laskKey)
+  bucketSettings.changePrevFolder(pageMarker.value)
   init('isNext')
 }
 
@@ -208,7 +212,7 @@ watch(
       >
         <el-button type="primary" icon="el-icon-download" :disabled="selections.length === 0">批量删除</el-button>
       </o-popconfirm>
-      <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" :disabled="!bucketName" @click="refresh">刷新</el-button>
     </div>
 
     <div class="m-t-8">
