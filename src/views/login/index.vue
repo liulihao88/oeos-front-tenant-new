@@ -143,6 +143,9 @@ const _login = async () => {
 }
 
 const onLogin = async () => {
+  if (isLoading.value) {
+    return
+  }
   isLoading.value = true
   try {
     await _login()
