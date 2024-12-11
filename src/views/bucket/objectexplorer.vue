@@ -88,18 +88,19 @@ const columns = [
 ]
 const data = ref([])
 
-proxy.$mitt.on('upload-file', (fileObj) => {
-  let unRefFileObj = unref(fileObj)
-  if (timer.value) {
-    return
-  }
-  let status = Object.values(unRefFileObj)[0].status
+proxy.$mitt.on('upload-file', ({ fileList, fileName }) => {
+  let unRefFileList = unref(fileList)
+  let status = unRefFileList[fileName].status
   if (status === 'done') {
+    console.log(`62 timer.value`, timer.value)
+    if (timer.value) {
+      return
+    }
     timer.value = setTimeout(() => {
       init()
       timer.value = null
       clearTimeout(timer.value)
-    }, 1000)
+    }, 2000)
   }
 })
 

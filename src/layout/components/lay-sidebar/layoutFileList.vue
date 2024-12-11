@@ -30,7 +30,7 @@ const columns = [
   // },
 ]
 
-proxy.$mitt.on('upload-file', (fileList) => {
+proxy.$mitt.on('upload-file', ({ fileList, fileName }) => {
   data.value = Object.keys(fileList).map((key) => {
     return {
       name: key,

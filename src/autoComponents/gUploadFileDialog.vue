@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, h } from 'vue'
+import { ref, getCurrentInstance, h, unref } from 'vue'
 import axios from 'axios'
 import useBucketSettings from '@/store/modules/bucketSettings.ts'
 const bucketSettings = useBucketSettings()
 const { proxy } = getCurrentInstance()
 const emits = defineEmits(['success'])
-let fileObj = ref({})
+let fileList = ref({})
 const props = defineProps({
   bucketName: {
     type: String,
@@ -15,16 +15,18 @@ const props = defineProps({
 
 const updateNotification = (fileName, percentage) => {
   if (percentage === 100) {
-    fileObj.value[fileName] = {
+    fileList.value[fileName] = {
       message: '上传完成',
       status: 'done',
+      file: fileName,
     }
     return
   }
 
-  fileObj.value[fileName] = {
+  fileList.value[fileName] = {
     message: percentage,
     status: 'pending',
+    file: fileName,
   }
 }
 
@@ -42,7 +44,7 @@ const onChange = (file, files) => {
         const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
         // 更新通知中的进度信息
         updateNotification(fileName, percentage)
-        proxy.$mitt.emit('upload-file', fileObj.value)
+        proxy.$mitt.emit('upload-file', { fileList: unref(fileList.value), fileName })
       },
       headers: {
         'Content-type': 'multipart/form-data',
@@ -51,28 +53,31 @@ const onChange = (file, files) => {
     })
     .then((res) => {
       if (res.data.status === 200) {
-        fileObj.value[fileName] = {
+        fileList.value[fileName] = {
           message: '上传完成',
           status: 'done',
+          file: fileName,
         }
         proxy.$toast(`${fileName}上传完成`)
       } else {
-        fileObj.value[fileName] = {
+        fileList.value[fileName] = {
           message: `上传失败, ${res.data.message}`,
           status: 'error',
+          file: fileName,
         }
         proxy.$toast(`${fileName}上传失败, ${res.data.message}`, 'e')
       }
     })
     .catch(() => {
-      fileObj.value[fileName] = {
+      fileList.value[fileName] = {
         message: `上传失败`,
         status: 'error',
+        file: fileName,
       }
       proxy.$toast(`${fileName}上传失败`, 'e')
     })
     .finally(() => {
-      proxy.$mitt.emit('upload-file', fileObj.value)
+      proxy.$mitt.emit('upload-file', { fileList: unref(fileList.value), fileName })
     })
 }
 
@@ -84,7 +89,7 @@ const beforeUpload = (file) => {
 }
 
 defineExpose({
-  fileObj,
+  fileList,
 })
 </script>
 
