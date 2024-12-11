@@ -170,7 +170,8 @@ const goBack = () => {
 <template>
   <div>
     <o-title title="基本信息" t="0" b="8">
-      <el-button class="ml" @click="goBack">返回</el-button>
+      <el-button class="ml" icon="el-icon-back" @click="goBack">返回</el-button>
+      <!-- <o-icon name="back" class="ml"></o-icon> -->
     </o-title>
     <div class="c-box w-100% p-lr-32 p-tb-16">
       <div class="mb2">
