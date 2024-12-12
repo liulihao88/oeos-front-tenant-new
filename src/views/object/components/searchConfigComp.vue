@@ -159,6 +159,11 @@ const columns = [
       {
         content: '删除',
         handler: deleteRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          content: '删除',
+        },
       },
     ],
   },
