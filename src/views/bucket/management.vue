@@ -299,7 +299,6 @@ function _handleUsedData(usedSpace) {
 }
 
 const refresh = () => {
-  overviewInit()
   getSpaceInit()
   init()
 }
