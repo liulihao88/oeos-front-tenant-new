@@ -50,10 +50,13 @@ export function objectPropertyDetail(data) {
 
 // 恢复
 export function objectRestore(data) {
-  return request('object/restore', 'put', { params: data })
+  return request('object/restore', 'put', { params: data, showLoading: 'loading1' })
 }
 
 // 批量恢复 object/restore/batch
 export function objectRestoreBatch(expirationInDays, data) {
-  return request(`object/restore/batch?expirationInDays=${expirationInDays}`, 'put', { data: data })
+  return request(`object/restore/batch?expirationInDays=${expirationInDays}`, 'put', {
+    data: data,
+    showLoading: 'loading1',
+  })
 }

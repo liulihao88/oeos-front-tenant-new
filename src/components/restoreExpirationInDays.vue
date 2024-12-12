@@ -3,6 +3,7 @@ import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 import KeepTime from '@/views/task/components/keepTime.vue'
 import { objectRestore, objectRestoreBatch } from '@/api/bucketReview'
+import { loading1 } from '@/utils/request'
 
 const isShow = ref(false)
 const keepTimeRef = ref(null)
@@ -50,7 +51,14 @@ defineExpose({
 
 <template>
   <div>
-    <o-dialog ref="dialogRef" v-model="isShow" title="设置过期时间" width="800px" @confirm="confirm">
+    <o-dialog
+      ref="dialogRef"
+      v-model="isShow"
+      title="设置过期时间"
+      width="800px"
+      :confirmAttrs="{ loading: loading1 }"
+      @confirm="confirm"
+    >
       <el-form ref="formRef" :model="form" :rules="rules">
         <el-form-item label="恢复过期时间" prop="expirationInDays">
           <KeepTime
