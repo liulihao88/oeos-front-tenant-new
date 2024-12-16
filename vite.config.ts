@@ -13,6 +13,15 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     resolve: {
       alias,
     },
+    // The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
+
     // 服务端渲染
     server: {
       // 端口号
