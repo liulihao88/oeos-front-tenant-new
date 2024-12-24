@@ -1,4 +1,8 @@
 const Layout = () => import('@/layout/index.vue')
+
+import router from './index'
+import { getStorage, isEmpty } from 'oeos-components'
+
 import DarkSvg from '@/assets/svg/dark.svg'
 import DaySvg from '@/assets/svg/day.svg'
 import tenantViewSvg from '@/assets/svg/menu/tenant-view.svg'
@@ -97,7 +101,7 @@ export default [
     ],
   },
   {
-    id: 'TM030',
+    id: 'TM020',
     path: '/object',
     component: Layout,
     meta: {
@@ -106,7 +110,7 @@ export default [
     },
     children: [
       {
-        id: 'TM031',
+        id: 'TM021',
         path: '/object/search',
         name: 'Search',
         component: 'object/search',
@@ -116,7 +120,7 @@ export default [
         },
       },
       {
-        id: 'TM032',
+        id: 'TM022',
         path: '/object/advancesearch',
         name: 'AdvanceSearch',
         component: 'object/advancesearch',
@@ -126,7 +130,7 @@ export default [
         },
       },
       {
-        id: 'TM034',
+        id: 'TM023',
         path: '/object/unfrezze',
         name: 'Unfrezze',
         component: 'object/unfrezze',
@@ -138,7 +142,7 @@ export default [
     ],
   },
   {
-    id: 'TM020',
+    id: 'TM030',
     path: '/task',
     component: Layout,
     meta: {
@@ -147,7 +151,7 @@ export default [
     },
     children: [
       {
-        id: 'TM021',
+        id: 'TM031',
         path: '/task/management',
         name: 'TaskManagement',
         component: 'task/management.vue',
@@ -157,7 +161,7 @@ export default [
         },
       },
       {
-        id: 'TM022',
+        id: 'TM032',
         path: '/task/schedule',
         name: 'Schedule',
         component: 'task/schedule',
@@ -168,6 +172,7 @@ export default [
       },
     ],
   },
+
   {
     id: 'TM040',
     path: '/security',
@@ -202,6 +207,11 @@ export default [
               activePath: '/security/user',
               showLink: false,
               showParent: false,
+            },
+            beforeEnter: (to, from) => {
+              if (isEmpty(getStorage('tenant-user-details'))) {
+                router.push({ name: 'User' })
+              }
             },
             component: 'security/addUser',
           },

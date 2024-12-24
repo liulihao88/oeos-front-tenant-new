@@ -30,6 +30,7 @@ const roleValues = ref([])
 const { proxy } = getCurrentInstance()
 
 const userDetails = ref(proxy.getStorage('tenant-user-details') || {})
+
 const bucketPermissionRef = ref(null)
 
 const groupValues = ref([])
