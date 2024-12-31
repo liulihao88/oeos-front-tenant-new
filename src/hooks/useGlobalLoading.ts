@@ -20,8 +20,6 @@ export function useGlobalLoading() {
     if (loadingText === true) {
       clearTimeout(timer.value)
       useLoading.value = true
-      loadingNumberObj.value.true = loadingNumberObj.value.true ? loadingNumberObj.value.true + 1 : 1
-      console.log(`38  loadingNumberObj.value.true`, loadingNumberObj.value.true)
     }
     if (loadingText === 'loading1') {
       clearTimeout(timer.value)
@@ -36,41 +34,38 @@ export function useGlobalLoading() {
   }
 
   function loadingFalse(loadingText: boolean | string = '') {
-    timer.value = setTimeout(() => {
-      if (!loadingText) {
+    if (!loadingText) {
+      useLoading.value = false
+      useLoading1.value = false
+      useLoading2.value = false
+      loadingNumberObj.value = {}
+    }
+    if (loadingText === true) {
+      if (loadingNumberObj.value.true === 1) {
         useLoading.value = false
+        delete loadingNumberObj.value.true
+      } else {
+        loadingNumberObj.value.true = loadingNumberObj.value.true - 1
+      }
+    }
+    if (loadingText === 'loading1') {
+      if (loadingNumberObj.value.loading1 === 1) {
         useLoading1.value = false
+        loadingNumberObj.value.loading1 === ''
+        delete loadingNumberObj.value.loading1
+      } else {
+        loadingNumberObj.value.loading1 = loadingNumberObj.value.loading1 - 1
+      }
+    }
+    if (loadingText === 'loading2') {
+      if (loadingNumberObj.value.loading2 === 1) {
         useLoading2.value = false
-        loadingNumberObj.value = {}
+        loadingNumberObj.value.loading2 === ''
+        delete loadingNumberObj.value.loading2
+      } else {
+        loadingNumberObj.value.loading2 = loadingNumberObj.value.loading2 - 1
       }
-      if (loadingText === true) {
-        if (loadingNumberObj.value.true === 1) {
-          useLoading.value = false
-          delete loadingNumberObj.value.true
-        } else {
-          loadingNumberObj.value.true = loadingNumberObj.value.true - 1
-        }
-        console.log(` loadingNumberObj.value.true`, loadingNumberObj.value.true)
-      }
-      if (loadingText === 'loading1') {
-        if (loadingNumberObj.value.loading1 === 1) {
-          useLoading1.value = false
-          loadingNumberObj.value.loading1 === ''
-          delete loadingNumberObj.value.loading1
-        } else {
-          loadingNumberObj.value.loading1 = loadingNumberObj.value.loading1 - 1
-        }
-      }
-      if (loadingText === 'loading2') {
-        if (loadingNumberObj.value.loading2 === 1) {
-          useLoading2.value = false
-          loadingNumberObj.value.loading2 === ''
-          delete loadingNumberObj.value.loading2
-        } else {
-          loadingNumberObj.value.loading2 = loadingNumberObj.value.loading2 - 1
-        }
-      }
-    }, 30)
+    }
   }
 
   return {

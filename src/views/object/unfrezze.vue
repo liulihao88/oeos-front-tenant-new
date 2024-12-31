@@ -221,7 +221,7 @@ const next = () => {
         />
       </div>
       <div>
-        <el-button type="primary" @click="init">查询</el-button>
+        <el-button type="primary" :disabled="!bucketName" @click="init">查询</el-button>
         <template v-if="frezzeStatus === 'unfreezing'">
           <el-button type="primary" :disabled="selections.length === 0" @click="cancelUnFreeze">取消解冻</el-button>
           <el-button type="primary" :disabled="data.length === 0" @click="allCancel">全部取消</el-button>
