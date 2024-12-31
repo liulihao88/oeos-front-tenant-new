@@ -150,6 +150,7 @@ defineExpose({
       confirmText="保存"
       width="800"
       :confirmAttrs="{ loading: loading1 }"
+      @close="loading1 = false"
       @confirm="confirm"
     >
       <o-form ref="formRef" :model="model" :fieldList="fieldList">

@@ -57,6 +57,7 @@ defineExpose({
       title="设置过期时间"
       width="800px"
       :confirmAttrs="{ loading: loading1 }"
+      @close="loading1 = false"
       @confirm="confirm"
     >
       <el-form ref="formRef" :model="form" :rules="rules">
