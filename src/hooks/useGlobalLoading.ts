@@ -20,6 +20,7 @@ export function useGlobalLoading() {
     if (loadingText === true) {
       clearTimeout(timer.value)
       useLoading.value = true
+      loadingNumberObj.value.true = loadingNumberObj.value.true ? loadingNumberObj.value.true + 1 : 1
     }
     if (loadingText === 'loading1') {
       clearTimeout(timer.value)
@@ -34,6 +35,7 @@ export function useGlobalLoading() {
   }
 
   function loadingFalse(loadingText: boolean | string = '') {
+    console.log(`92 loadingText`, loadingText)
     if (!loadingText) {
       useLoading.value = false
       useLoading1.value = false
@@ -41,8 +43,10 @@ export function useGlobalLoading() {
       loadingNumberObj.value = {}
     }
     if (loadingText === true) {
+      console.log(`59 loadingNumberObj.value`, loadingNumberObj.value)
       if (loadingNumberObj.value.true === 1) {
         useLoading.value = false
+        loadingNumberObj.value.true === ''
         delete loadingNumberObj.value.true
       } else {
         loadingNumberObj.value.true = loadingNumberObj.value.true - 1
