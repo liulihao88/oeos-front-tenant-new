@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, nextTick, onMounted } from 'vue'
 import { getSchedules, deleteSchedule, saveSchedule, getScheduleDetail } from '@/api/taskApi.ts'
+import ScheduleChart from '@/views/task/components/scheduleChart.vue'
 
 const { proxy } = getCurrentInstance()
 const dateValue = ref({})
@@ -8,6 +9,8 @@ const isDelete = ref(false)
 const taskName = ref('')
 const tableRef = ref(null)
 const testTime = ref(['11:28', '12:28'])
+const isShow = ref(false)
+const isEdit = ref(false)
 const originWeeks = ref([
   {
     label: '星期一',
@@ -73,6 +76,10 @@ const deleteRow = async (row) => {
     proxy.$toast(showMsg, 'e')
   }
 }
+const editRow = async () => {
+  isEdit.value = true
+  isShow.value = true
+}
 
 const columns = [
   {
@@ -81,7 +88,7 @@ const columns = [
   },
   {
     label: '操作',
-    width: 100,
+    width: 110,
     prop: 'operation',
     btns: [
       {
@@ -92,6 +99,21 @@ const columns = [
         attrs: {
           name: 'delete',
           content: '删除',
+          style: {
+            margin: '0 8px',
+          },
+        },
+      },
+      {
+        content: '编辑',
+        handler: editRow,
+        comp: 'o-icon',
+        attrs: {
+          name: 'edit',
+          content: '编辑',
+          style: {
+            margin: '0 8px',
+          },
         },
       },
     ],
@@ -150,7 +172,12 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
           val.workPeriods = val.workPeriods.map((item, index) => {
             return {
               ...item,
-              parseTimes: item.fromHH ? [item.fromHH + ':' + item.fromMM, item.toHH + ':' + item.toMM] : [],
+              parseTimes: item.fromHH
+                ? [
+                    (item.fromHH + '').padStart(2, '0') + ':' + (item.fromMM + '').padStart(2, '0'),
+                    (item.toHH + '').padStart(2, '0') + ':' + (item.toMM + '').padStart(2, '0'),
+                  ]
+                : [],
             }
           })
           weeks.value[i].dates = val.workPeriods
@@ -209,10 +236,10 @@ const isTimeOverlapping = (startTime, endTime, timeRangeList, idx) => {
     if (range.startTime === startTime && range.endTime === endTime && idx !== index) {
       return true
     }
-    return !(
-      new Date(`2023-01-01T${endTime}`).getTime() <= new Date(`2023-01-01T${range.startTime}`).getTime() ||
-      new Date(`2023-01-01T${startTime}`).getTime() >= new Date(`2023-01-01T${range.endTime}`).getTime()
-    )
+    // return !(
+    //   new Date(`2023-01-01T${endTime}`).getTime() <= new Date(`2023-01-01T${range.startTime}`).getTime() ||
+    //   new Date(`2023-01-01T${startTime}`).getTime() >= new Date(`2023-01-01T${range.endTime}`).getTime()
+    // )
   })
 }
 const save = async () => {
@@ -249,6 +276,7 @@ const save = async () => {
     return proxy.$toast('时间不能为空', 'e')
   }
   await saveReq()
+  isShow.value = false
 }
 const addTime = (v, i) => {
   weeks.value[i].dates.push({ parseTimes: [] })
@@ -264,6 +292,12 @@ const deleteTime = (v, i, val = '', idx = '') => {
     isDelete.value = false
   })
 }
+
+const newAdd = () => {
+  reset()
+  isEdit.value = false
+  isShow.value = true
+}
 </script>
 
 <template>
@@ -277,7 +311,7 @@ const deleteTime = (v, i, val = '', idx = '') => {
           placeholder="请输入"
           @clear="searchHandler"
         />
-        <el-button type="primary" class="m-l-16" @click="reset">新建</el-button>
+        <el-button type="primary" class="m-l-16" @click="newAdd">新建</el-button>
       </div>
       <div>
         <o-table
@@ -291,43 +325,54 @@ const deleteTime = (v, i, val = '', idx = '') => {
       </div>
     </div>
     <div class="r">
-      <div class="r-top">
-        <o-input v-model.trim="taskName" title="计划名称" width="300" />
-        <el-button v-throttle="save" size="small" type="primary" class="m-l-16">保存</el-button>
-      </div>
-      <div class="r-content">
-        <div v-for="(v, i) in weeks" :key="i" class="item">
-          <div class="f-bt">
-            <span>
-              {{ v.label }}
-            </span>
-            <o-tooltip content="清空当前列">
-              <el-button size="small" class="ml2" @click="deleteTime(v, i)">
-                <o-icon name="delete" />
-              </el-button>
-            </o-tooltip>
-            <o-tooltip content="添加">
-              <el-button type="primary" size="small" class="ml2" @click="addTime(v, i)">
-                <o-icon name="plus" />
-              </el-button>
-            </o-tooltip>
-          </div>
+      <ScheduleChart :weeks="weeks" />
+    </div>
 
-          <template v-if="!isDelete">
-            <div v-for="(val, idx) in v.dates" :key="idx" class="f-st-ct m-tb-8">
-              <el-time-picker
-                v-model="val.parseTimes"
-                is-range
-                format="HH:mm"
-                value-format="HH:mm"
-                style="width: 140px"
-              />
-              <o-svg name="eraser" size="16" class="cp ml fs-12" @click="deleteTime(v, i, val, idx)" />
+    <o-dialog
+      ref="dialogRef"
+      v-model="isShow"
+      :title="isEdit ? '编辑任务计划' : '新建任务计划'"
+      fullscreen
+      @confirm="save"
+    >
+      <div class="r" style=" display: flex; flex-direction: column; height: 100%;margin-left: 0">
+        <div class="r-top">
+          <o-input v-model.trim="taskName" title="计划名称" width="300" />
+        </div>
+        <div class="r-content">
+          <div v-for="(v, i) in weeks" :key="i" class="item">
+            <div class="f-bt">
+              <span>
+                {{ v.label }}
+              </span>
+              <o-tooltip content="清空当前列">
+                <el-button size="small" class="ml2" @click="deleteTime(v, i)">
+                  <o-icon name="delete" />
+                </el-button>
+              </o-tooltip>
+              <o-tooltip content="添加">
+                <el-button type="primary" size="small" class="ml2" @click="addTime(v, i)">
+                  <o-icon name="plus" />
+                </el-button>
+              </o-tooltip>
             </div>
-          </template>
+
+            <template v-if="!isDelete">
+              <div v-for="(val, idx) in v.dates" :key="idx" class="f-st-ct m-tb-8">
+                <el-time-picker
+                  v-model="val.parseTimes"
+                  is-range
+                  format="HH:mm"
+                  value-format="HH:mm"
+                  style="width: 140px"
+                />
+                <o-svg name="eraser" size="16" class="cp ml fs-12" @click="deleteTime(v, i, val, idx)" />
+              </div>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
+    </o-dialog>
   </div>
 </template>
 
