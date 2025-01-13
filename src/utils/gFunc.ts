@@ -3,8 +3,9 @@ import settings from '@/config/settings.ts'
 import { router } from '@/router/index.ts'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { isStringNumber, isNumber } from './types.js'
+import request from '@/utils/request.js'
 
-export function gDownload(item) {
+export async function gDownload(item) {
   if (!item.bucket) {
     $toast('不是有效数据，不支持下载!', 'w')
     return false
@@ -20,6 +21,8 @@ export function gDownload(item) {
   let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}&version=${objectVersionID}`
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
+  let requestHref = 'object/download' + dataUrl + `&Authorization=${getStorage('tenant-token')}`
+  await request(requestHref)
   downloadFile(_href, objectKey)
 }
 
