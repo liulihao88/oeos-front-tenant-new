@@ -22,7 +22,11 @@ export async function gDownload(item) {
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
   let requestHref = 'object/download' + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  await request(requestHref)
+  let res = await request(requestHref, { customResponse: true })
+  if (res.data && res.data.status && res.data.status !== 200) {
+    $toast(res.data.message, 'e')
+    return
+  }
   downloadFile(_href, objectKey)
 }
 
