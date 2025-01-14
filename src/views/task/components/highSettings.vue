@@ -18,7 +18,7 @@ const originForm = ref({
   rawKeyPrefix: 'BucketID',
   packageSizeThreshold: 1073741824,
   singleSizeRange: [104857600, 1073741824],
-  fragmentSizeThreshold: 524288000,
+  fragmentSizeThreshold: 1073741824,
   workerCount: 2,
   action: FREEZE,
   threadOfTransmission: 3,
