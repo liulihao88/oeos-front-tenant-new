@@ -110,7 +110,7 @@ const next = () => {
 
 <style lang="scss" scoped>
 .folder-box {
-  width: 1000px;
+  width: 100%;
   height: 40px;
   padding-left: 16px;
   border: 1px solid var(--line);
