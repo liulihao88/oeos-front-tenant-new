@@ -113,6 +113,7 @@ const next = () => {
   width: 100%;
   height: 40px;
   padding-left: 16px;
+  overflow: auto;
   border: 1px solid var(--line);
 
   .inner-box {
