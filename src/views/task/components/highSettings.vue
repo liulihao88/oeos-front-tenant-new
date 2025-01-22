@@ -14,7 +14,7 @@ const FREEZE = 'FREEZE'
 const formRef = ref(null)
 const isShow = ref(false)
 const originForm = ref({
-  KeepRawKey: false,
+  keepRawKey: false,
   rawKeyPrefix: 'BucketID',
   packageSizeThreshold: 1073741824,
   singleSizeRange: [104857600, 1073741824],
@@ -22,9 +22,9 @@ const originForm = ref({
   workerCount: 2,
   action: FREEZE,
   threadOfTransmission: 3,
-  InjectSelftMeta: false,
+  injectSelftMeta: false,
   directTransmission: true,
-  VerifyFreezeContent: true,
+  verifyFreezeContent: true,
   dynamicFragmentSize: true,
 })
 const emits = defineEmits(['save'])
@@ -55,7 +55,7 @@ const devTest = () => {
 }
 
 const beforeChange = async () => {
-  if (!form.value.KeepRawKey) {
+  if (!form.value.keepRawKey) {
     await proxy.confirm('', {
       dangerouslyUseHTMLString: true,
       customStyle: {
@@ -113,7 +113,7 @@ defineExpose({
     >
       <el-form-item label="保持原始对象" prop="">
         <div class="f-st-tp">
-          <el-switch v-model="form.KeepRawKey" :before-change="beforeChange" />
+          <el-switch v-model="form.keepRawKey" :before-change="beforeChange" />
           <g-warning
             type="icon"
             class="t--2 po-r"
@@ -124,11 +124,11 @@ defineExpose({
       </el-form-item>
 
       <el-form-item label="对象名前缀" prop="">
-        <o-radio v-model="form.rawKeyPrefix" :options="prefixOptions" :disabled="!form.KeepRawKey" />
+        <o-radio v-model="form.rawKeyPrefix" :options="prefixOptions" :disabled="!form.keepRawKey" />
         <g-warning type="icon" content="在原始对象名前添加前缀（父目录）可防止多个桶内出现重名文件情况下的冷冻失败" />
       </el-form-item>
       <el-form-item label="聚合存储上限" prop="packageSizeThreshold">
-        <gBtoMb v-model="form.packageSizeThreshold" :disabled="form.KeepRawKey" />
+        <gBtoMb v-model="form.packageSizeThreshold" :disabled="form.keepRawKey" />
         <g-warning
           type="icon"
           content="对于小于[单个打包范围最小大小]的文件其内容将合并物理存储；此值标定包体体积上限；建议1G~2G"
@@ -136,9 +136,9 @@ defineExpose({
       </el-form-item>
       <el-form-item label="独立存储区间" prop="singleSizeRange">
         <div class="f-st-ct w-93%">
-          <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.KeepRawKey" />
+          <gBtoMb v-model="form.singleSizeRange[0]" :disabled="form.keepRawKey" />
           <div class="mlr">-</div>
-          <gBtoMb v-model="form.singleSizeRange[1]" :disabled="form.KeepRawKey" />
+          <gBtoMb v-model="form.singleSizeRange[1]" :disabled="form.keepRawKey" />
           <div class="">
             <g-warning type="icon" content="介于此大小范围的文件将独立冷冻存储不进行合并或分片处理" />
           </div>
@@ -146,7 +146,7 @@ defineExpose({
       </el-form-item>
 
       <el-form-item label="分片存储大小" prop="fragmentSizeThreshold">
-        <gBtoMb v-model="form.fragmentSizeThreshold" :disabled="form.KeepRawKey" />
+        <gBtoMb v-model="form.fragmentSizeThreshold" :disabled="form.keepRawKey" />
         <div class="">
           <g-warning type="icon" content="超过[独立存储]上限的文件数据将被分片存储；建议1G~5G" />
         </div>
@@ -162,15 +162,15 @@ defineExpose({
           v-model="form.threadOfTransmission"
           :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
           type="simple"
-          :disabled="form.KeepRawKey"
+          :disabled="form.keepRawKey"
         />
         <div>
           <g-warning type="icon" content="单个工作线程内的传输线程" class="" />
         </div>
       </el-form-item>
 
-      <el-form-item label="开启元数据注入" prop="InjectSelftMeta">
-        <el-switch v-model="form.InjectSelftMeta" :disabled="form.KeepRawKey" />
+      <el-form-item label="开启元数据注入" prop="injectSelftMeta">
+        <el-switch v-model="form.injectSelftMeta" :disabled="form.keepRawKey" />
         <div>
           <g-warning type="icon" content="此功能可通过冷冻后的数据独立恢复原始文件；但会降低冷冻性能。" />
         </div>
@@ -181,8 +181,8 @@ defineExpose({
           <g-warning type="icon" content="直接传输数据避免使用缓冲区" />
         </div>
       </el-form-item>
-      <el-form-item label="开启数据传输校验" prop="VerifyFreezeContent">
-        <el-switch v-model="form.VerifyFreezeContent" />
+      <el-form-item label="开启数据传输校验" prop="verifyFreezeContent">
+        <el-switch v-model="form.verifyFreezeContent" />
         <div>
           <g-warning
             type="icon"
@@ -191,7 +191,7 @@ defineExpose({
         </div>
       </el-form-item>
       <el-form-item label=" 开启自适应分片大小" prop="dynamicFragmentSize">
-        <el-switch v-model="form.dynamicFragmentSize" :disabled="form.KeepRawKey" />
+        <el-switch v-model="form.dynamicFragmentSize" :disabled="form.keepRawKey" />
         <div class="">
           <g-warning type="icon" content="根据系统分片自动调整大小提升处理性能" />
         </div>

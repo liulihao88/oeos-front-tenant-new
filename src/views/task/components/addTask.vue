@@ -28,7 +28,7 @@ const isShow = ref(false)
 const originForm = ref({
   properties: {
     workScheduleExeOpportunity: 'IncludeExecute',
-    MAX_UNFREEZING_QUEUE_SIZE: 1,
+    maxUnfreezingQueueSize: 1,
     objectFilter: {
       expiredTimeExpress: '0y0m0d0h',
       keyPrefix: '',
@@ -47,18 +47,6 @@ const rules = {
 }
 const planOptions = ref([])
 const isView = ref(false)
-
-watch(
-  isLimitNumber,
-  (val) => {
-    if (!val) {
-      form.value.properties.MAX_UNFREEZING_QUEUE_SIZE = -1
-    }
-  },
-  {
-    immediate: true,
-  },
-)
 
 const compTitle = computed(() => {
   if (isView.value) {
@@ -123,6 +111,14 @@ const save = async () => {
   }
   copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').tenantId
   copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue()
+  // 处理冷冻任务
+  if (form.value.action === UNFREEZE) {
+    if (isLimitNumber.value) {
+      copyForm.properties.maxUnfreezingQueueSize = 1
+    } else {
+      copyForm.properties.maxUnfreezingQueueSize = -1
+    }
+  }
   await saveTask(copyForm)
   isShow.value = false
   emits('success')
@@ -220,7 +216,7 @@ defineExpose({
             </div>
             <div v-if="isLimitNumber" class="f mlr2">
               <span class="mr">最大解冻队列数量</span>
-              <el-input-number v-model="form.properties.MAX_UNFREEZING_QUEUE_SIZE" v-number :min="1" width="100" />
+              <el-input-number v-model="form.properties.maxUnfreezingQueueSize" v-number :min="1" width="100" />
             </div>
           </el-form-item>
         </template>
