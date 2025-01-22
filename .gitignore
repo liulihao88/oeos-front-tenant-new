@@ -22,4 +22,4 @@ tests/**/coverage/
 tsconfig.tsbuildinfo
 tenant
 src/views/test/*.js
-.vscode
+.vscode/

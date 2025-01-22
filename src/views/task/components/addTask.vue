@@ -2,6 +2,7 @@
 import { ref, getCurrentInstance, watch, nextTick, computed, h } from 'vue'
 import KeepTime from './keepTime.vue'
 import HighSettings from '@/views/task/components/highSettings.vue'
+import { pick, omit } from 'lodash'
 
 import { getSchedules, getTargetStorageList, saveTask, taskDetails } from '@/api/taskApi.ts'
 import OpenAllSwitch from '@/views/task/components/openAllSwitch.vue'
@@ -110,16 +111,34 @@ const save = async () => {
     copyForm.properties.includeBuckets = null
   }
   copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').tenantId
-  copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue()
+  if (copyForm.action !== UNFREEZE) {
+    copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue?.()
+  }
   // 处理冷冻任务
-  if (form.value.action === UNFREEZE) {
-    if (isLimitNumber.value) {
-      copyForm.properties.maxUnfreezingQueueSize = 1
-    } else {
+  if (copyForm.action === UNFREEZE) {
+    if (!isLimitNumber.value) {
       copyForm.properties.maxUnfreezingQueueSize = -1
     }
   }
-  await saveTask(copyForm)
+  // 根据不同的冷冻类型, 筛选出对应的要传给后端的属性值
+  let sendForm = proxy.clone(copyForm)
+  if (copyForm.action === FREEZE || copyForm.action === ZERO_COPY_FREEZE) {
+    sendForm.properties = omit(copyForm.properties, ['maxUnfreezingQueueSize'])
+  }
+  if (copyForm.action === UNFREEZE) {
+    sendForm.properties = pick(copyForm.properties, ['tenant', 'action', 'maxUnfreezingQueueSize'])
+  }
+  if (form.value.action === DELETE) {
+    sendForm.properties = pick(copyForm.properties, [
+      'tenant',
+      'action',
+      'objectFilter',
+      'workSchedule',
+      'workScheduleExeOpportunity',
+      'includeBuckets',
+    ])
+  }
+  await saveTask(sendForm)
   isShow.value = false
   emits('success')
 }
