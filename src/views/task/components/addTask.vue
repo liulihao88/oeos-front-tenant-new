@@ -110,7 +110,6 @@ const save = async () => {
   if (isTargetBucket.value) {
     copyForm.properties.includeBuckets = null
   }
-  copyForm.properties.tenant = proxy.getStorage('tenant-sysdomain').tenantId
   if (copyForm.action !== UNFREEZE) {
     copyForm.properties.objectFilter.expiredTimeExpress = keepTimeRef.value?.getValue?.()
   }
@@ -126,12 +125,10 @@ const save = async () => {
     sendForm.properties = omit(copyForm.properties, ['maxUnfreezingQueueSize'])
   }
   if (copyForm.action === UNFREEZE) {
-    sendForm.properties = pick(copyForm.properties, ['tenant', 'action', 'maxUnfreezingQueueSize'])
+    sendForm.properties = pick(copyForm.properties, ['maxUnfreezingQueueSize'])
   }
   if (form.value.action === DELETE) {
     sendForm.properties = pick(copyForm.properties, [
-      'tenant',
-      'action',
       'objectFilter',
       'workSchedule',
       'workScheduleExeOpportunity',

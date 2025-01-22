@@ -10,7 +10,6 @@ const props = defineProps({
   },
 })
 
-const FREEZE = 'FREEZE'
 const formRef = ref(null)
 const isShow = ref(false)
 const originForm = ref({
@@ -20,7 +19,6 @@ const originForm = ref({
   singleSizeRange: [104857600, 1073741824],
   fragmentSizeThreshold: 1073741824,
   workerCount: 2,
-  action: FREEZE,
   threadOfTransmission: 3,
   injectSelftMeta: false,
   directTransmission: true,
