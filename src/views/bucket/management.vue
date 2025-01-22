@@ -387,11 +387,11 @@ onMounted(() => {
         <div class="right-box">
           <div class="c-box w-100% f-1">
             <o-title :title="objectTitle" icon="plus" />
-            <BucketNumPie :title="title" :data="objectNumData" />
+            <BucketNumPie :data="objectNumData" />
           </div>
           <div class="c-box w-100% mt3 f-1">
             <o-title :title="quotaTitle" icon="plus" />
-            <BucketCapacityPie :title="title" :data="capacityData" />
+            <BucketCapacityPie :data="capacityData" />
           </div>
         </div>
       </el-col>
