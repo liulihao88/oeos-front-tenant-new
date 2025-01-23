@@ -185,12 +185,13 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
           val.workPeriods = val.workPeriods.map((item, index) => {
             return {
               ...item,
-              parseTimes: item.fromHH
-                ? [
-                    (item.fromHH + '').padStart(2, '0') + ':' + (item.fromMM + '').padStart(2, '0'),
-                    (item.toHH + '').padStart(2, '0') + ':' + (item.toMM + '').padStart(2, '0'),
-                  ]
-                : [],
+              parseTimes:
+                item.fromHH !== undefined || item.fromHH !== null
+                  ? [
+                      (item.fromHH + '').padStart(2, '0') + ':' + (item.fromMM + '').padStart(2, '0'),
+                      (item.toHH + '').padStart(2, '0') + ':' + (item.toMM + '').padStart(2, '0'),
+                    ]
+                  : [],
             }
           })
           weeks.value[i].dates = val.workPeriods
