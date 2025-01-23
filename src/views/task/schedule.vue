@@ -122,16 +122,18 @@ const columns = [
 
 const data = ref([])
 const originData = ref([])
-const selectedRows = ref([])
+const selectRow = ref({})
 
 const searchHandler = () => {
   if (!searchValue.value) {
     data.value = proxy.clone(originData.value)
+    restoreHighLight()
     return
   }
   data.value = originData.value.filter((item) => {
     return item.name.includes(searchValue.value)
   })
+  restoreHighLight()
 }
 
 const init = async () => {
@@ -141,6 +143,15 @@ const init = async () => {
   _handleRowClick()
 }
 init()
+
+async function restoreHighLight() {
+  let matchRow = data.value.find((item) => {
+    return item.value === selectRow.value.value
+  })
+  if (matchRow) {
+    tableRef.value.$refs.tableRef.setCurrentRow(matchRow)
+  }
+}
 
 const _handleRowClick = () => {
   let localTaskName = proxy.getStorage('tenant-task-name') || ''
@@ -159,7 +170,9 @@ const _handleRowClick = () => {
 }
 
 const handleCurrentChange = async (currentRow, oldCurrentRow) => {
-  selectedRows.value = currentRow
+  if (currentRow) {
+    selectRow.value = currentRow
+  }
   proxy.setStorage('tenant-task-name', currentRow?.name ?? '')
   if (proxy.notEmpty(currentRow)) {
     let res = await getScheduleDetail(currentRow.value)
@@ -190,6 +203,7 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
 const reset = () => {
   taskName.value = ''
   weeks.value = proxy.clone(originWeeks.value)
+  selectRow.value = {}
   isDelete.value = true
   nextTick(() => {
     isDelete.value = false
@@ -216,7 +230,7 @@ const saveReq = async () => {
       }
     })
   const sendData = {
-    id: selectedRows.value?.value,
+    id: selectRow.value?.value,
     name: taskName.value,
     workPeriodsList: workPeriodsList,
   }
