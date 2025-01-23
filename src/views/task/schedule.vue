@@ -332,12 +332,12 @@ const newAdd = () => {
       ref="dialogRef"
       v-model="isShow"
       :title="isEdit ? '编辑任务计划' : '新建任务计划'"
-      fullscreen
+      width="1400"
       @confirm="save"
     >
-      <div class="r" style=" display: flex; flex-direction: column; height: 100%;margin-left: 0">
+      <div class="r" style="display: flex; flex-direction: column; height: 100%; margin-left: 0">
         <div class="r-top">
-          <o-input v-model.trim="taskName" title="计划名称" width="300" />
+          <o-input v-model.trim="taskName" v-focus title="计划名称" width="300" />
         </div>
         <div class="r-content">
           <div v-for="(v, i) in weeks" :key="i" class="item">
@@ -397,6 +397,7 @@ const newAdd = () => {
     flex: 1;
     min-width: calc(100vw - 1000px);
     height: calc(100%);
+    // min-height: 500px;
     margin-left: 300px;
     overflow-x: auto;
 
@@ -411,6 +412,7 @@ const newAdd = () => {
       flex: 1;
       justify-content: space-between;
       height: 100%;
+      // min-height: 500px;
       overflow: auto;
       background-color: #fff;
 
@@ -418,6 +420,7 @@ const newAdd = () => {
         flex: 1;
         min-width: 180px;
         height: 100%;
+        min-height: 500px;
         padding: 8px;
         overflow: auto;
         border-left: 1px solid #eee;
