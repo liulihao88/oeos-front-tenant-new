@@ -107,4 +107,8 @@ watch(
     height: 100%;
   }
 }
+
+:deep(.g-gantt-row:last-child) {
+  border-bottom: 2px solid #eaeaea;
+}
 </style>

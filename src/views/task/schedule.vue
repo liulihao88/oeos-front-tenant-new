@@ -415,6 +415,7 @@ const newAdd = () => {
     // min-height: 500px;
     margin-left: 300px;
     overflow-x: auto;
+    background: #fff;
 
     .r-top {
       display: flex;
