@@ -11,10 +11,14 @@
 import { ref } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import useBucketList from '@/hooks/getBucketList.ts'
+const bucketList = useBucketList()
 
 import useNativeRefresh from '@/store/nativeRefresh'
 const useRefresh = useNativeRefresh()
 const currentLocale = ref(zhCn)
+
+bucketList.update()
 
 document.addEventListener('mouseover', function (event) {
   if (event.target && event.target.title) {

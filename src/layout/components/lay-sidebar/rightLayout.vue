@@ -8,6 +8,8 @@ import ModifyPassword from '@/layout/components/lay-sidebar/modifyPassword.vue'
 import DropdownLayout from '@/layout/components/dropdownLayout.vue'
 import LaySidebarFullScreen from '@/layout/components/lay-sidebar/components/SidebarFullScreen.vue'
 import LayoutFileList from '@/layout/components/lay-sidebar/layoutFileList.vue'
+import useBucketList from '@/hooks/getBucketList.ts'
+const bucketList = useBucketList()
 
 import Setting from '@iconify-icons/ri/settings-3-line'
 
@@ -24,6 +26,11 @@ function onFresh() {
     path: '/redirect' + fullPath,
     query,
   })
+  // 只有这些路由页面 才刷新租户列表
+  const refreshRoutesName = ['Management', 'Objectexplorer', 'Search', 'AdvanceSearch', 'AddUser', 'Group']
+  if (refreshRoutesName.includes(route.name)) {
+    bucketList.update()
+  }
   handleAliveRoute(route, 'refresh')
 }
 </script>
