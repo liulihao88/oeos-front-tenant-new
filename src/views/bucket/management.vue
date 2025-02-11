@@ -301,6 +301,7 @@ function _handleUsedData(usedSpace) {
 const refresh = () => {
   getSpaceInit()
   init()
+  getBucketListHook.update()
 }
 
 onMounted(() => {
