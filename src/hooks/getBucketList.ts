@@ -11,7 +11,7 @@ import { getStorage, clearStorage, setStorage } from 'oeos-components'
 
 const useGetBucketList = defineStore('getBucketList', {
   state: () => ({
-    bucketOptions: [],
+    bucketOptions: getStorage('tenant-bucket-options') ?? [],
   }),
   actions: {
     async getBucketList() {
@@ -19,12 +19,16 @@ const useGetBucketList = defineStore('getBucketList', {
         let res = await getBucketOptions()
         this.bucketOptions = res ?? []
         this._clearEmptyId()
+        setStorage('tenant-bucket-options', res ?? [])
+      } else {
+        this.bucketOptions = getStorage('tenant-bucket-options') ?? []
       }
     },
     async update(config = {}) {
       let res = await getBucketOptions(config)
       this.bucketOptions = res ?? []
       this._clearEmptyId()
+      setStorage('tenant-bucket-options', res ?? [])
     },
     _clearEmptyId() {
       let bucketId = getStorage('tenant-bucket-id') ?? ''
@@ -54,6 +58,7 @@ const useGetBucketList = defineStore('getBucketList', {
       clearStorage('tenant-bucket-id')
       clearStorage('tenant-easy-bucket-id')
       clearStorage('tenant-freeze-bucket-id')
+      clearStorage('tenant-bucket-options')
     },
   },
 })
