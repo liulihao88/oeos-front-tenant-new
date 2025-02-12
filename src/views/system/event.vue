@@ -278,7 +278,7 @@ onUnmounted(() => {
         />
       </div>
       <div class="w-100">
-        <el-button type="primary" @click="exportEventHandle">导出</el-button>
+        <el-button type="primary" :disabled="data.length === 0" @click="exportEventHandle">导出</el-button>
       </div>
     </div>
     <o-table
