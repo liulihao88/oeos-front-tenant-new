@@ -218,8 +218,8 @@ const goBack = () => {
     <o-title title="属性设置" t="8" b="8" />
 
     <el-row :gutter="8" class="row-height">
-      <el-col :span="12" class="h-100%">
-        <div class="c-box h-33%">
+      <el-col :span="12" style="height: 100%">
+        <div class="c-box o-a" style="height: 32.6%">
           <o-title class="mr2" title="存储桶版本控制:" type="simple">
             <template #icon>
               <g-img src="bucket/control" class="mr" />
@@ -234,7 +234,7 @@ const goBack = () => {
           <g-dif-warning class="mtb2" type="version" />
         </div>
 
-        <div class="c-box mt h-33%">
+        <div class="c-box mt h-33% o-a">
           <o-title title="存储桶配额" type="simple">
             <template #icon>
               <g-img src="bucket/quota" class="mr" />
@@ -252,15 +252,15 @@ const goBack = () => {
             </div>
             <div class="f-1">
               <span class="mr">配额类型:</span>
-              <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === originQuotaForm.quotaType).label }}</span>
+              <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === originQuotaForm.quotaType)?.label }}</span>
             </div>
           </div>
-          <div class="f-ed-ct">
+          <div class="f-ed-ct h-20">
             <el-button type="primary" class="f-ed-ct tr" @click="editQuota">编辑</el-button>
           </div>
         </div>
 
-        <div class="c-box mt h-33%">
+        <div class="c-box mt h-33% o-a">
           <o-title title="对象定时删除" type="simple">
             <template #icon>
               <g-img src="bucket/delete" class="mr" />
@@ -283,7 +283,7 @@ const goBack = () => {
               </span>
             </div>
           </div>
-          <div class="f-ed-ct">
+          <div class="f-ed-ct h-20">
             <el-button type="primary" @click="editDate">编辑</el-button>
           </div>
         </div>
