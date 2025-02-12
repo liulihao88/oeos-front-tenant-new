@@ -278,7 +278,9 @@ onUnmounted(() => {
         />
       </div>
       <div class="w-100">
-        <el-button type="primary" :disabled="data.length === 0" @click="exportEventHandle">导出</el-button>
+        <o-tooltip content="导出结果为空, 不执行导出操作" :disabled="data.length !== 0">
+          <el-button type="primary" :disabled="data.length === 0" @click="exportEventHandle">导出</el-button>
+        </o-tooltip>
       </div>
     </div>
     <o-table

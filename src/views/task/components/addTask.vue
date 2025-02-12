@@ -233,7 +233,7 @@ defineExpose({
               <span class="mr">限制解冻队列数量</span>
               <el-switch v-model="isLimitNumber" />
             </div>
-            <div v-if="isLimitNumber" class="f mlr2">
+            <div v-if="isLimitNumber" class="f-st-ct mlr2">
               <span class="mr">最大解冻队列数量</span>
               <el-input-number v-model="form.properties.maxUnfreezingQueueSize" v-number :min="1" width="100" />
             </div>
