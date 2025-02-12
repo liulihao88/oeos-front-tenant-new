@@ -13,6 +13,7 @@ const testTime = ref(['11:28', '12:28'])
 const isShow = ref(false)
 const isEdit = ref(false)
 const batchTime = ref([])
+const selectWeeks = ref([])
 const originWeeks = ref([
   {
     label: '星期一',
@@ -84,6 +85,7 @@ const editRow = async () => {
   isEdit.value = true
   isShow.value = true
   batchTime.value = []
+  selectWeeks.value = []
 }
 
 const columns = [
@@ -253,27 +255,30 @@ const batchClear = () => {
 }
 const batchAdd = () => {
   copyWeeks.value = copyWeeks.value.map((v) => {
-    let hasDates = v.dates.some((val) => {
-      if (isEqual(val.parseTimes, batchTime.value)) {
-        return true
+    if (selectWeeks.value.length === 0 || selectWeeks.value.includes(v.dayOfWeek)) {
+      let hasDates = v.dates.some((val) => {
+        if (isEqual(val.parseTimes, batchTime.value)) {
+          return true
+        }
+      })
+      if (!hasDates) {
+        v.dates.push({ parseTimes: batchTime.value })
       }
-    })
-    if (!hasDates) {
-      v.dates.push({ parseTimes: batchTime.value })
     }
     return v
   })
 }
 const batchDelete = () => {
   copyWeeks.value = copyWeeks.value.map((v) => {
-    console.log(`67 v`, v)
-    v.dates = v.dates.filter((val) => {
-      if (isEqual(val.parseTimes, batchTime.value)) {
-        return false
-      } else {
-        return true
-      }
-    })
+    if (selectWeeks.value.length === 0 || selectWeeks.value.includes(v.dayOfWeek)) {
+      v.dates = v.dates.filter((val) => {
+        if (isEqual(val.parseTimes, batchTime.value)) {
+          return false
+        } else {
+          return true
+        }
+      })
+    }
     return v
   })
 }
@@ -356,6 +361,7 @@ const newAdd = () => {
   isEdit.value = false
   isShow.value = true
   batchTime.value = []
+  selectWeeks.value = []
 }
 </script>
 
@@ -417,9 +423,20 @@ const newAdd = () => {
             >
               添加
             </el-button>
-            <el-button type="primary" :disabled="batchTime.length === 0" icon="el-icon-delete" @click="batchDelete">
+            <el-button :disabled="batchTime.length === 0" icon="el-icon-delete" class="m-r-10" @click="batchDelete">
               删除
             </el-button>
+
+            <o-select
+              v-model="selectWeeks"
+              width="400"
+              :options="originWeeks"
+              value="dayOfWeek"
+              multiple
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="3"
+            />
           </div>
         </div>
         <div class="r-content">
