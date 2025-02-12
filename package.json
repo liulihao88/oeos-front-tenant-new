@@ -51,6 +51,7 @@
     "url": "https://github.com/xiaoxian521"
   },
   "dependencies": {
+    "@infectoone/vue-ganttastic": "^2.3.2",
     "@pureadmin/descriptions": "^1.2.1",
     "@pureadmin/table": "^3.1.2",
     "@pureadmin/utils": "^2.4.7",
@@ -71,7 +72,7 @@
     "mitt": "^3.0.1",
     "mousetrap": "^1.6.5",
     "nprogress": "^0.2.0",
-    "oeos-components": "^0.1.48",
+    "oeos-components": "^0.1.76",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^4.1.3",
@@ -85,8 +86,7 @@
     "vue-echarts": "^6.7.2",
     "vue-router": "^4.3.2",
     "vue-tippy": "^6.4.1",
-    "vue-types": "^5.1.2",
-    "@infectoone/vue-ganttastic": "^2.3.2"
+    "vue-types": "^5.1.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
