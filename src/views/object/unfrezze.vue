@@ -197,16 +197,16 @@ const next = () => {
 
 <template>
   <div>
-    <div class="top">
-      <div>
+    <div class="top o-a">
+      <div class="f">
         <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
         <o-input
           v-model="prefixKey"
           v-debounce.200="init"
           title="对象前缀"
-          placeholder="请输入对象键的前缀"
+          placeholder="对象键的前缀"
           :disabled="!bucketId"
-          width="300"
+          width="200"
           class="mr2"
           @clear="init"
         />
@@ -217,10 +217,11 @@ const next = () => {
           width="200"
           :clearable="false"
           title="状态"
+          class="mr"
           @change="init"
         />
       </div>
-      <div>
+      <div class="f">
         <el-button type="primary" :disabled="!bucketName" @click="init">查询</el-button>
         <template v-if="frezzeStatus === 'unfreezing'">
           <el-button type="primary" :disabled="selections.length === 0" @click="cancelUnFreeze">取消解冻</el-button>
