@@ -57,6 +57,9 @@ const compTitle = computed(() => {
 })
 
 const actionChange = async (value) => {
+  if (value === DELETE) {
+    isTargetBucket.value = false
+  }
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     let res = await getTargetStorageList()
     targetOptions.value = res
