@@ -25,6 +25,7 @@ const versionStatus = ref(tenantBucketDetails.value.versionStatus)
 const retentionAutoObj = ref({})
 const dateForm = ref({})
 const originDateForm = ref({})
+const originQuotaForm = ref({})
 const dateFormRef = ref(null)
 const isShowDate = ref(false)
 const limitQuota = ref(0)
@@ -94,6 +95,7 @@ const init = async () => {
       createdDatetime: tenantBucketDetails.value.createdDatetime,
     },
   ]
+  originQuotaForm.value = res[0]
 }
 init()
 async function getRetentionAutodeleteInit() {
@@ -141,13 +143,14 @@ const radioMap = {
 const editQuota = () => {
   getLimitCeilingInit()
   isQuotaShow.value = true
+  quotaForm.value = proxy.clone(originQuotaForm.value)
 }
 const quotaConfirm = async () => {
   await editBucketTotal(tenantBucketDetails.value.bucketName, quotaForm.value)
-  proxy.$toast('保存成功')
+  proxy.$toast('修改成功')
+  await init()
   isQuotaShow.value = false
   let mergeDetails = Object.assign(tenantBucketDetails.value, quotaForm.value)
-  data.value[0].total = quotaForm.value.quota
   proxy.setStorage('tenant-bucket-details', mergeDetails)
 }
 const dateConfirm = async () => {
@@ -184,7 +187,7 @@ const goBack = () => {
         <div class="top-item f-1">
           <img :src="proxy.formatImg('bucket/base1')" alt="" class="mr2" width="57" />
           <div class="f-bt-ct f-c">
-            <span class="bold">{{ data?.[0]?.total }}</span>
+            <span class="bold">{{ originQuotaForm.quota }} {{ originQuotaForm.quotaUnit }}</span>
             <span class="cl-45">配额</span>
           </div>
         </div>
@@ -245,11 +248,11 @@ const goBack = () => {
           <div class="mtb2 f-st-ct">
             <div class="f-1">
               <span class="mr">当前存储桶配额:</span>
-              <span class="cl-blue">{{ quotaForm.quota.toFixed(2) }} {{ quotaForm.quotaUnit }}</span>
+              <span class="cl-blue">{{ originQuotaForm.quota }} {{ originQuotaForm.quotaUnit }}</span>
             </div>
             <div class="f-1">
               <span class="mr">配额类型:</span>
-              <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === quotaForm.quotaType).label }}</span>
+              <span class="cl-blue">{{ QUOTA_OPTIONS.find((v) => v.value === originQuotaForm.quotaType).label }}</span>
             </div>
           </div>
           <div class="f-ed-ct">
