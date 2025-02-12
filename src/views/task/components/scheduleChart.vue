@@ -70,6 +70,7 @@ watch(
     chart-end="23:59"
     precision="hour"
     date-format="HH:mm"
+    :row-height="80"
     bar-start="beginDate"
     bar-end="endDate"
     grid
@@ -110,5 +111,25 @@ watch(
 
 :deep(.g-gantt-row:last-child) {
   border-bottom: 2px solid #eaeaea;
+}
+
+:deep(.tooltip__text),
+:deep(.el-tooltip__trigger),
+:deep(.el-dropdown) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 100%;
+  text-align: center;
+}
+
+:deep(.g-gantt-bar-label) {
+  padding: 0;
+}
+
+:deep(.g-gantt-row-label) {
+  height: 10%;
 }
 </style>

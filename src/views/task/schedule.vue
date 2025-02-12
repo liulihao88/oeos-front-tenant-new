@@ -2,6 +2,7 @@
 import { ref, getCurrentInstance, nextTick, onMounted } from 'vue'
 import { getSchedules, deleteSchedule, saveSchedule, getScheduleDetail } from '@/api/taskApi.ts'
 import ScheduleChart from '@/views/task/components/scheduleChart.vue'
+import { isEqual } from 'lodash-es'
 
 const { proxy } = getCurrentInstance()
 const dateValue = ref({})
@@ -11,6 +12,7 @@ const tableRef = ref(null)
 const testTime = ref(['11:28', '12:28'])
 const isShow = ref(false)
 const isEdit = ref(false)
+const batchTime = ref([])
 const originWeeks = ref([
   {
     label: '星期一',
@@ -50,6 +52,8 @@ const originWeeks = ref([
 ])
 const weeks = ref([])
 weeks.value = proxy.clone(originWeeks.value)
+const copyWeeks = ref([])
+copyWeeks.value = proxy.clone(originWeeks.value)
 
 const searchValue = ref('')
 const extractChinese = (str) => {
@@ -79,6 +83,7 @@ const deleteRow = async (row) => {
 const editRow = async () => {
   isEdit.value = true
   isShow.value = true
+  batchTime.value = []
 }
 
 const columns = [
@@ -178,6 +183,7 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
     let res = await getScheduleDetail(currentRow.value)
     taskName.value = res.name
     const cloneWeeks = proxy.clone(originWeeks.value)
+    copyWeeks.value = proxy.clone(originWeeks.value)
     weeks.value = proxy.clone(originWeeks.value)
     cloneWeeks.forEach((v, i) => {
       res.workPeriodsList.forEach((val, idx) => {
@@ -194,7 +200,9 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
                   : [],
             }
           })
-          weeks.value[i].dates = val.workPeriods
+          let cloneWorkPeriods = proxy.clone(val.workPeriods)
+          copyWeeks.value[i].dates = cloneWorkPeriods
+          weeks.value[i].dates = cloneWorkPeriods
         }
       })
     })
@@ -203,7 +211,6 @@ const handleCurrentChange = async (currentRow, oldCurrentRow) => {
 
 const reset = () => {
   taskName.value = ''
-  weeks.value = proxy.clone(originWeeks.value)
   selectRow.value = {}
   isDelete.value = true
   nextTick(() => {
@@ -213,7 +220,7 @@ const reset = () => {
 }
 
 const saveReq = async () => {
-  let workPeriodsList = weeks.value
+  let workPeriodsList = copyWeeks.value
     .filter((v) => {
       return v.dates.length > 0
     })
@@ -238,7 +245,37 @@ const saveReq = async () => {
   proxy.setStorage('tenant-task-name', taskName.value)
   await saveSchedule(sendData)
   proxy.$toast('保存成功')
+  weeks.value = proxy.clone(copyWeeks)
   init()
+}
+const batchClear = () => {
+  batchTime.value = []
+}
+const batchAdd = () => {
+  copyWeeks.value = copyWeeks.value.map((v) => {
+    let hasDates = v.dates.some((val) => {
+      if (isEqual(val.parseTimes, batchTime.value)) {
+        return true
+      }
+    })
+    if (!hasDates) {
+      v.dates.push({ parseTimes: batchTime.value })
+    }
+    return v
+  })
+}
+const batchDelete = () => {
+  copyWeeks.value = copyWeeks.value.map((v) => {
+    console.log(`67 v`, v)
+    v.dates = v.dates.filter((val) => {
+      if (isEqual(val.parseTimes, batchTime.value)) {
+        return false
+      } else {
+        return true
+      }
+    })
+    return v
+  })
 }
 const isTimeValid = (startTime, endTime) => {
   return new Date(`2023-01-01T${startTime}`).getTime() < new Date(`2023-01-01T${endTime}`).getTime()
@@ -251,10 +288,10 @@ const isTimeOverlapping = (startTime, endTime, timeRangeList, idx) => {
     if (range.startTime === startTime && range.endTime === endTime && idx !== index) {
       return true
     }
-    // return !(
-    //   new Date(`2023-01-01T${endTime}`).getTime() <= new Date(`2023-01-01T${range.startTime}`).getTime() ||
-    //   new Date(`2023-01-01T${startTime}`).getTime() >= new Date(`2023-01-01T${range.endTime}`).getTime()
-    // )
+    return !(
+      new Date(`2023-01-01T${endTime}`).getTime() <= new Date(`2023-01-01T${range.startTime}`).getTime() ||
+      new Date(`2023-01-01T${startTime}`).getTime() >= new Date(`2023-01-01T${range.endTime}`).getTime()
+    )
   })
 }
 const save = async () => {
@@ -263,7 +300,8 @@ const save = async () => {
   }
 
   let isTimeEmpty = true
-  weeks.value.forEach((v, i) => {
+
+  copyWeeks.value.forEach((v, i) => {
     let timeRangeList = []
     v.dates.forEach((val, idx) => {
       isTimeEmpty = false
@@ -278,9 +316,14 @@ const save = async () => {
         endTime: endTime,
       })
     })
+    console.log(`87 v.dates`, v.dates)
     v.dates.forEach((val, idx) => {
       let startTime = val.parseTimes[0]
       let endTime = val.parseTimes[1]
+      if (startTime === endTime) {
+        proxy.$toast(v.label + '第' + (idx + 1) + '个时间段开始时间与结束时间不能相同', 'e')
+        throw new Error()
+      }
       if (isTimeOverlapping(startTime, endTime, timeRangeList, idx)) {
         proxy.$toast(v.label + '第' + (idx + 1) + '个时间段与其他时间段不能重叠', 'e')
         throw new Error()
@@ -294,14 +337,14 @@ const save = async () => {
   isShow.value = false
 }
 const addTime = (v, i) => {
-  weeks.value[i].dates.push({ parseTimes: [] })
+  copyWeeks.value[i].dates.push({ parseTimes: [] })
 }
 const deleteTime = (v, i, val = '', idx = '') => {
   isDelete.value = true
   if (idx !== '') {
-    weeks.value[i].dates.splice(idx, 1)
+    copyWeeks.value[i].dates.splice(idx, 1)
   } else {
-    weeks.value[i].dates = []
+    copyWeeks.value[i].dates = []
   }
   nextTick(() => {
     isDelete.value = false
@@ -312,6 +355,7 @@ const newAdd = () => {
   reset()
   isEdit.value = false
   isShow.value = true
+  batchTime.value = []
 }
 </script>
 
@@ -352,10 +396,34 @@ const newAdd = () => {
     >
       <div class="r" style="display: flex; flex-direction: column; height: 100%; margin-left: 0">
         <div class="r-top">
-          <o-input v-model.trim="taskName" v-focus title="计划名称" width="300" />
+          <o-input v-model.trim="taskName" v-focus title="计划名称" width="300" class="mr" />
+
+          <div class="batch-box">
+            <o-comp-title title="批量操作" />
+            <el-time-picker
+              v-model="batchTime"
+              is-range
+              format="HH:mm"
+              value-format="HH:mm"
+              style="width: 140px"
+              @clear="batchClear"
+            />
+            <el-button
+              type="primary"
+              :disabled="batchTime.length === 0"
+              class="m-l-10"
+              icon="el-icon-plus"
+              @click="batchAdd"
+            >
+              添加
+            </el-button>
+            <el-button type="primary" :disabled="batchTime.length === 0" icon="el-icon-delete" @click="batchDelete">
+              删除
+            </el-button>
+          </div>
         </div>
         <div class="r-content">
-          <div v-for="(v, i) in weeks" :key="i" class="item">
+          <div v-for="(v, i) in copyWeeks" :key="i" class="item">
             <div class="f-bt">
               <span>
                 {{ v.label }}
@@ -446,6 +514,16 @@ const newAdd = () => {
         border-right: 0;
       }
     }
+  }
+}
+
+.batch-box {
+  display: flex;
+  align-items: center;
+
+  :deep(.el-input__wrapper) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 </style>
