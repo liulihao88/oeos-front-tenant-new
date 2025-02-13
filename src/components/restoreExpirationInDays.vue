@@ -4,6 +4,7 @@ const { proxy } = getCurrentInstance()
 import KeepTime from '@/views/task/components/keepTime.vue'
 import { objectRestore, objectRestoreBatch } from '@/api/bucketReview'
 import { loading1 } from '@/utils/request'
+const needVersion = ref(false)
 
 const isShow = ref(false)
 const keepTimeRef = ref(null)
@@ -14,7 +15,8 @@ const form = ref({
 const sendRowOrArr = ref()
 const emits = defineEmits(['success'])
 
-const open = (row) => {
+const open = (row, sendNeedVersion = true) => {
+  needVersion.value = sendNeedVersion
   sendRowOrArr.value = proxy.clone(row)
   form.value.expirationInDays = '0y0m1d0h'
   isShow.value = true
@@ -29,13 +31,22 @@ const confirm = async () => {
     sendExpirationInDays = match[3]
   }
   if (Array.isArray(sendRowOrArr.value)) {
+    if (!needVersion.value) {
+      sendRowOrArr.value = sendRowOrArr.value.map((item) => {
+        delete item.version
+        return item
+      })
+    }
     await objectRestoreBatch(sendExpirationInDays, sendRowOrArr.value)
   } else {
     let sendData = {
       bucket: sendRowOrArr.value.bucket,
       expirationInDays: sendExpirationInDays,
       key: sendRowOrArr.value.key,
-      version: sendRowOrArr.value.version,
+      // version: sendRowOrArr.value.version,
+    }
+    if (needVersion.value) {
+      sendData.version = sendRowOrArr.value.version
     }
     await objectRestore(sendData)
   }

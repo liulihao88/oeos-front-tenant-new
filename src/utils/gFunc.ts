@@ -5,7 +5,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { isStringNumber, isNumber } from './types.js'
 import request from '@/utils/request.js'
 
-export async function gDownload(item) {
+export async function gDownload(item, needVersion = true) {
   if (!item.bucket) {
     $toast('不是有效数据，不支持下载!', 'w')
     return false
@@ -18,10 +18,16 @@ export async function gDownload(item) {
   let bucketName = item.bucket ? item.bucket : ''
   let objectKey = item.key ? item.key : ''
   let objectVersionID = item.version ? item.version : ''
-  let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}&version=${objectVersionID}`
+  let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}`
+  if (needVersion) {
+    dataUrl = dataUrl + `&version=${objectVersionID}`
+  }
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  let dataUrl2 = `?bucket=${bucketName}&key=${objectKey}&version=${objectVersionID}`
+  let dataUrl2 = `?bucket=${bucketName}&key=${objectKey}`
+  if (needVersion) {
+    dataUrl2 = dataUrl2 + `&version=${objectVersionID}`
+  }
   let requestHref = 'object/download' + dataUrl2 + `&Authorization=${getStorage('tenant-token')}`
   let res = await request(requestHref, { customResponse: true })
   if (res.data && res.data.status && res.data.status !== 200) {

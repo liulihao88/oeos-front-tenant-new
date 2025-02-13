@@ -4,6 +4,14 @@ const { proxy } = getCurrentInstance()
 
 import { getHistory, deleteOne, deleteBatch, objectDownloadBatch, objectPropertyDetail } from '@/api/bucketReview.ts'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
+import { useRouter, useRoute } from 'vue-router'
+const route = useRoute()
+const needVersion = ref(false)
+if (route.name === 'Objectexplorer') {
+  needVersion.value = false
+} else {
+  needVersion.value = true
+}
 
 const isShow = ref(false)
 const data = ref([])
@@ -30,7 +38,9 @@ const init = async (isReset = false) => {
     bucket: props.bucketName || rowDetails.value.bucket,
     pageMarker: pageMarker.value ?? '',
     versionIdMarker: versionIdMarker.value,
-    version: rowDetails.value.version,
+  }
+  if (needVersion.value) {
+    params.version = rowDetails.value.version
   }
   let res = await getHistory(params)
   data.value = res.page

@@ -5,6 +5,7 @@ import { getObjectList, deleteBatch, objectDownloadBatch } from '@/api/bucketRev
 import UploadFile from '@/views/bucket/components/uploadFile.vue'
 import { throttle } from 'lodash-es'
 import RestoreExpirationInDays from '@/components/restoreExpirationInDays.vue'
+import { useRouter, useRoute } from 'vue-router'
 
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
@@ -29,13 +30,27 @@ const bucketRef = ref(null)
 const selections = ref([])
 const timer = ref(null)
 const pageMarker = ref()
+const route = useRoute()
+const needVersion = ref(false)
+if (route.name === 'Objectexplorer') {
+  needVersion.value = false
+} else {
+  needVersion.value = true
+}
 
 function selectableFn(row, index) {
   return row.injectTime
 }
 
 const batchDownload = async () => {
-  let res = await objectDownloadBatch(selections.value)
+  let sendSelections = proxy.clone(selections.value)
+  if (!needVersion.value) {
+    sendSelections = sendSelections.map((v) => {
+      delete v.version
+      return v
+    })
+  }
+  let res = await objectDownloadBatch(sendSelections)
   proxy.gDownloadAll(res)
 }
 
@@ -138,7 +153,14 @@ const refresh = () => {
   init()
 }
 const multypleDelete = async () => {
-  await deleteBatch(selections.value)
+  let sendSelections = proxy.clone(selections.value)
+  if (!needVersion.value) {
+    sendSelections = sendSelections.map((v) => {
+      delete v.version
+      return v
+    })
+  }
+  await deleteBatch(sendSelections)
   proxy.$toast('删除成功!')
   init()
 }
@@ -197,7 +219,7 @@ watch(
       <el-button
         type="primary"
         :disabled="selections.length === 0"
-        @click="RestoreExpirationInDaysRef.open(selections)"
+        @click="RestoreExpirationInDaysRef.open(selections, false)"
       >
         <template #icon>
           <o-svg name="restore" />

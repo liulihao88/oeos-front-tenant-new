@@ -2,18 +2,27 @@ import { ref, nextTick, getCurrentInstance, computed } from 'vue'
 import { preview } from '@/utils/remoteFunc.ts'
 import { isImage, gDownload } from '@/utils/gFunc.ts'
 import { $toast } from 'oeos-components'
+import { useRouter, useRoute } from 'vue-router'
 
 import { deleteOne, objectPropertyDetail } from '@/api/bucketReview'
 
 export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, BucketFileDetailsCompRef, init) => {
+  const route = useRoute()
+  const needVersion = ref(false)
+  if (route.name === 'Objectexplorer') {
+    needVersion.value = false
+  } else {
+    needVersion.value = true
+  }
   const { proxy } = getCurrentInstance()
-  // const btns = ref([])
   const isChange = ref(false)
   const detailRow = async (row) => {
     let params = {
       bucket: row.bucket,
       key: row.key,
-      version: row.version,
+    }
+    if (needVersion.value) {
+      params.version = row.version
     }
     let res = await objectPropertyDetail(params)
     BucketFileDetailsCompRef.value.open(res)
@@ -22,11 +31,16 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
     let params = {
       bucket: row.bucket,
       key: row.key,
-      version: row.version,
+    }
+    if (needVersion.value) {
+      params.version = row.version
     }
     await deleteOne(params)
     $toast('删除成功')
     init()
+  }
+  const downloadRow = async (row) => {
+    return gDownload(row, needVersion.value)
   }
   const btns = computed(() => {
     let baseObj = {
@@ -49,7 +63,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         },
         {
           content: '下载',
-          handler: gDownload,
+          handler: downloadRow,
           comp: 'o-icon',
           attrs: {
             type: 'svg',
@@ -71,7 +85,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
         {
           content: '恢复',
           handler: (row) => {
-            RestoreExpirationInDaysRef.value.open(row)
+            RestoreExpirationInDaysRef.value.open(row, needVersion.value)
           },
         },
         {
@@ -83,7 +97,7 @@ export const useBtns = (RestoreExpirationInDaysRef, bucketOverviewHistoryRef, Bu
           isShow: (row) => {
             return isImage(row.key)
           },
-          handler: (row) => preview(row.bucket, row.name, row),
+          handler: (row) => preview(row.bucket, row.name, row, needVersion.value),
         },
       ],
     }
