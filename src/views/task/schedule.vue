@@ -404,10 +404,10 @@ const newAdd = () => {
     >
       <div class="r" style="display: flex; flex-direction: column; height: 100%; margin-left: 0">
         <div class="r-top">
-          <o-input v-model.trim="taskName" v-focus title="计划名称" width="300" class="mr" />
+          <o-input v-model.trim="taskName" v-focus title="计划名称" width="200" class="mr" />
 
           <div class="batch-box">
-            <o-comp-title title="批量操作" />
+            <o-comp-title title="批量配置" />
             <el-time-picker
               v-model="batchTime"
               is-range
@@ -429,7 +429,7 @@ const newAdd = () => {
               删除
             </el-button>
 
-            <o-select
+            <o-checkbox
               v-model="selectWeeks"
               width="400"
               :options="originWeeks"

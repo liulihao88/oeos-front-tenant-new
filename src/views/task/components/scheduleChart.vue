@@ -89,7 +89,11 @@ watch(
     >
       <template #bar-label="{ bar }">
         <o-tooltip :content="bar.ganttBarConfig.label">
-          {{ bar.ganttBarConfig.label }}
+          <div class="f-ct-ct" style="flex-direction: column">
+            <div class="tc">{{ bar.ganttBarConfig.label.split('~')[0] }}</div>
+            <div class="tc">~</div>
+            <div class="tc">{{ bar.ganttBarConfig.label.split('~')[1] }}</div>
+          </div>
         </o-tooltip>
       </template>
     </g-gantt-row>
