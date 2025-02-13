@@ -86,6 +86,7 @@ const editRow = async () => {
   isShow.value = true
   batchTime.value = []
   selectWeeks.value = []
+  copyWeeks.value = proxy.clone(weeks.value)
 }
 
 const columns = [
@@ -362,6 +363,7 @@ const newAdd = () => {
   isShow.value = true
   batchTime.value = []
   selectWeeks.value = []
+  copyWeeks.value = proxy.clone(originWeeks.value)
 }
 </script>
 
