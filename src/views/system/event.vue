@@ -171,20 +171,26 @@ const exportEventHandle = async () => {
     apps: [],
     nodes: [],
     levels: searchForm.value.levels,
-    mark: searchForm.value.mark,
+    mark: searchForm.value.mark || null,
     beginDatetime: searchForm.value.beginDatetime,
     endDatetime: searchForm.value.endDatetime,
   }
   let res = await exportEvent(_data)
-  if (res.status === 200) {
+  if (res.status !== 200) {
+    return proxy.$toast('导出失败', 'e')
+  }
+  try {
+    // 尝试将文本解析为 JSON
+    const result = await parseBlobToJson(res.data)
+    proxy.$toast(result.message, 'e')
+  } catch (e) {
+    // 如果无法解析为json, 代表是数据流, 可以下载
     let data = res.data
     const url = URL.createObjectURL(data)
     const link = document.createElement('a')
     link.href = url
     link.download = '租户事件.xls'
     link.click()
-  } else {
-    proxy.$toast('导出失败', 'e')
   }
 }
 
@@ -230,6 +236,25 @@ const parseLevel = (level) => {
 
 getLevelOptions()
 
+function parseBlobToJson(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = function (event) {
+      try {
+        const text = event.target.result // 获取 Blob 的文本内容
+        const json = JSON.parse(text) // 将文本解析为 JSON
+        resolve(json)
+      } catch (error) {
+        reject(new Error('无法解析 JSON: ' + error.message))
+      }
+    }
+    reader.onerror = function (error) {
+      reject(new Error('读取 Blob 时出错: ' + error.message))
+    }
+    reader.readAsText(blob) // 以文本形式读取 Blob
+  })
+}
+
 init()
 timer.value = setInterval(() => {
   init()
@@ -248,7 +273,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="top w-100% f-bt-ct m-b-16">
+    <div class="top w-100% f-bt-ct m-b-16 o-a">
       <div class="f-1 f-st-ct w-100%">
         <o-select
           v-model="searchForm.levels"
@@ -257,8 +282,8 @@ onUnmounted(() => {
           multiple
           label="name"
           placeholder="请选择事件等级"
-          class="m-r-16"
-          width="510"
+          class="mr"
+          width="350"
           @change="init"
         />
         <o-select
@@ -266,12 +291,14 @@ onUnmounted(() => {
           title="状态"
           :options="statusOptions"
           placeholder="请选择状态"
-          class="m-r-16"
+          class="mr"
+          width="200"
           @change="init"
         />
         <o-date-range
           v-model="dateRangeValue"
           title="发生时间"
+          class="mr"
           value-format="YYYY-MM-DD"
           @change="dateChange"
           @clear="dateChange"
