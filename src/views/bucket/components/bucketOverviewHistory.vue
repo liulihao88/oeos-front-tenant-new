@@ -25,6 +25,7 @@ const props = defineProps({
 })
 
 const selections = ref([])
+const hasNext = ref(true)
 const rowDetails = ref({})
 const prevHisList = ref([])
 const pageMarker = ref()
@@ -36,15 +37,19 @@ const init = async (isReset = false) => {
   let params = {
     key: rowDetails.value.key,
     bucket: props.bucketName || rowDetails.value.bucket,
-    pageMarker: pageMarker.value ?? '',
-    versionIdMarker: versionIdMarker.value,
+    pageMarker: prevHisList.value.length === 0 ? '' : prevHisList.value.at(-1)?.pageMarker,
   }
+  if (prevHisList.value.length > 0) {
+    params.versionIdMarker = prevHisList.value.at(-1)?.versionIdMarker
+  }
+
   if (needVersion.value) {
     params.version = rowDetails.value.version
   }
   let res = await getHistory(params)
   data.value = res.page
   pageMarker.value = res.pageMarker
+  hasNext.value = res.pageMarker ? true : false
 }
 
 const detailRow = async (row) => {
@@ -59,6 +64,8 @@ const detailRow = async (row) => {
 
 const open = async (row) => {
   rowDetails.value = row
+  prevHisList.value = []
+  pageMarker.value = ''
   await init()
   isShow.value = true
 }
@@ -174,9 +181,9 @@ const columns = [
   },
 ]
 const prev = () => {
-  let popList = prevHisList.value.pop()
-  pageMarker.value = popList.key
-  versionIdMarker.value = popList.version
+  prevHisList.value.pop()
+  pageMarker.value = prevHisList.value.at(-1)?.key
+  versionIdMarker.value = prevHisList.value.at(-1)?.version
   init()
 }
 const next = () => {
@@ -238,7 +245,7 @@ defineExpose({
 
       <div class="mt2 f-ed-ct">
         <el-button type="primary" :disabled="prevHisList.length === 0" @click="prev">上一页</el-button>
-        <el-button type="primary" :disabled="data.length < 20" @click="next">下一页</el-button>
+        <el-button type="primary" :disabled="!hasNext" @click="next">下一页</el-button>
       </div>
     </o-dialog>
     <RestoreExpirationInDays ref="RestoreExpirationInDaysRef" />
