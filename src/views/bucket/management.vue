@@ -409,17 +409,17 @@ onMounted(() => {
       <el-col :span="8" style="height: 100%">
         <div class="right-box">
           <div class="c-box w-100% f-1">
-            <o-tooltip
+            <!-- <o-tooltip
               :content="parseOptions(objectNumData)"
               raw-content
               width="100% "
               :disabled="objectNumData.every((v) => !v.value)"
               placement="left"
               class="w-100% h-100%"
-            >
-              <o-title :title="objectTitle" icon="plus" />
-              <BucketNumPie :data="objectNumData" />
-            </o-tooltip>
+            > -->
+            <o-title :title="objectTitle" icon="plus" />
+            <BucketNumPie :data="objectNumData" />
+            <!-- </o-tooltip> -->
           </div>
           <div class="c-box w-100% mt3 f-1">
             <o-title :title="quotaTitle" icon="plus" />
