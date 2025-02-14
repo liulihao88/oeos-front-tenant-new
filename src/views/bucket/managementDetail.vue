@@ -187,7 +187,7 @@ const goBack = () => {
         <div class="top-item f-1">
           <img :src="proxy.formatImg('bucket/base1')" alt="" class="mr2" width="57" />
           <div class="f-bt-ct f-c">
-            <span class="bold">{{ originQuotaForm.quota }} {{ originQuotaForm.quotaUnit }}</span>
+            <span class="bold">{{ originQuotaForm.quota.toFixed(2) }} {{ originQuotaForm.quotaUnit }}</span>
             <span class="cl-45">配额</span>
           </div>
         </div>
@@ -248,7 +248,7 @@ const goBack = () => {
           <div class="mtb2 f-st-ct">
             <div class="f-1">
               <span class="mr">当前存储桶配额:</span>
-              <span class="cl-blue">{{ originQuotaForm.quota }} {{ originQuotaForm.quotaUnit }}</span>
+              <span class="cl-blue">{{ originQuotaForm.quota.toFixed(2) }} {{ originQuotaForm.quotaUnit }}</span>
             </div>
             <div class="f-1">
               <span class="mr">配额类型:</span>
