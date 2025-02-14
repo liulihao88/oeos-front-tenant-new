@@ -298,6 +298,28 @@ function _handleUsedData(usedSpace) {
   ]
 }
 
+const parsePercent = (v, t) => {
+  return ((v / t) * 100).toFixed(2) + '%'
+}
+
+const parseOptions = (opts) => {
+  let str = ''
+  const total = opts.reduce((acc, cur) => {
+    return acc + cur.value || 0
+  }, 0)
+  opts.forEach((v) => {
+    str += `
+       <div>
+          <span class="m-r-4 cl-green"> ${v.name}: </span>
+          <span class="m-r-4"> ${v.value || 0}</span>
+          <span class="cl-green m-r-4"> 占比: </span>
+          <span>${parsePercent(v.value || 0, total)}</span>
+        </div>
+      `
+  })
+  return str
+}
+
 const refresh = () => {
   getSpaceInit()
   init()
@@ -387,8 +409,17 @@ onMounted(() => {
       <el-col :span="8" style="height: 100%">
         <div class="right-box">
           <div class="c-box w-100% f-1">
-            <o-title :title="objectTitle" icon="plus" />
-            <BucketNumPie :data="objectNumData" />
+            <o-tooltip
+              :content="parseOptions(objectNumData)"
+              raw-content
+              width="100% "
+              :disabled="objectNumData.every((v) => !v.value)"
+              placement="left"
+              class="w-100% h-100%"
+            >
+              <o-title :title="objectTitle" icon="plus" />
+              <BucketNumPie :data="objectNumData" />
+            </o-tooltip>
           </div>
           <div class="c-box w-100% mt3 f-1">
             <o-title :title="quotaTitle" icon="plus" />

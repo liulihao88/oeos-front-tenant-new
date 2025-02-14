@@ -30,9 +30,9 @@ const initOptions = {
     formatter: formatter,
   },
   toolbox: {
-    show: true,
+    show: false,
     feature: {
-      mark: { show: true },
+      mark: { show: false },
     },
   },
   series: [
@@ -48,7 +48,6 @@ const initOptions = {
         textStyle: {
           fontSize: 12, // 更改标题字体大小为 20px
           color: '#e4393c',
-          // color: 'yellow',
         },
         rich: {
           a: {
@@ -78,6 +77,11 @@ const initOptions = {
     },
   ],
 }
+function formatter(params) {
+  let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
+  let { value, name } = params.data
+  return `${name}: ${value}\n 占比: (${params.percent}%)`
+}
 
 watch(
   () => props.data,
@@ -93,11 +97,6 @@ watch(
     immediate: true,
   },
 )
-function formatter(params) {
-  let res = `${params.name} \n <span class="cl-blue">${params.value}</span>`
-  let { value, name } = params.data
-  return `${name}: ${value}\n 占比: (${params.percent}%)`
-}
 </script>
 
 <template>
