@@ -121,7 +121,7 @@ defineExpose({
 
 <template>
   <div class="f-st-ct w-100% flex-wrap h-100%">
-    <div class="mr f-st-ct w-100% flex-wrap h-100%">
+    <div class="mr f-st-ct w-100% h-100% o-a f-n">
       <el-input-number
         v-model="days"
         class="mr"
@@ -137,7 +137,7 @@ defineExpose({
         </template>
       </el-input-number>
 
-      <div class="radio-box">
+      <div class="radio-box o-a" style="flex-wrap: nowrap">
         <o-radio v-model="easyTime" :options="timeOptions" />
       </div>
 
@@ -157,6 +157,10 @@ defineExpose({
   border: 1px solid var(--line);
   border-radius: 4px;
   transition: all 0.5s ease-out;
+
+  :deep(.el-radio-group) {
+    flex-wrap: nowrap;
+  }
 
   &:hover {
     box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);

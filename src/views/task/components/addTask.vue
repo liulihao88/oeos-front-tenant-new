@@ -57,9 +57,18 @@ const compTitle = computed(() => {
 })
 
 const actionChange = async (value) => {
-  if (value === DELETE) {
+  if (!isEdit.value) {
+    let { workSchedule, workScheduleExeOpportunity } = proxy.clone(form.value.properties)
     isTargetBucket.value = false
+    form.value = proxy.clone(originForm)
+    form.value.action = value
+    await nextTick()
+    let highForm = highSettingsRef.value.originForm
+    highSave(highForm)
+    form.value.properties.workSchedule = workSchedule
+    form.value.properties.workScheduleExeOpportunity = workScheduleExeOpportunity
   }
+
   if (form.value.action === FREEZE || form.value.action === ZERO_COPY_FREEZE) {
     let res = await getTargetStorageList()
     targetOptions.value = res
@@ -201,14 +210,15 @@ defineExpose({
             v-model="form.action"
             :options="proxy.TASK_TYPE_OPTIONS"
             :disabled="isEdit"
+            :clearable="false"
             @change="actionChange"
           />
         </el-form-item>
 
         <el-divider v-if="form.action" />
-        <template v-if="form.action !== UNFREEZE && form.action">
+        <div v-show="form.action !== UNFREEZE && form.action">
           <el-form-item label="数据保留时长" prop="">
-            <KeepTime ref="keepTimeRef" :value="form.properties.objectFilter.expiredTimeExpress" :isView="isView" />
+            <KeepTime ref="keepTimeRef" :value="form.properties?.objectFilter?.expiredTimeExpress" :isView="isView" />
           </el-form-item>
           <el-form-item label="任务计划" prop="">
             <div class="f-st-ct">
@@ -226,7 +236,7 @@ defineExpose({
               </el-radio-group>
             </div>
           </el-form-item>
-        </template>
+        </div>
         <template v-if="form.action === UNFREEZE">
           <el-form-item label="数据解冻配置" prop="">
             <div>
