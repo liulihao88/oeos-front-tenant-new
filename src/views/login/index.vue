@@ -62,9 +62,23 @@ async function init() {
     passwordRef.value.focus()
     return
   }
+  let tenantValue = route.query.tenantValue
+  let filterTenantObj = tenantOptions.value.filter((v) => v.value === tenantValue)
   if (proxy.$dev) {
-    let nameIndex = tenantOptions.value.findIndex((v) => v.name === 'liu')
-    ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', { optionsIndex: nameIndex === -1 ? 0 : nameIndex })
+    let matchedTenantIdx = tenantOptions.value.findIndex((v) => {
+      if (tenantValue) {
+        return v.name === tenantValue
+      } else {
+        return v.name.includes('liu')
+      }
+    })
+    ruleForm.tenantId = proxy.uuid(tenantOptions.value, 'value', {
+      optionsIndex: matchedTenantIdx === -1 ? 0 : matchedTenantIdx,
+    })
+  }
+
+  if (proxy.notEmpty(filterTenantObj)) {
+    ruleForm.tenantId = filterTenantObj[0].value
   }
 }
 init()
