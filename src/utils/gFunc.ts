@@ -24,16 +24,17 @@ export async function gDownload(item, needVersion = true) {
   }
   let baseUrl = import.meta.env.DEV ? settings.url : window.origin
   let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  let dataUrl2 = `?bucket=${bucketName}&key=${objectKey}`
+  let dataUrl2 = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}`
   if (needVersion) {
     dataUrl2 = dataUrl2 + `&version=${objectVersionID}`
   }
-  let requestHref = 'object/download' + dataUrl2 + `&Authorization=${getStorage('tenant-token')}`
-  let res = await request(requestHref, { customResponse: true })
-  if (res.data && res.data.status && res.data.status !== 200) {
-    $toast(res.data.message, 'e')
-    return
-  }
+  // let requestHref = 'object/download' + dataUrl2 + `&Authorization=${getStorage('tenant-token')}`
+  // console.log(`57 requestHref`, requestHref);
+  // let res = await request(requestHref, { customResponse: true, stringify: false })
+  // if (res.data && res.data.status && res.data.status !== 200) {
+  //   $toast(res.data.message, 'e')
+  //   return
+  // }
   downloadFile(_href, objectKey)
 }
 

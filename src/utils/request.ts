@@ -57,16 +57,18 @@ instance.interceptors.request.use((config) => {
     }
     config.data = formData
   }
-  let [baseUrl, urlQuery] = config.url.split('?')
-  let parseQueryParams = getQueryObject(urlQuery)
-  let mergeParams = { ...config.params, ...parseQueryParams }
-  let qsParams = qs.stringify(mergeParams)
-  if (qsParams) {
-    config.url = baseUrl + '?' + qsParams
-  } else {
-    config.url = baseUrl
+  if (config.stringify !== false) {
+    let [baseUrl, urlQuery] = config.url.split('?')
+    let parseQueryParams = getQueryObject(urlQuery)
+    let mergeParams = { ...config.params, ...parseQueryParams }
+    let qsParams = qs.stringify(mergeParams)
+    if (qsParams) {
+      config.url = baseUrl + '?' + qsParams
+    } else {
+      config.url = baseUrl
+    }
+    delete config.params
   }
-  delete config.params
   return config
 })
 // 响应拦截
