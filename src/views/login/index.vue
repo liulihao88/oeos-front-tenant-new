@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
                   class="po-a r--100 t-4"
                   @click="ruleForm.username = 'admin'"
                 >
-                  填充用户
+                  填充账号
                 </el-button>
               </el-form-item>
             </Motion>
