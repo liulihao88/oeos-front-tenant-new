@@ -217,20 +217,41 @@ onBeforeUnmount(() => {
                   placeholder="账号"
                   :prefix-icon="useRenderIcon(User)"
                 />
+                <el-button
+                  v-if="proxy.$test"
+                  type="primary"
+                  size="mini"
+                  class="po-a r--100 t-4"
+                  @click="ruleForm.username = 'admin'"
+                >
+                  填充用户
+                </el-button>
               </el-form-item>
             </Motion>
 
             <Motion :delay="150">
               <el-form-item prop="password">
-                <el-input
-                  ref="passwordRef"
-                  v-model.trim="ruleForm.password"
-                  clearable
-                  show-password
-                  placeholder="密码"
-                  autocomplete="new-password"
-                  :prefix-icon="useRenderIcon(Lock)"
-                />
+                <div class="p-r w-100%">
+                  <el-input
+                    ref="passwordRef"
+                    v-model.trim="ruleForm.password"
+                    clearable
+                    show-password
+                    placeholder="密码"
+                    style="width: 100%"
+                    autocomplete="new-password"
+                    :prefix-icon="useRenderIcon(Lock)"
+                  />
+                  <el-button
+                    v-if="proxy.$test"
+                    type="primary"
+                    size="mini"
+                    class="po-a r--100 t-4"
+                    @click="ruleForm.password = 'adminadmin'"
+                  >
+                    填充密码
+                  </el-button>
+                </div>
               </el-form-item>
             </Motion>
 

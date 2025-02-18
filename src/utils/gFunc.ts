@@ -14,37 +14,65 @@ export async function gDownload(item, needVersion = true) {
       $toast('不是有效数据，不支持下载!', 'w')
     }
   }
-  let getUrl = `/v1/admin/tenant/object/download` //接口
   let bucketName = item.bucket ? item.bucket : ''
   let objectKey = item.key ? item.key : ''
   let objectVersionID = item.version ? item.version : ''
-  let dataUrl = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}`
-  if (needVersion) {
-    dataUrl = dataUrl + `&version=${objectVersionID}`
-  }
-  let baseUrl = import.meta.env.DEV ? settings.url : window.origin
-  let _href = baseUrl + getUrl + dataUrl + `&Authorization=${getStorage('tenant-token')}`
-  let dataUrl2 = `?bucket=${bucketName}&key=${encodeURIComponent(objectKey)}`
-  if (needVersion) {
-    dataUrl2 = dataUrl2 + `&version=${objectVersionID}`
-  }
-  // let requestHref = 'object/download' + dataUrl2 + `&Authorization=${getStorage('tenant-token')}`
-  // console.log(`57 requestHref`, requestHref);
-  // let res = await request(requestHref, { customResponse: true, stringify: false })
-  // if (res.data && res.data.status && res.data.status !== 200) {
-  //   $toast(res.data.message, 'e')
-  //   return
-  // }
-  downloadFile(_href, objectKey)
-}
 
-function downloadFile(url, filename = 'default') {
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename || 'default'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+  let parseKey = encodeURIComponent(objectKey)
+  // let parseKey = objectKey
+  let sendParams = {
+    bucket: bucketName,
+    key: parseKey,
+    Authorization: getStorage('tenant-token'),
+  }
+  if (needVersion) {
+    sendParams.version = objectVersionID
+  }
+  let res = await request('object/download', 'get', {
+    customResponse: true,
+    responseType: 'blob',
+    params: sendParams,
+    stringify: false,
+  })
+  if (res.status !== 200) {
+    return $toast(res.message || '下载失败', 'e')
+  }
+  try {
+    // 尝试将文本解析为 JSON
+    const result = await parseBlobToJson(res.data)
+    $toast(result.message, 'e')
+  } catch (e) {
+    // 如果无法解析为json, 代表是数据流, 可以下载
+    let data = res.data
+    const url = URL.createObjectURL(data)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = item.name
+    link.click()
+  }
+
+  if (res.data && res.data.status && res.data.status !== 200) {
+    $toast(res.data.message, 'e')
+    return
+  }
+  function parseBlobToJson(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = function (event) {
+        try {
+          const text = event.target.result // 获取 Blob 的文本内容
+          const json = JSON.parse(text) // 将文本解析为 JSON
+          resolve(json)
+        } catch (error) {
+          reject(new Error('无法解析 JSON: ' + error.message))
+        }
+      }
+      reader.onerror = function (error) {
+        reject(new Error('读取 Blob 时出错: ' + error.message))
+      }
+      reader.readAsText(blob) // 以文本形式读取 Blob
+    })
+  }
 }
 
 export function gDownloadAll(id) {
