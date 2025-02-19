@@ -21,15 +21,27 @@ const columns = [
     prop: 'permission',
     useSlot: true,
   },
-  // {
-  //   key: 'operation',
-  //   label: '操作',
-  //   btns: [
-  //     {
-  //       content: '编辑',
-  //     },
-  //   ],
-  // },
+  {
+    key: 'operation',
+    label: '操作',
+    width: 120,
+    btns: [
+      {
+        content: '取消上传',
+        isShow: (row) => {
+          console.log(`63 row`, row)
+          return row.permission.status !== 'done' && row.permission.status !== 'error'
+        },
+        comp: 'o-icon',
+        attrs: {
+          type: 'svg',
+          content: '取消上传',
+          name: 'cancel',
+        },
+        handler: cancelUploadRow,
+      },
+    ],
+  },
 ]
 
 proxy.$mitt.on('upload-file', ({ fileList }) => {
@@ -37,6 +49,7 @@ proxy.$mitt.on('upload-file', ({ fileList }) => {
     return {
       name: key,
       permission: fileList[key],
+      cancelFileList: fileList[key].cancelFileList,
     }
   })
 })
@@ -47,6 +60,30 @@ const noticesNum = computed(() => {
   }
   return data.value.filter((v) => v.permission.status === 'pending').length
 })
+
+function cancelUploadRow(row) {
+  console.log(`51 row`, row)
+  try {
+    row.cancelFileList.cancelToken()
+  } catch (e) {
+    data.value[row.name] = {
+      message: `上传失败`,
+      status: 'error',
+      file: row.name,
+      cancelFileList: {},
+    }
+    let tenantFileList = proxy.getStorage('tenant-file-list')
+    tenantFileList[row.name] = {
+      message: `上传失败`,
+      status: 'error',
+      file: row.name,
+      cancelFileList: {},
+    }
+    proxy.setStorage('tenant-file-list', tenantFileList)
+    proxy.$mitt.emit('upload-file', { fileList: tenantFileList })
+  } finally {
+  }
+}
 </script>
 
 <template>
