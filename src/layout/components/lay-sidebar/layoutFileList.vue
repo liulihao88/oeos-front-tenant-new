@@ -2,6 +2,8 @@
 import { ref, computed, getCurrentInstance } from 'vue'
 import { noticesData } from './data'
 import NoticeList from './components/NoticeList.vue'
+import GUploadFileDialog from '@/autoComponents/gUploadFileDialog.vue'
+
 import BellIcon from '@iconify-icons/ep/bell'
 const { proxy } = getCurrentInstance()
 
@@ -30,7 +32,7 @@ const columns = [
   // },
 ]
 
-proxy.$mitt.on('upload-file', ({ fileList, fileName }) => {
+proxy.$mitt.on('upload-file', ({ fileList }) => {
   data.value = Object.keys(fileList).map((key) => {
     return {
       name: key,
@@ -50,7 +52,8 @@ const noticesNum = computed(() => {
 <template>
   <div>
     <span :class="['dropdown-badge', 'navbar-bg-hover', 'select-none']" @click="isShow = true">
-      <el-badge :value="Number(noticesNum) === 0 ? '' : noticesNum" :max="99">
+      <GUploadFileDialog />
+      <el-badge :value="Number(noticesNum) === 0 ? '' : noticesNum">
         <span class="header-notice-icon">
           <IconifyIconOffline :icon="BellIcon" />
         </span>

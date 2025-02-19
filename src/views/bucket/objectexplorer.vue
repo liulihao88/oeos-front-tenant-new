@@ -104,10 +104,12 @@ const columns = [
 const data = ref([])
 
 proxy.$mitt.on('upload-file', ({ fileList, fileName }) => {
+  if (!fileName) {
+    return
+  }
   let unRefFileList = unref(fileList)
   let status = unRefFileList[fileName].status
   if (status === 'done') {
-    console.log(`62 timer.value`, timer.value)
     if (timer.value) {
       return
     }
@@ -115,7 +117,7 @@ proxy.$mitt.on('upload-file', ({ fileList, fileName }) => {
       init()
       timer.value = null
       clearTimeout(timer.value)
-    }, 2000)
+    }, 1000)
   }
 })
 

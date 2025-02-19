@@ -6,6 +6,10 @@ const bucketSettings = useBucketSettings()
 const { proxy } = getCurrentInstance()
 const emits = defineEmits(['success'])
 let fileList = ref({})
+fileList.value = proxy.getStorage('tenant-file-list') || {}
+if (proxy.notEmpty(fileList.value)) {
+  proxy.$mitt.emit('upload-file', { fileList: unref(fileList.value) })
+}
 const props = defineProps({
   bucketName: {
     type: String,
@@ -67,6 +71,7 @@ const onChange = (file, files) => {
         }
         proxy.$toast(`${fileName}上传失败, ${res.data.message}`, 'e')
       }
+      proxy.setStorage('tenant-file-list', fileList.value)
     })
     .catch(() => {
       fileList.value[fileName] = {
@@ -74,6 +79,7 @@ const onChange = (file, files) => {
         status: 'error',
         file: fileName,
       }
+      proxy.setStorage('tenant-file-list', fileList.value)
       proxy.$toast(`${fileName}上传失败`, 'e')
     })
     .finally(() => {
