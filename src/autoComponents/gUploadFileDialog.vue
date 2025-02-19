@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, h, unref, computed } from 'vue'
 import axios from 'axios'
-import useBucketSettings from '@/store/modules/bucketSettings.ts'
-const bucketSettings = useBucketSettings()
 const { proxy } = getCurrentInstance()
 
 const emits = defineEmits(['success'])
@@ -13,8 +11,22 @@ const props = defineProps({
     default: '',
   },
 })
-
 let fileList = ref({})
+
+proxy.$mitt.on('file-change', ({ formData, fileName }) => {
+  onChange(formData, fileName)
+})
+proxy.$mitt.on('delete-files', (deleteFileNames) => {
+  Object.keys(fileList.value).forEach((v) => {
+    if (deleteFileNames.includes(v)) {
+      delete fileList.value[v]
+    }
+  })
+
+  proxy.setStorage('tenant-file-list', mergeFileList.value)
+  proxy.$mitt.emit('upload-file', { fileList: unref(mergeFileList.value) })
+})
+
 let cancelFileList = ref({})
 fileList.value = proxy.getStorage('tenant-file-list') || {}
 if (proxy.notEmpty(fileList.value)) {
@@ -49,16 +61,8 @@ const updateNotification = (fileName, percentage) => {
   }
 }
 
-const onChange = (file, files) => {
-  const formData = new FormData()
-  formData.append('file', file.raw)
-  formData.append('bucket', props.bucketName)
-  formData.append('key', bucketSettings.prefixKey || '/')
-
-  let fileName = file.name
-
+function onChange(formData, fileName) {
   const CancelToken = axios.CancelToken
-
   axios
     .put(import.meta.env.VITE_PROXY_API + '/v1/admin/tenant/object/upload', formData, {
       onUploadProgress: (progressEvent) => {
@@ -109,20 +113,7 @@ const onChange = (file, files) => {
     })
 }
 
-const beforeUpload = (file) => {
-  let size = file.size
-  if (size / 1024 / 1024 > 1024 * 5) {
-    return proxy.$toast('只能上传小于等于5GB大小的文件', 'e')
-  }
-}
-
 defineExpose({
   fileList,
 })
 </script>
-
-<template>
-  <g-upload class="m-r-10" multiple :onChange="onChange" :before-upload="beforeUpload">
-    <slot />
-  </g-upload>
-</template>

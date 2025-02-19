@@ -10,6 +10,7 @@ import { useRouter, useRoute } from 'vue-router'
 import BucketOverviewHistory from '@/views/bucket/components/bucketOverviewHistory.vue'
 import BucketFileDetailsComp from '@/views/bucket/components/bucketFileDetailsComp.vue'
 import FolderNav from '@/views/bucket/components/folderNav.vue'
+import UploadFileComp from '@/views/bucket/components/uploadFileComp.vue'
 
 import useBucketSettings from '@/store/modules/bucketSettings.ts'
 const bucketSettings = useBucketSettings()
@@ -200,9 +201,9 @@ watch(
   <div>
     <div class="top f">
       <g-bucket2 ref="bucketRef" v-model="bucketId" v-model:bucketName="bucketName" />
-      <g-upload-file-dialog :bucketName="bucketName">
+      <UploadFileComp :bucketName="bucketName">
         <el-button type="primary" icon="el-icon-upload" :disabled="!bucketName">上传文件</el-button>
-      </g-upload-file-dialog>
+      </UploadFileComp>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'Search' })">简单搜索</el-button>
       <el-button type="primary" icon="el-icon-search" @click="proxy.jump({ name: 'AdvanceSearch' })">
         高级搜索

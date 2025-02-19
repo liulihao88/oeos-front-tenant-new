@@ -11,7 +11,14 @@ const isShow = ref(false)
 
 const fileRef = ref(null)
 const data = ref([])
+const selections = ref([])
+const tenantFileList = ref([])
+tenantFileList.value = proxy.getStorage('tenant-file-list')
 const columns = [
+  // {
+  //   type: 'selection',
+  //   selectable: selectableFn,
+  // },
   {
     label: '名字',
     prop: 'name',
@@ -24,12 +31,11 @@ const columns = [
   {
     key: 'operation',
     label: '操作',
-    width: 120,
+    width: 100,
     btns: [
       {
         content: '取消上传',
         isShow: (row) => {
-          console.log(`63 row`, row)
           return row.permission.status !== 'done' && row.permission.status !== 'error'
         },
         comp: 'o-icon',
@@ -39,6 +45,19 @@ const columns = [
           name: 'cancel',
         },
         handler: cancelUploadRow,
+      },
+      {
+        content: '删除',
+        handler: deleteRow,
+        isShow: (row) => {
+          return row.permission.status === 'done' || row.permission.status === 'error'
+        },
+        comp: 'o-icon',
+        attrs: {
+          name: 'delete',
+          type: 'svg',
+          content: '删除',
+        },
       },
     ],
   },
@@ -61,26 +80,37 @@ const noticesNum = computed(() => {
   return data.value.filter((v) => v.permission.status === 'pending').length
 })
 
+const selectionChange = (val, ...a) => {
+  selections.value = val
+}
+
+// const batchDelete = () => {
+//   let selectionsNames = selections.value.map((v) => v.name)
+//   console.log(`93 selectionsNames`, selectionsNames)
+//   proxy.$mitt.emit('delete-files', selectionsNames)
+// }
+
+function deleteRow(row) {
+  proxy.$mitt.emit('delete-files', [row.name])
+}
+
+function selectableFn(row, index) {
+  return row.permission.status === 'done' || row.permission.status === 'error'
+}
+
 function cancelUploadRow(row) {
   console.log(`51 row`, row)
   try {
     row.cancelFileList.cancelToken()
   } catch (e) {
-    data.value[row.name] = {
+    tenantFileList.value[row.name] = {
       message: `上传失败`,
       status: 'error',
       file: row.name,
       cancelFileList: {},
     }
-    let tenantFileList = proxy.getStorage('tenant-file-list')
-    tenantFileList[row.name] = {
-      message: `上传失败`,
-      status: 'error',
-      file: row.name,
-      cancelFileList: {},
-    }
-    proxy.setStorage('tenant-file-list', tenantFileList)
-    proxy.$mitt.emit('upload-file', { fileList: tenantFileList })
+    proxy.setStorage('tenant-file-list', tenantFileList.value)
+    proxy.$mitt.emit('upload-file', { fileList: tenantFileList.value })
   } finally {
   }
 }
@@ -102,26 +132,37 @@ function cancelUploadRow(row) {
         上传文件列表
         <el-tag class="v-b" style="vertical-align: bottom">{{ data.length }}</el-tag>
       </template>
-      <o-table ref="tableRef" :columns="columns" :data="data" :showPage="false">
-        <template #permission="{ scope, row }">
-          {{ row.message }}
-          <template v-if="row.permission.status === 'done'">
-            <el-tag>
-              {{ row.permission.message }}
-            </el-tag>
+      <div>
+        <!-- <el-button
+          type="primary"
+          icon="el-icon-download"
+          class="mb2"
+          :disabled="selections.length === 0"
+          @click="batchDelete"
+        >
+          批量删除
+        </el-button> -->
+        <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
+          <template #permission="{ scope, row }">
+            {{ row.message }}
+            <template v-if="row.permission.status === 'done'">
+              <el-tag>
+                {{ row.permission.message }}
+              </el-tag>
+            </template>
+            <template v-else-if="row.permission.status === 'error'">
+              <el-tag type="danger">
+                {{ row.permission.message }}
+              </el-tag>
+            </template>
+            <template v-else>
+              <div class="w-90%">
+                <o-progress :percentage="row.permission.message" />
+              </div>
+            </template>
           </template>
-          <template v-else-if="row.permission.status === 'error'">
-            <el-tag type="danger">
-              {{ row.permission.message }}
-            </el-tag>
-          </template>
-          <template v-else>
-            <div class="w-90%">
-              <o-progress :percentage="row.permission.message" />
-            </div>
-          </template>
-        </template>
-      </o-table>
+        </o-table>
+      </div>
     </o-dialog>
   </div>
 </template>
