@@ -19,7 +19,7 @@ const modifyPasswordHandler = () => {
     <el-dropdown trigger="hover">
       <span class="el-dropdown-link navbar-bg-hover select-none">
         <o-icon name="avatar" size="20" />
-        {{ proxy.getStorage('tenant-sysdomain').loginName }}
+        {{ proxy.getStorage('tenant-sysdomain')?.loginName }}
       </span>
       <template #dropdown>
         <el-dropdown-menu class="logout">

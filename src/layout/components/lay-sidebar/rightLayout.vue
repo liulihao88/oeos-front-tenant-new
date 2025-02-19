@@ -39,8 +39,8 @@ function onFresh() {
   <div class="vertical-header-right">
     <div class="mr">
       <div>
-        当前租户: {{ proxy.getStorage('tenant-sysdomain').tenantName }} [
-        {{ proxy.getStorage('tenant-sysdomain').tenantId }} ]
+        当前租户: {{ proxy.getStorage('tenant-sysdomain')?.tenantName }} [
+        {{ proxy.getStorage('tenant-sysdomain')?.tenantId }} ]
       </div>
     </div>
     <!-- 退出登录 -->

@@ -1,17 +1,21 @@
 import request from './request.ts'
-import Vue from 'vue'
 import { setStorage, getStorage } from 'oeos-components'
-import JSEncrypt from 'jsencrypt'
 import router from '@/router/index.ts'
 import { encryptionPassword } from '@/api/login.ts'
 
 export async function devLogin() {
   if (import.meta.env.DEV) {
+    let sysdomain = getStorage('tenant-sysdomain')
+    if (!sysdomain) {
+      localStorage.removeItem('tenant-token')
+      router.push({ name: 'Login' })
+      return
+    }
     let genPasRes = await encryptionPassword('adminadmin')
     let data = {
       username: 'admin',
       password: genPasRes[0],
-      sysdomain: getStorage('tenant-sysdomain').tenantId,
+      sysdomain: sysdomain.tenantId || 'T04',
     }
     let res = await request('/auth/signin', 'put', {
       type: 'common',
