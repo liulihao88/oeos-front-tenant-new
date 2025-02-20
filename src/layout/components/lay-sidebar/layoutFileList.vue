@@ -15,10 +15,6 @@ const selections = ref([])
 const tenantFileList = ref([])
 tenantFileList.value = proxy.getStorage('tenant-file-list')
 const columns = [
-  // {
-  //   type: 'selection',
-  //   selectable: selectableFn,
-  // },
   {
     label: '名字',
     prop: 'name',
@@ -43,7 +39,7 @@ const columns = [
   {
     key: 'operation',
     label: '操作',
-    width: 100,
+    width: 150,
     btns: [
       {
         content: '取消上传',
@@ -71,6 +67,18 @@ const columns = [
           content: '删除',
         },
       },
+      // {
+      //   handler: restoreRow,
+      //   isShow: (row) => {
+      //     return row.status === 'error'
+      //   },
+      //   comp: 'o-icon',
+      //   attrs: {
+      //     name: 'restore',
+      //     type: 'svg',
+      //     content: '重新上传',
+      //   },
+      // },
     ],
   },
 ]
@@ -79,12 +87,11 @@ proxy.$mitt.on('upload-file', ({ fileList }) => {
   data.value = Object.keys(fileList).map((key) => {
     return {
       name: key,
-      bucketName: fileList[key].details.bucketName,
-      size: fileList[key].details.size,
+      bucketName: fileList[key]?.details?.bucketName,
+      size: fileList[key]?.details?.size,
       ...fileList[key],
     }
   })
-  console.log(`14 data.value `, data.value)
 })
 
 const noticesNum = computed(() => {
@@ -98,10 +105,8 @@ const selectionChange = (val, ...a) => {
   selections.value = val
 }
 
-// const batchDelete = () => {
-//   let selectionsNames = selections.value.map((v) => v.name)
-//   console.log(`93 selectionsNames`, selectionsNames)
-//   proxy.$mitt.emit('delete-files', selectionsNames)
+// function restoreRow(row) {
+//   proxy.$mitt.emit('file-change', row.details)
 // }
 
 function deleteRow(row) {
@@ -113,7 +118,6 @@ function selectableFn(row, index) {
 }
 
 function cancelUploadRow(row) {
-  console.log(`51 row`, row)
   try {
     row.cancelFileList.cancelToken()
   } catch (e) {
@@ -121,6 +125,7 @@ function cancelUploadRow(row) {
       message: `上传失败`,
       status: 'error',
       file: row.name,
+      details: row.details,
       cancelFileList: {},
     }
     proxy.setStorage('tenant-file-list', tenantFileList.value)

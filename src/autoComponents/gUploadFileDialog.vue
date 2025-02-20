@@ -72,6 +72,7 @@ function onChange(emitObj) {
         const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
         // 更新通知中的进度信息
         updateNotification(fileName, percentage, emitObj)
+        proxy.setStorage('tenant-file-list', mergeFileList.value)
         proxy.$mitt.emit('upload-file', { fileList: unref(mergeFileList.value), fileName })
       },
       headers: {
@@ -101,7 +102,6 @@ function onChange(emitObj) {
         }
         proxy.$toast(`${fileName}上传失败, ${res.data.message}`, 'e')
       }
-      console.log(`49 mergeFileList.value`, mergeFileList.value)
       proxy.setStorage('tenant-file-list', mergeFileList.value)
     })
     .catch(() => {

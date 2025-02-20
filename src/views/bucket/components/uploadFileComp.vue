@@ -16,7 +16,6 @@ const props = defineProps({
 
 const onChange = (file, files) => {
   const formData = new FormData()
-  console.log(`36 file.raw`, file.raw)
   formData.append('file', file.raw)
   formData.append('bucket', props.bucketName)
   formData.append('key', bucketSettings.prefixKey || '/')
