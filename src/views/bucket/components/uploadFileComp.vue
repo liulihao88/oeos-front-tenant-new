@@ -16,13 +16,19 @@ const props = defineProps({
 
 const onChange = (file, files) => {
   const formData = new FormData()
+  console.log(`36 file.raw`, file.raw)
   formData.append('file', file.raw)
   formData.append('bucket', props.bucketName)
   formData.append('key', bucketSettings.prefixKey || '/')
 
   let fileName = file.name
 
-  proxy.$mitt.emit('file-change', { formData: formData, fileName: fileName, bucketName: props.bucketName })
+  proxy.$mitt.emit('file-change', {
+    formData: formData,
+    fileName: fileName,
+    bucketName: props.bucketName,
+    size: file.raw.size,
+  })
 }
 
 const beforeUpload = (file) => {

@@ -13,8 +13,8 @@ const props = defineProps({
 })
 let fileList = ref({})
 
-proxy.$mitt.on('file-change', ({ formData, fileName }) => {
-  onChange(formData, fileName)
+proxy.$mitt.on('file-change', (fileObj) => {
+  onChange(fileObj)
 })
 proxy.$mitt.on('delete-files', (deleteFileNames) => {
   Object.keys(fileList.value).forEach((v) => {
@@ -44,12 +44,13 @@ const mergeFileList = computed(() => {
   return merged
 })
 
-const updateNotification = (fileName, percentage) => {
+const updateNotification = (fileName, percentage, emitObj) => {
   if (percentage === 100) {
     fileList.value[fileName] = {
       message: '上传完成',
       status: 'done',
       file: fileName,
+      details: emitObj,
     }
     return
   }
@@ -58,17 +59,19 @@ const updateNotification = (fileName, percentage) => {
     message: percentage,
     status: 'pending',
     file: fileName,
+    details: emitObj,
   }
 }
 
-function onChange(formData, fileName) {
+function onChange(emitObj) {
+  const { fileName, formData } = emitObj
   const CancelToken = axios.CancelToken
   axios
     .put(import.meta.env.VITE_PROXY_API + '/v1/admin/tenant/object/upload', formData, {
       onUploadProgress: (progressEvent) => {
         const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
         // 更新通知中的进度信息
-        updateNotification(fileName, percentage)
+        updateNotification(fileName, percentage, emitObj)
         proxy.$mitt.emit('upload-file', { fileList: unref(mergeFileList.value), fileName })
       },
       headers: {
@@ -86,6 +89,7 @@ function onChange(formData, fileName) {
           message: '上传完成',
           status: 'done',
           file: fileName,
+          details: emitObj,
         }
         proxy.$toast(`${fileName}上传完成`)
       } else {
@@ -93,6 +97,7 @@ function onChange(formData, fileName) {
           message: `上传失败, ${res.data.message}`,
           status: 'error',
           file: fileName,
+          details: emitObj,
         }
         proxy.$toast(`${fileName}上传失败, ${res.data.message}`, 'e')
       }
@@ -104,6 +109,7 @@ function onChange(formData, fileName) {
         message: `上传失败`,
         status: 'error',
         file: fileName,
+        details: emitObj,
       }
       proxy.setStorage('tenant-file-list', mergeFileList.value)
       proxy.$toast(`${fileName}上传失败`, 'e')

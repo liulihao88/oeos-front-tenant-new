@@ -24,6 +24,18 @@ const columns = [
     prop: 'name',
   },
   {
+    label: '所属桶',
+    prop: 'bucketName',
+  },
+  {
+    label: '文件大小',
+    width: 100,
+    prop: 'size',
+    filter: (value) => {
+      return proxy.formatBytes(value)
+    },
+  },
+  {
     label: '上传进度',
     prop: 'permission',
     useSlot: true,
@@ -36,7 +48,7 @@ const columns = [
       {
         content: '取消上传',
         isShow: (row) => {
-          return row.permission.status !== 'done' && row.permission.status !== 'error'
+          return row.status !== 'done' && row.status !== 'error'
         },
         comp: 'o-icon',
         attrs: {
@@ -50,7 +62,7 @@ const columns = [
         content: '删除',
         handler: deleteRow,
         isShow: (row) => {
-          return row.permission.status === 'done' || row.permission.status === 'error'
+          return row.status === 'done' || row.status === 'error'
         },
         comp: 'o-icon',
         attrs: {
@@ -67,17 +79,19 @@ proxy.$mitt.on('upload-file', ({ fileList }) => {
   data.value = Object.keys(fileList).map((key) => {
     return {
       name: key,
-      permission: fileList[key],
-      cancelFileList: fileList[key].cancelFileList,
+      bucketName: fileList[key].details.bucketName,
+      size: fileList[key].details.size,
+      ...fileList[key],
     }
   })
+  console.log(`14 data.value `, data.value)
 })
 
 const noticesNum = computed(() => {
   if (data.value.length === 0) {
     return 0
   }
-  return data.value.filter((v) => v.permission.status === 'pending').length
+  return data.value.filter((v) => v.status === 'pending').length
 })
 
 const selectionChange = (val, ...a) => {
@@ -95,7 +109,7 @@ function deleteRow(row) {
 }
 
 function selectableFn(row, index) {
-  return row.permission.status === 'done' || row.permission.status === 'error'
+  return row.status === 'done' || row.status === 'error'
 }
 
 function cancelUploadRow(row) {
@@ -144,20 +158,19 @@ function cancelUploadRow(row) {
         </el-button> -->
         <o-table ref="tableRef" :columns="columns" :data="data" @selection-change="selectionChange">
           <template #permission="{ scope, row }">
-            {{ row.message }}
-            <template v-if="row.permission.status === 'done'">
+            <template v-if="row.status === 'done'">
               <el-tag>
-                {{ row.permission.message }}
+                {{ row.message }}
               </el-tag>
             </template>
-            <template v-else-if="row.permission.status === 'error'">
+            <template v-else-if="row.status === 'error'">
               <el-tag type="danger">
-                {{ row.permission.message }}
+                {{ row.message }}
               </el-tag>
             </template>
             <template v-else>
               <div class="w-90%">
-                <o-progress :percentage="row.permission.message" />
+                <o-progress :percentage="row.message" />
               </div>
             </template>
           </template>
